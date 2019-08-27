@@ -1,0 +1,27 @@
+# ===============================================================================
+# This actions file runs generic process request action tests.
+# ===============================================================================
+propertyFiles:
+  - fileName: "UCADF-Package/Test/UcAdfCoreTestProperties.yml"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.properties"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.secure.properties"
+  
+actions:
+  #==============================================================================          
+  # Prepare for tests.
+  #==============================================================================          
+  # Cancel any currently waiting processes.
+  - action: UcdCancelProcesses
+    
+  #==============================================================================          
+  # Run the tests.
+  #==============================================================================          
+  # Run a generic process.
+  - action: UcdRunGenericProcess
+    process: "${u:coreTestGenericProcessTaskTest}"
+    resource: "${u:coreTestTopResource}/Agent"
+    waitForProcess: false
+  - action: UcAdfComment
+    comment: "Request status %s"
+    values:
+      - ${u:actionReturn}

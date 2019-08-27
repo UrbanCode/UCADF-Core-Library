@@ -1,0 +1,66 @@
+
+# This actions file runs generic process action tests.
+# ===============================================================================
+propertyFiles:
+  - fileName: "UCADF-Package/Test/UcAdfCoreTestProperties.yml"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.properties"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.secure.properties"
+  
+actions:
+  #==============================================================================          
+  # Run the tests.
+  #==============================================================================          
+  # Create a generic process.
+  - action: UcdCreateGenericProcess
+    name: "${u:coreTestGenericProcess1}"
+    description: "Test generic process"
+    failIfExists: false
+
+  # Update a generic process.
+  - action: UcdUpdateGenericProcess
+    process: "${u:coreTestGenericProcess1}"
+    description: "Updated generic process description."
+    
+  # Create a generic process to delete.
+  - action: UcdCreateGenericProcess
+    name: "${u:coreTestGenericProcessDelete}"
+    description: "Test generic process"
+    failIfExists: false
+    
+  # Get generic processes.
+  - action: UcdGetGenericProcesses
+    actionReturnPropertyName: genericProcesses
+  - action: UcAdfLoop
+    items: ${u:genericProcesses}
+    actions:
+      - action: UcAdfComment
+        comment: "Generic process %s."
+        values:
+          - ${u:item}
+          
+  # Get generic process.
+  - action: UcdGetGenericProcess
+    process: "${u:coreTestGenericProcess1}"
+    actionReturnPropertyName: genericProcess
+  - action: UcAdfComment
+    comment: "Generic process %s."
+    values:
+      - ${u:genericProcess}
+      
+   # Export a generic process to a file.
+  - action: UcdExportGenericProcess
+    process: "${u:coreTestGenericProcessDelete}"
+    fileName: "temp/${u:coreTestGenericProcessDelete}.json"
+  - action: UcAdfComment
+    comment: "Generic process export %s."
+    values:
+      - ${u:actionReturn}
+          
+  # Delete a generic process.
+  - action: UcdDeleteGenericProcess
+    process: "${u:coreTestGenericProcessDelete}"
+    failIfNotFound: false
+
+   # Import a generic process from a file.
+  - action: UcdImportGenericProcess
+    fileName: "temp/${u:coreTestGenericProcessDelete}.json"

@@ -1,0 +1,43 @@
+<assembly>
+	<id>UCADF-Core-Package</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    
+	<includeBaseDirectory>false</includeBaseDirectory>
+
+    <fileSets>
+        <!-- The base directory. -->
+        <fileSet>
+			<directory>${project.basedir}/UCADF-Package</directory>
+            <outputDirectory/>
+            <includes>
+                <include>UcAdfConfig.properties</include>
+            </includes>
+        </fileSet>
+        
+    	<!-- The Library directory. -->
+        <fileSet>
+			<directory>${project.basedir}/target</directory>
+			<outputDirectory>Library</outputDirectory>
+            <includes>
+                <include>UCADF-Core-Library.jar</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+			<directory>${project.basedir}</directory>
+			<outputDirectory>Library</outputDirectory>
+            <includes>
+                <include>log4j.properties</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+			<directory>${project.basedir}/ucadfclient</directory>
+			<outputDirectory>Library</outputDirectory>
+            <includes>
+                <include>ucadfclient</include>
+                <include>ucadfclient.cmd</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</assembly>

@@ -1,0 +1,32 @@
+# ===============================================================================
+# This actions file runs component process action tests.
+# ===============================================================================
+propertyFiles:
+  - fileName: "UCADF-Package/Test/UcAdfCoreTestProperties.yml"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.properties"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.secure.properties"
+  
+actions:
+  #==============================================================================          
+  # Run the tests.
+  #==============================================================================          
+   # Get the list of component processes.
+  - action: UcdGetComponentProcesses
+    component: "${u:coreTestComp2}"
+    actionReturnPropertyName: componentProcesses
+    
+  # Show each component process.
+  - action: UcAdfLoop
+    items: ${u:componentProcesses}
+    actions:
+      - action: UcAdfComment
+        comment: "Component process %s"
+        values:
+          - ${u:item}
+
+  # Delete an component process.
+  - action: UcdDeleteComponentProcess
+    component: "${u:coreTestCompDelete}"
+    process: "${u:coreTestCompProcessDelete}"
+    failIfNotFound: false
+    

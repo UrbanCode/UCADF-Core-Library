@@ -1,0 +1,39 @@
+# ===============================================================================
+# This actions file runs agent relay action tests.
+# ===============================================================================
+propertyFiles:
+  - fileName: "UCADF-Package/Test/UcAdfCoreTestProperties.yml"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.properties"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.secure.properties"
+  
+actions:
+  #==============================================================================          
+  # Run the tests.
+  #==============================================================================          
+  # Get the list of agent relays.
+  - action: UcdGetAgentRelays
+    actionReturnPropertyName: agentRelays
+  - action: UcAdfLoop
+    actionInfo: false
+    items: ${u:agentRelays}
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Agent relay %s"
+        values:
+          - ${u:item}
+
+  # Add team security to a specified agent relay.
+  - action: UcdAddAgentRelayToTeams
+    relay: "${u:agentRelays/0/name}"
+    teams:
+      - team: "${u:coreTestTeam1}"
+
+  # Get information about an agent relay.
+  - action: UcdGetAgentRelay
+    relay: "${u:agentRelays/0/name}"
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "Agent relay %s"
+    values:
+      - ${u:actionReturn}
