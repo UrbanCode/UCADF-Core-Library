@@ -4,11 +4,9 @@
 package org.urbancode.ucadf.core.action.ucd.authorizationRealm
 
 import javax.ws.rs.client.WebTarget
-import javax.ws.rs.core.GenericType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.authenticationRealm.UcdAuthenticationRealm
 import org.urbancode.ucadf.core.model.ucd.authorizationRealm.UcdAuthorizationRealm
 import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
 
@@ -37,8 +35,7 @@ class UcdGetAuthorizationRealm extends UcAdfAction {
 		
 		Response response = target.request().get()
 		if (response.getStatus() == 200) {
-			List<UcdAuthenticationRealm> ucdAuthorizationRealms = response.readEntity(new GenericType<List<UcdAuthorizationRealm>>(){})
-			ucdAuthorizationRealm = ucdAuthorizationRealms[0]
+			ucdAuthorizationRealm = response.readEntity(UcdAuthorizationRealm)
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
 			logInfo(errMsg)
