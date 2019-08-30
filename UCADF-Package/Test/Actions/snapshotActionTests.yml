@@ -1,0 +1,135 @@
+# ===============================================================================
+# This actions file runs snapshot action tests.
+# ===============================================================================
+propertyFiles:
+  - fileName: "UCADF-Package/Test/UcAdfCoreTestProperties.yml"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.properties"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.secure.properties"
+  
+actions:
+  #==============================================================================          
+  # Prepare for tests.
+  #==============================================================================          
+  # Create an environment.
+  - action: UcdCreateEnvironment
+    application: "${u:coreTestApp1}"
+    name: "${u:coreTestEnv1}"
+    color: "RED"
+    description: "Test environment"
+    failIfExists: false
+    
+  #==============================================================================          
+  # Run the tests.
+  #==============================================================================          
+  # Create a snapshot to delete.
+  - action: UcdCreateSnapshot
+    application: "${u:coreTestApp1}"
+    name: "${u:coreTestSnapshotDelete}"
+    description: "Test snapshot."
+    failIfExists: false
+ 
+   # Delete a snapshot.
+  - action: UcdDeleteSnapshot
+    application: "${u:coreTestApp1}"
+    snapshot: "${u:coreTestSnapshotDelete}"
+
+  # Create a snapshot an environment.
+  - action: UcdCreateSnapshotOfEnvironment
+    application: "${u:coreTestApp1}"
+    environment: "${u:coreTestEnv1}"
+    name: "${u:coreTestSnapshotDelete}"
+    description: "Test snapshot."
+ 
+   # Delete a snapshot.
+  - action: UcdDeleteSnapshot
+    application: "${u:coreTestApp1}"
+    snapshot: "${u:coreTestSnapshotDelete}"
+
+  # Create a snapshot with latest.
+  - action: UcdCreateSnapshotWithLatest
+    application: "${u:coreTestApp1}"
+    name: "${u:coreTestSnapshotDelete}"
+    description: "Test snapshot."
+
+  # Lock snapshot versiosn.
+  - action: UcdLockSnapshotVersions
+    application: "${u:coreTestApp1}"
+    snapshot: "${u:coreTestSnapshotDelete}"
+
+  # Set snapshot configuration latest entries to current.
+  - action: UcdSetSnapshotConfiguration
+    application: "${u:coreTestApp1}"
+    snapshot: "${u:coreTestSnapshotDelete}"
+    type: SETLATESTENTRIESTOCURRENT
+    
+  # Reset snapshot configuration entries to latest.
+  - action: UcdSetSnapshotConfiguration
+    application: "${u:coreTestApp1}"
+    snapshot: "${u:coreTestSnapshotDelete}"
+    type: RESETALLTOLATEST
+     
+  # Lock the snapshot configuration.
+  - action: UcdLockSnapshotConfiguration
+    application: "${u:coreTestApp1}"
+    snapshot: "${u:coreTestSnapshotDelete}"
+    
+  # Get the snapshot configuration.
+  # TODO: This does not work.
+  - action: UcdGetSnapshotConfiguration
+    application: "${u:coreTestApp1}"
+    snapshot: "${u:coreTestSnapshotDelete}"
+ 
+  # Get the snapshot versions.
+  - action: UcdGetSnapshotVersions
+    application: "${u:coreTestApp1}"
+    snapshot: "${u:coreTestSnapshotDelete}"
+  - action: UcAdfLoop
+    actionInfo: false
+    items: ${u:actionReturn}
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Snapshot version %s"
+        values:
+          - ${u:item}
+    
+  # Create a snapshot status.
+  - action: UcdCreateStatus 
+    type: "SNAPSHOT" 
+    name: "${u:coreTestSnapshotStatus1}" 
+    color: "RED" 
+    description: "Snapshot status." 
+    failIfExists: false
+    
+   # Add the snapshot statuses.
+  - action: UcdAddSnapshotStatuses
+    application: "${u:coreTestApp1}"
+    snapshot: "${u:coreTestSnapshotDelete}"
+    statuses:
+      - "${u:coreTestSnapshotStatus1}"
+      
+  # Get the snapshot statuses.
+  - action: UcdGetSnapshotStatuses
+    application: "${u:coreTestApp1}"
+    snapshot: "${u:coreTestSnapshotDelete}"
+  - action: UcAdfLoop
+    actionInfo: false
+    items: ${u:actionReturn}
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Snapshot status %s"
+        values:
+          - ${u:item}
+
+  # Remove the snapshot statuses.
+  - action: UcdRemoveSnapshotStatuses
+    application: "${u:coreTestApp1}"
+    snapshot: "${u:coreTestSnapshotDelete}"
+    statuses:
+      - "${u:coreTestSnapshotStatus1}"
+      
+  # Get the next snapshot version number.
+  - action: UcdGetNextSnapshotVersionNumber
+    application: "${u:coreTestApp1}"
+    versionPattern: "UCADFCORETEST-1.0.*"

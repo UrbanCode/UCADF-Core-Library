@@ -1,0 +1,178 @@
+# ===============================================================================
+# This actions file runs application process action tests.
+# ===============================================================================
+propertyFiles:
+  - fileName: "UCADF-Package/Test/UcAdfCoreTestProperties.yml"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.properties"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.secure.properties"
+  
+actions:
+  #==============================================================================          
+  # Prepare for tests.
+  #==============================================================================          
+  - action: UcdDeleteApplication
+    application: "${u:coreTestApp1}"
+    deleteSnapshots: true
+    failIfNotFound: false
+  
+  - action: UcdDeleteApplication
+    application: "${u:coreTestApp2}"
+    deleteSnapshots: true
+    failIfNotFound: false
+  
+  #==============================================================================          
+  # Run the tests.
+  #==============================================================================          
+  # Create an application.
+  - action: UcdCreateApplication
+    name: "${u:coreTestApp1}"
+    description: "Test application."
+    failIfExists: true
+    
+  # Create an application process.
+  - action: UcdCreateApplicationProcess
+    application: "${u:coreTestApp1}"
+    name: "${u:coreTestAppProcess1}"
+    description: "Test process."
+    propDefs:
+      - name: "Property1"
+        type: "TEXT"
+      - name: "HttpSelectProperty"
+        type: "HTTP_SELECT"
+        httpUrl: "@sfUcdUrl@/cli/resource?parent=/Standard/WAS%20Management/Lists/Data%20Centers"
+        httpFormat: "JSON"
+        httpValuePath: "name"
+        httpAuthenticationType: "BASIC"
+        httpUsername: "PasswordIsAuthToken"
+        httpPassword: "@sfUcdAdminToken@"
+    requiredRole: "Administrator"
+    failIfExists: true
+    
+  # Update the application process required role.
+  - action: UcdUpdateApplicationProcess
+    application: "${u:coreTestApp1}"
+    process: "${u:coreTestAppProcess1}"
+    description: "Updated test process."
+    requiredRole: "Administrator"
+    
+  # Update the application process HTTP select property definition.
+  - action: UcdUpdateApplicationProcessPropDefHttpSelect
+    application: "${u:coreTestApp1}"
+    process: "${u:coreTestAppProcess1}"
+    name: "HttpSelectProperty"
+    label: "Test HTTP Select"
+    required: true
+    httpUrl: "${u:ucdUrl}/cli/resource?parent=/"
+    httpFormat: "JSON"
+    httpValuePath: "name"
+    httpAuthenticationType: "BASIC"
+    httpUsername: "PasswordIsAuthToken"
+    httpPassword: "${u:ucdAuthToken}"
+    
+  # Get the application process property definitions.
+  - action: UcdGetApplicationProocessPropDefs
+    application: "${u:coreTestApp1}"
+    process: "${u:coreTestAppProcess1}"
+    actionReturnPropertyName: applicationProcessPropDefs
+  - action: UcAdfLoop
+    actionInfo: false
+    items: ${u:applicationProcessPropDefs}
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Application process property definition %s"
+        values:
+          - ${u:item}
+    
+  # Get the application process.
+  - action: UcdGetApplicationProcess
+    application: "${u:coreTestApp1}"
+    process: "${u:coreTestAppProcess1}"
+    full: true
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "Application process %s"
+    values:
+      - ${u:actionReturn}
+      
+  # Get the list of application processes.
+  - action: UcdGetApplicationProcesses
+    application: "${u:coreTestApp1}"
+    full: true
+    actionReturnPropertyName: applicationProcesses
+  - action: UcAdfLoop
+    actionInfo: false
+    items: ${u:applicationProcesses}
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Application process %s"
+        values:
+          - ${u:item}
+          
+  # Create a second application.
+  - action: UcdCreateApplication
+    name: "${u:coreTestApp2}"
+    description: "Test application."
+    failIfExists: false
+    
+  # Create an application process in the second application.
+  - action: UcdCreateApplicationProcess
+    application: "${u:coreTestApp2}"
+    name: "${u:coreTestAppProcess2}"
+    description: "Test process."
+    failIfExists: false
+    
+  # Copy all of the processes from the first application to the second.
+  - action: UcdCopyApplicationProcesses
+    fromApplication: "${u:coreTestApp1}"
+    toApplication: "${u:coreTestApp2}"
+    processes:
+      - "${u:coreTestAppProcess2}"
+
+  # Synchronize all of the processes from the first application to the second.
+  - action: UcdSyncApplicationProcesses
+    fromApplication: "${u:coreTestApp1}"
+    toApplication: "${u:coreTestApp2}"
+    
+   # Get the list of application processes.
+  - action: UcdGetApplicationProcesses
+    application: "${u:coreTestApp2}"
+    actionReturnPropertyName: applicationProcesses
+  - action: UcAdfLoop
+    actionInfo: false
+    items: ${u:applicationProcesses}
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Application process %s"
+        values:
+          - ${u:item}
+
+  # Update the application process HTTP property definition.
+  - action: UcdUpdateApplicationProcessPropDefHttpSelect
+    application: "${u:coreTestApp2}"
+    process: "${u:coreTestAppProcess1}"
+    name: "testHttpDefSelect"
+    label: "Test HTTP Select"
+    required: true
+    httpUrl: "${u:ucdUrl}/cli/resource?parent=/"
+    httpFormat: "JSON"
+    httpValuePath: "name"
+    httpAuthenticationType: "BASIC"
+    httpUsername: "PasswordIsAuthToken"
+    httpPassword: "${u:ucdAuthToken}"
+    
+  # Create an application process in the second application.
+  - action: UcdCreateApplicationProcess
+    application: "${u:coreTestApp2}"
+    name: "${u:coreTestAppProcess2}"
+    description: "Test process."
+    failIfExists: true
+    
+  # Delete an application process.
+  - action: UcdDeleteApplicationProcess
+    application: "${u:coreTestApp2}"
+    process: "${u:coreTestAppProcess2}"
+    failIfNotFound: true
+    

@@ -1,0 +1,41 @@
+#!/bin/sh -e
+####################################################################################################
+# The ucadfclient wrapper for Linux.
+# To add additional UCADF packages set the UCADF_PACKAGES_CLASSPATH environment variable.
+####################################################################################################
+if [ -n "$JAVA_HOME" ];
+then
+	JAVACOMMAND="$JAVA_HOME\bin\java"
+	
+    SCRIPTNAME=$0
+    SCRIPTPATH=`dirname ${SCRIPTNAME}`
+    
+    if [ "." = "$SCRIPTPATH" ]
+    then
+       SCRIPTPATH=`pwd`
+    fi
+    
+	# The path to the the core jar.
+	UCADFJAR="$SCRIPTPATH/UCADF-Core-Library.jar"
+	
+    # Start with a Unix-style path for the log4j properties file.
+	LOG4JPROPS="$SCRIPTPATH/log4j.properties"
+
+    # If this is a bash shell running on Windows then adjust the paths.
+	if [ "$OS" == "Windows_NT" ]; then
+		UCADFJAR=`echo "$UCADFJAR" | sed -e 's/^\///' -e 's/\\//\\\\/g' -e 's/^./\0:/'`
+		UCADF_PACKAGES_CLASSPATH=`echo "$UCADF_PACKAGES_CLASSPATH" | sed -e 's/^\///' -e 's/\\//\\\\/g' -e 's/^./\0:/'`
+		LOG4JPROPS=`echo "$LOG4JPROPS" | sed -e 's/^\///' -e 's/\\//\\\\/g' -e 's/^./\0:/'`
+	fi
+	
+    if [ -f "$UCADFJAR" ];
+    then
+		"$JAVACOMMAND" -classpath "$UCADF_PACKAGES_CLASSPATH;$UCADFJAR" -Dlog4j.configuration=file:"$LOG4JPROPS" org.urbancode.ucadf.core.client.UcAdfClient $@
+	else
+		echo "$UCADFJAR file not found."
+		exit 1
+	fi
+else
+	echo "No JAVA_HOME has been set on your environment."
+	exit 1
+fi

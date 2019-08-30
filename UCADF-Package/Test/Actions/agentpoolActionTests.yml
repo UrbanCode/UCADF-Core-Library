@@ -1,0 +1,60 @@
+# ===============================================================================
+# This actions file runs agent pool action tests.
+# ===============================================================================
+propertyFiles:
+  - fileName: "UCADF-Package/Test/UcAdfCoreTestProperties.yml"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.properties"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.secure.properties"
+  
+actions:
+  #==============================================================================          
+  # Run the tests.
+  #==============================================================================          
+  # Get the list of agents to have the name of one to create a pool.
+  - action: UcdGetAgents
+    actionReturnPropertyName: agents
+    
+  # Create an agent pool.
+  - action: UcdCreateAgentPool
+    name: "${u:coreTestAgentPool1}"
+    agents:
+      - "${u:agents/0/name}"
+    failIfExists: false
+    
+  # Get the list of agent pools.
+  - action: UcdGetAgentPools
+    actionReturnPropertyName: agentPools
+    
+  # Show each agent pool.
+  - action: UcAdfLoop
+    actionInfo: false
+    items: ${u:agentPools}
+    actions:
+      - action: UcAdfComment
+        comment: "Agent pool %s"
+        values:
+          - ${u:item}
+
+  # Get information about an agent pool.
+  - action: UcdGetAgentPool
+    pool: "${u:coreTestAgentPool1}"
+
+  # Add team security to a specified agent pool.
+  - action: UcdAddAgentPoolToTeams
+    pool: "${u:coreTestAgentPool1}"
+    teams:
+      - team: "${u:coreTestTeam1}"
+
+  # Add team security to a specified agent pool.
+  - action: UcdAddAgentPoolToTeams
+    pool: "${u:coreTestAgentPool1}"
+    teams:
+      - team: "${u:coreTestTeam1}"
+
+  # Get a random agent from an agent pool.
+  - action: UcdGetPoolAgent
+    pool: "${u:coreTestAgentPool1}"
+    
+  # Delete an agent pool.
+  - action: UcdDeleteAgentPool
+    pool: "${u:coreTestAgentPool1}"

@@ -1,0 +1,24 @@
+# ===============================================================================
+# This actions file runs system action tests.
+# ===============================================================================
+propertyFiles:
+  - fileName: "UCADF-Package/Test/UcAdfCoreTestProperties.yml"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.properties"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.secure.properties"
+  
+actions:
+  #==============================================================================          
+  # Run the tests.
+  #==============================================================================          
+  # Get the system configuration.
+  - action: UcdGetSystemConfiguration
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "System configuration %s"
+    values:
+      - ${u:actionReturn}
+
+  - action: UcdUpdateSystemConfiguration
+    configMap:
+      messageOfTheDay: "This is the message of the day X."
+      

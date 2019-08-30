@@ -1,0 +1,63 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<name>UCADF-Core-Package</name>
+	<groupId>org.urbancode.ucadf.core</groupId>
+	<artifactId>UCADF-Core-Package</artifactId>
+	<version>0.0.1</version>
+
+	<url>http://maven.apache.org</url>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+    <!-- Configuration required to deploy artifacts to a Maven repository. -->
+	<distributionManagement>
+		<repository>
+			<id>${MVN_REPO_ID}</id>
+			<name>${MVN_REPO_NAME}</name>
+			<url>${MVN_REPO_URL}</url>
+		</repository>
+		<snapshotRepository>
+			<id>${MVN_REPO_ID}</id>
+			<name>${MVN_REPO_NAME}</name>
+			<url>${MVN_REPO_URL}</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<build> 
+		<plugins>
+            <!-- Skip testing since it's not required for packaging. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+
+			<!-- Create a zip file with the UCADF configuration. -->
+			<plugin>
+			    <artifactId>maven-assembly-plugin</artifactId>
+			    <configuration>
+			        <finalName>UCADF-Core-Package-${project.version}</finalName>
+			  		<appendAssemblyId>false</appendAssemblyId>
+			        <descriptors>
+			            <descriptor>${basedir}/assembly.xml</descriptor>
+			        </descriptors>
+			    </configuration>
+			    <executions>
+			        <execution>
+			            <id>make-assembly</id>
+			            <phase>package</phase>
+			            <goals>
+			                <goal>single</goal>
+			            </goals>
+			        </execution>
+   			    </executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

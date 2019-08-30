@@ -1,0 +1,14 @@
+package org.urbancode.ucadf.core.model.ucd.snapshotConfiguration
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import org.urbancode.ucadf.core.model.ucd.applicationProcess.UcdApplicationProcessInventoryManagementTypeEnum
+import org.urbancode.ucadf.core.model.ucd.applicationProcess.UcdApplicationProcessOfflineAgentHandlingEnum
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+class UcdSnapshotConfigurationApplicationProcess extends UcdSnapshotConfigurationProcess implements UcdSnapshotConfigurationTypeByClassName {
+	public final static String CLASS_NAME = "ApplicationProcess"
+	
+	UcdApplicationProcessInventoryManagementTypeEnum inventoryManagementType
+	UcdApplicationProcessOfflineAgentHandlingEnum offlineAgentHandling
+	Boolean deleted
+}

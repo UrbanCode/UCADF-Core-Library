@@ -1,0 +1,60 @@
+
+# This actions file runs lock action tests.
+# ===============================================================================
+propertyFiles:
+  - fileName: "UCADF-Package/Test/UcAdfCoreTestProperties.yml"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.properties"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.secure.properties"
+  
+actions:
+  #==============================================================================          
+  # Run the tests.
+  #==============================================================================          
+  # Run a generic process that acquires a lock.
+  - action: UcdRunGenericProcess
+    process: "${u:coreTestGenericProcessLockTest}"
+    resource: "${u:coreTestTopResource}/Agent"
+    properties:
+      - name: "lockName"
+        value: "${u:coreTestLock1}"
+    waitForProcess: false
+  - action: UcAdfComment
+    comment: "Generic process %s."
+    values:
+      - ${u:actionReturn}
+      
+  # Get all locks.
+  - action: UcdGetLocks
+  - action: UcAdfLoop
+    actionInfo: false
+    items: ${u:actionReturn}
+    actions:
+      - action: UcAdfComment
+        comment: "Lock %s."
+        values:
+          - ${u:item}
+
+  # Get locks that match.
+  - action: UcdGetLocks
+    match: "^${u:coreTestLock1}$"
+  - action: UcAdfLoop
+    actionInfo: false
+    items: ${u:actionReturn}
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Lock %s."
+        values:
+          - ${u:item}
+
+  # Get all locks.
+  - action: UcdGetLocks
+  - action: UcAdfLoop
+    actionInfo: false
+    items: ${u:actionReturn}
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Lock %s."
+        values:
+          - ${u:item}
