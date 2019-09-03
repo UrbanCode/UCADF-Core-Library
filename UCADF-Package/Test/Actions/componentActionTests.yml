@@ -52,7 +52,7 @@ actions:
   # Get the list of components.
   - action: UcdGetComponents
     actionReturnPropertyName: components
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:components}
     actions:
@@ -106,7 +106,7 @@ actions:
   - action: UcdGetComponents
     tag: "${u:componentTag}"
     actionReturnPropertyName: taggedComponents
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:taggedComponents}
     actions:
@@ -120,7 +120,7 @@ actions:
   - action: UcdGetTagsOnComponent
     component: "${u:coreTestComp1}"
     actionReturnPropertyName: componentTags
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:componentTags}
     actions:
@@ -158,7 +158,7 @@ actions:
   - action: UcdGetComponentProperties
     component: "${u:coreTestComp1}"
     actionReturnPropertyName: componentProperties
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:componentProperties}
     actions:

@@ -81,7 +81,7 @@ actions:
     comment: "Version property %s"
     values:
       - ${u:versionProperties/UCADFCORETEST-Property1}
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:versionProperties}
     actions:
@@ -112,7 +112,7 @@ actions:
   - action: UcdGetComponentVersions
     component: "${u:coreTestComp1}"
     actionReturnPropertyName: versions
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:versions}
     actions:
@@ -133,3 +133,37 @@ actions:
   - action: UcdDeleteVersion
     component: "${u:coreTestComp1}"
     version: "${u:coreTestVersionDelete}"
+
+  # Bulk add 100 versions.
+  - action: UcAdfCounterLoop
+    counterBegin: 1
+    counterChange: 1
+    counterEnd: 100
+    actionInfo: false
+    actions:
+      - action: UcdCreateVersion
+        component: "${u:coreTestComp1}"
+        name: 'Eval(import java.text.SimpleDateFormat; new SimpleDateFormat("yyyyMMddHHmmssSSSS").format(new Date()))'
+        description: "Test version."
+        failIfExists: false
+
+  # Get versions using page loop.
+  - action: UcAdfPageLoop
+    actionInfo: false
+    rowsPerPage: 20
+    actions:
+      - action: UcdGetVersions
+        actionInfo: false
+        component: "${u:coreTestComp1}"
+        actionReturnPropertyName: versions
+      - action: UcAdfItemsLoop
+        actionInfo: false
+        items: ${u:versions}
+        actions:
+          - action: UcAdfComment
+            actionInfo: false
+            comment: "Component [%s] Version [%s] Page [%s]"
+            values:
+              - ${u:item/component/name}
+              - ${u:item/name}
+              - ${u:pageLoopControl}

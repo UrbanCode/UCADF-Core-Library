@@ -59,7 +59,7 @@ actions:
     actionReturnPropertyName: environmentProperties
     
   # Show each environment property.
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     items: ${u:environmentProperties}
     actions:
       - action: UcAdfComment
@@ -92,7 +92,7 @@ actions:
     actionReturnPropertyName: environmentBaseResources
     
   # Show each base resource.
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     items: ${u:environmentBaseResources}
     actions:
       - action: UcAdfComment
@@ -133,7 +133,7 @@ actions:
   - action: UcdGetEnvironments
     application: "${u:coreTestApp1}"
     actionReturnPropertyName: environments
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:environments}
     actions:
@@ -161,7 +161,7 @@ actions:
   - action: UcdGetEnvironmentInventoryByComponent
     application: "${u:coreTestApp1}"
     environment: "${u:coreTestEnv1}"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     items: ${u:actionReturn}
     actions:
       - action: UcAdfComment
@@ -173,7 +173,7 @@ actions:
   - action: UcdGetEnvironmentInventoryByResource
     application: "${u:coreTestApp1}"
     environment: "${u:coreTestEnv1}"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     items: ${u:actionReturn}
     actions:
       - action: UcAdfComment

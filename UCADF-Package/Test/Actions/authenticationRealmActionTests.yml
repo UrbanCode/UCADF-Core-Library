@@ -23,7 +23,7 @@ actions:
   # Get the list of authentication realms.
   - action: UcdGetAuthenticationRealms
     actionReturnPropertyName: "authenticationRealms"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:authenticationRealms}
     actions:

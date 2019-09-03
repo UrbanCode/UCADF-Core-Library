@@ -33,7 +33,7 @@ actions:
   - action: UcdGetAuthTokens
     user: "${u:coreTestUserAuthToken}"
     actionReturnPropertyName: "AuthTokens"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:AuthTokens}
     actions:

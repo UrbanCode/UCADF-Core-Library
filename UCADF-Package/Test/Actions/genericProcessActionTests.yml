@@ -30,7 +30,7 @@ actions:
   # Get generic processes.
   - action: UcdGetGenericProcesses
     actionReturnPropertyName: genericProcesses
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     items: ${u:genericProcesses}
     actions:
       - action: UcAdfComment

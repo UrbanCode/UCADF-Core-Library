@@ -20,7 +20,7 @@ actions:
   - action: UcdGetSecurityTypePermissions
     returnAs: MAPBYNAME
     actionReturnPropertyName: "securityTypePermissions"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:securityTypePermissions}
     itemKeyProperty: "securityTypeKey"
@@ -32,7 +32,7 @@ actions:
         values:
           - ${u:securityTypeKey}
       # Iterate the security type permissions.
-      - action: UcAdfLoop
+      - action: UcAdfItemsLoop
         actionInfo: false
         items: ${u:item}
         itemKeyProperty: "permissionKey"
@@ -65,7 +65,7 @@ actions:
   # Get the list of roles.
   - action: UcdGetRoles
     actionReturnPropertyName: "roles"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:roles}
     itemProperty: "role"
@@ -84,7 +84,7 @@ actions:
   - action: UcdGetSecurityTypePermissions
     returnAs: MAPBYNAME
     actionReturnPropertyName: "securityTypePermissions"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:securityTypePermissions}
     itemKeyProperty: "securityTypeKey"
@@ -96,7 +96,7 @@ actions:
         values:
           - ${u:securityTypeKey}
       # Iterate the security type permissions.
-      - action: UcAdfLoop
+      - action: UcAdfItemsLoop
         actionInfo: false
         items: ${u:item}
         itemKeyProperty: "permissionKey"

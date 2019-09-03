@@ -23,7 +23,10 @@ class UcAdfActionsRunner {
 
 	// List of actions that defer property evaluation of their child actions until they run.
 	private final static List<String> DEFERRED_PROPERTY_ACTIONS = [
-		"UcAdfLoop",
+		"UcAdfCounterLoop",
+		"UcAdfItemsLoop",
+		"UcAdfPageLoop",
+		"UcAdfWaitLoop",
 		"UcAdfWhen"
 	]
 		
@@ -255,7 +258,7 @@ class UcAdfActionsRunner {
 
 		// If there's an action match value then evaluate it to determine if the action should be run.
 		if (action.getWhen().toString().equals(false.toString())) {
-			println "Skipping action [$actionName}] when [${action.getWhen()}]."
+			log.debug("Skipping action [$actionName}] when [${action.getWhen()}].")
 		} else {
 			// Show the action properties.
 			action.showProperties()

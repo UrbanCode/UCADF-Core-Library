@@ -6,6 +6,7 @@ package org.urbancode.ucadf.core.action.ucd.application
 import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.Response
 
+import org.urbancode.ucadf.core.action.ucadf.general.UcAdfUpdatePropertiesFile
 import org.urbancode.ucadf.core.action.ucd.applicationProcess.UcdGetApplicationProcesses
 import org.urbancode.ucadf.core.action.ucd.applicationProcess.UcdUpdateApplicationProcess
 import org.urbancode.ucadf.core.action.ucd.role.UcdGetRoles
@@ -39,13 +40,19 @@ class UcdExportApplication extends UcAdfAction {
 
 		// Initialize the temporary working directories.
 		String actionsFileName = ""
+		String propertiesFileName = ""
 		File exportFile
 		File actionsFile
+		File propertiesFile
 		
 		if (fileName) {
-			actionsFileName = fileName.replaceAll(/\..*?$/, "") + ".actions.json"
 			exportFile = new File(fileName)
+			
+			actionsFileName = fileName.replaceAll(/\..*?$/, "") + ".actions.json"
 			actionsFile = new File(actionsFileName)
+			
+			propertiesFileName = fileName.replaceAll(/\..*?$/, "") + ".properties"
+			propertiesFile = new File(propertiesFileName)
 			
 			for (file in [ exportFile, actionsFile ]) {
 				if (file.getParentFile()) {
@@ -119,6 +126,20 @@ class UcdExportApplication extends UcAdfAction {
 			exportFile.write(ucdApplicationImport.toJsonString())
 		}
 		
-		return new UcdExport(ucdApplicationImport)
+		UcdExport ucdExport = new UcdExport(ucdApplicationImport)
+
+		// Write the keystore names and UCD version to the application properties file.		
+		if (propertiesFileName) {
+			logInfo("Saving application [$application] export properties to file [$propertiesFileName].")
+			actionsRunner.runAction([
+				action: UcAdfUpdatePropertiesFile.getSimpleName(),
+				fileName: propertiesFileName,
+			    propertyValues: [
+					keystoreNames: ucdExport.getKeystoreNames().join(","),
+					ucdVersion: ucdSession.getUcdVersion()
+				]
+			])
+		}
+		return ucdExport
 	}
 }

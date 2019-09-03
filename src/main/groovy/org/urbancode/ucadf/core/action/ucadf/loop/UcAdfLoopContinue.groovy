@@ -1,7 +1,7 @@
 /**
  * This action is used to skip the remainder of a loop and go to the next iteration.
  */
-package org.urbancode.ucadf.core.action.ucadf.general
+package org.urbancode.ucadf.core.action.ucadf.loop
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 

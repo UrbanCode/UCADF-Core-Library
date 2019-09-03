@@ -23,7 +23,7 @@ actions:
   # Get the list of authorization realms.
   - action: UcdGetAuthorizationRealms
     actionReturnPropertyName: "AuthorizationRealms"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:AuthorizationRealms}
     actions:
