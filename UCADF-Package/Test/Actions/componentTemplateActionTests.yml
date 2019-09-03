@@ -45,7 +45,7 @@ actions:
     actionReturnPropertyName: componentTemplates
     
   # Show each component template.
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     items: ${u:componentTemplates}
     actions:
       - action: UcAdfComment
@@ -104,7 +104,7 @@ actions:
     actionReturnPropertyName: componentTemplateProperties
     
   # Show each component property.
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     items: ${u:componentTemplateProperties}
     actions:
       - action: UcAdfComment

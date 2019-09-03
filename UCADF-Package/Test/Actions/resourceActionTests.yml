@@ -180,7 +180,7 @@ actions:
   # Get resource properties.
   - action: UcdGetResourceProperties
     resource: "${u:coreTestTopResource}"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:actionReturn}
     actions:
@@ -193,7 +193,7 @@ actions:
   # Get child resources.
   - action: UcdGetChildResources
     resource: "${u:coreTestTopResource}"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:actionReturn}
     actions:
@@ -206,7 +206,7 @@ actions:
   - action: UcdGetChildResources
     resource: "${u:coreTestTopResource}"
     tag: "${u:coreTestResourceTag1}"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:actionReturn}
     actions:
@@ -241,7 +241,7 @@ actions:
     resource: "${u:coreTestTopResource}"
     property: "${u:coreTestProperty1}"
     
-  - action: UcAdfLoop
+  - action: UcAdfWaitLoop
     actionInfo: false
     waitIntervalSecs: 3
     maxWaitSecs: 20
@@ -259,7 +259,7 @@ actions:
         comment: "Property value=%s try=%s"
         values:
           - ${u:propertyValue}
-          - ${u:item/currentTry}
+          - ${u:waitLoopControl/currentTry}
 
       # If the property value has been set then break.          
       - action: UcAdfLoopBreak
@@ -267,11 +267,11 @@ actions:
       - action: UcAdfComment
         comment: "maxwaitSecs=%s"
         values:
-          - ${u:item/maxWaitSecs}
+          - ${u:waitLoopControl/maxWaitSecs}
 
       # If the 2nd try then set the resource property.        
       - action: UcdSetResourceProperties
-        when: 'Eval(${u:item/currentTry} == 2)'
+        when: 'Eval(${u:waitLoopControl/currentTry} == 2)'
         resource: "${u:coreTestTopResource}"
         properties:
           - name: "${u:coreTestProperty2}"

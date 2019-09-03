@@ -43,7 +43,7 @@ actions:
   # Get the list of applications.
   - action: UcdGetApplications
     actionReturnPropertyName: applications
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:applications}
     actions:
@@ -79,7 +79,7 @@ actions:
   - action: UcdGetComponentsInApplication
     application: "${u:coreTestApp1}"
     actionReturnPropertyName: applicationComponents
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:applicationComponents}
     actions:
@@ -98,7 +98,7 @@ actions:
   - action: UcdGetEnvironments
     application: "${u:coreTestApp1}"
     actionReturnPropertyName: applicationEnvironments
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:applicationEnvironments}
     actions:
@@ -130,7 +130,7 @@ actions:
   - action: UcdGetApplicationProperties
     application: "${u:coreTestApp1}"
     actionReturnPropertyName: applicationProperties
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:applicationProperties}
     actions:
@@ -153,7 +153,7 @@ actions:
   - action: UcdGetSnapshotsInApplication
     application: "${u:coreTestApp1}"
     actionReturnPropertyName: applicationSnapshots
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:applicationSnapshots}
     actions:

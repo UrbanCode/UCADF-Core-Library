@@ -4,6 +4,12 @@
 package org.urbancode.ucadf.core.model.ucd.agent
 
 enum UcdAgentStatusEnum {
+	/** The agent is connecting. */
+	CONNECTING,
+	
+	/** The agent is in an error condition. */
+	ERROR,
+	
 	/** The agnet is online. */
 	ONLINE,
 	
@@ -11,7 +17,10 @@ enum UcdAgentStatusEnum {
 	OFFLINE,
 	
 	/** The agent should be upgraded. */
-	UPGRADE
+	UPGRADE,
+	
+	/** The agent upgrade is recommended. */
+	UPGRADE_RECOMMND
 	
 	// TODO: Any additional statuses?
 }

@@ -38,8 +38,6 @@ class UcdGetComponentVersions extends UcAdfAction {
 	
 		List<UcdVersion> ucdVersions = []
 		
-//		WebTarget target = ucdSession.getUcdWebTarget().path("/rest/deploy/component/{component}/versions/false")
-//			.resolveTemplate("component", component)
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/component/versions")
 			.queryParam("component", component)
 			.queryParam("inactive", inactive)

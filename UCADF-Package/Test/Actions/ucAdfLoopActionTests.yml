@@ -1,5 +1,5 @@
 # ===============================================================================
-# This actions file runs agent relay action tests.
+# This actions file runs version action tests.
 # ===============================================================================
 propertyFiles:
   - fileName: "UCADF-Package/Test/UcAdfCoreTestProperties.yml"
@@ -10,30 +10,32 @@ actions:
   #==============================================================================          
   # Run the tests.
   #==============================================================================          
-  # Get the list of agent relays.
-  - action: UcdGetAgentRelays
-    actionReturnPropertyName: agentRelays
-  - action: UcAdfItemsLoop
+  # Wait loop test.
+  - action: UcAdfWaitLoop
     actionInfo: false
-    items: ${u:agentRelays}
+    waitIntervalSecs: 1
+    maxWaitSecs: 600 
+    maxTries: 5
     actions:
       - action: UcAdfComment
         actionInfo: false
-        comment: "Agent relay %s"
+        comment: "Wait loop control %s"
         values:
-          - ${u:item}
+          - ${u:waitLoopControl}
+      - action: UcAdfLoopBreak
+        actionInfo: false
+        when: 'Eval(${u:waitLoopControl/remainingTries} < 3)'
 
-  # Add team security to a specified agent relay.
-  - action: UcdAddAgentRelayToTeams
-    relay: "${u:agentRelays/0/name}"
-    teams:
-      - team: "${u:coreTestTeam1}"
-
-  # Get information about an agent relay.
-  - action: UcdGetAgentRelay
-    relay: "${u:agentRelays/0/name}"
-  - action: UcAdfComment
+  # Counter loop test.
+  - action: UcAdfCounterLoop
     actionInfo: false
-    comment: "Agent relay %s"
-    values:
-      - ${u:actionReturn}
+    counterBegin: 1 
+    counterChange: 1 
+    counterEnd: 2 
+    waitIntervalSecs: 1
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Counter control %s"
+        values:
+          - ${u:counterLoopControl}

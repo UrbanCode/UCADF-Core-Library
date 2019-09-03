@@ -15,6 +15,9 @@ actions:
   # Run the tests.
   #==============================================================================          
   - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/ucAdfLoopActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
     fileName: "${u:testActionsDir}/agentActionTests.yml"
     
   - action: UcAdfRunActionsFromFile
@@ -102,7 +105,7 @@ actions:
     
   - action: UcAdfRunActionsFromFile
     fileName: "${u:testActionsDir}/versionActionTests.yml"
-
+    
   - action: UcAdfComment
     actionInfo: false
     comment: "!!! ALL TESTS COMPLETED !!!"

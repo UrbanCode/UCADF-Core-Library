@@ -17,7 +17,7 @@ import org.urbancode.ucadf.core.model.ucd.tag.UcdTag
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
-//@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 class UcdResource extends UcdSecurityTypeObject {
 	/** The path delimiter. */
 	public final static String PATHDELIMITER = "/"
@@ -103,6 +103,9 @@ class UcdResource extends UcdSecurityTypeObject {
 	/** The associated agent pool. */
 	UcdAgentPool agentPool
 
+	/** This is returned by get agent resources. TODO: What is it? **/
+	UcdResource resource
+	
 	// Constructors.
 	UcdResource() {
 	}

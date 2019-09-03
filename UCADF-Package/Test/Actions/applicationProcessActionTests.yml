@@ -74,7 +74,7 @@ actions:
     application: "${u:coreTestApp1}"
     process: "${u:coreTestAppProcess1}"
     actionReturnPropertyName: applicationProcessPropDefs
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:applicationProcessPropDefs}
     actions:
@@ -100,7 +100,7 @@ actions:
     application: "${u:coreTestApp1}"
     full: true
     actionReturnPropertyName: applicationProcesses
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:applicationProcesses}
     actions:
@@ -139,7 +139,7 @@ actions:
   - action: UcdGetApplicationProcesses
     application: "${u:coreTestApp2}"
     actionReturnPropertyName: applicationProcesses
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:applicationProcesses}
     actions:

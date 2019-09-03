@@ -83,7 +83,7 @@ actions:
   - action: UcdGetSnapshotVersions
     application: "${u:coreTestApp1}"
     snapshot: "${u:coreTestSnapshotDelete}"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:actionReturn}
     actions:
@@ -112,7 +112,7 @@ actions:
   - action: UcdGetSnapshotStatuses
     application: "${u:coreTestApp1}"
     snapshot: "${u:coreTestSnapshotDelete}"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:actionReturn}
     actions:

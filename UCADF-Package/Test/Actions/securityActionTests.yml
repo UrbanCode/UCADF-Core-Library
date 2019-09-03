@@ -13,7 +13,7 @@ actions:
   # For each security type, get the specific security type.
   - action: UcdGetSecurityTypes
     actionReturnPropertyName: "securityTypes"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:securityTypes}
     itemProperty: "securityType"
@@ -36,7 +36,7 @@ actions:
       
   # Get the list of the security types.
   - action: UcdGetSecurityTypes
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:actionReturn}
     itemProperty: "securityType"
@@ -50,7 +50,7 @@ actions:
   # Get a list of the security type permissions.
   - action: UcdGetSecurityTypePermissions
     returnAs: MAPBYID
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:actionReturn}
     actions:
@@ -67,7 +67,7 @@ actions:
   # Create a security subtype for each security type.
   - action: UcdGetSecurityTypes
     actionReturnPropertyName: "securityTypes"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:securityTypes}
     itemProperty: "securityType"
@@ -87,7 +87,7 @@ actions:
   # For each security type get the specific security subtype.
   - action: UcdGetSecurityTypes
     actionReturnPropertyName: "securityTypes"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:securityTypes}
     itemProperty: "securityType"
@@ -112,7 +112,7 @@ actions:
       
   # Get a list of the security subtypes.
   - action: UcdGetSecuritySubtypes
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:actionReturn}
     itemProperty: "securitySubtype"
@@ -126,7 +126,7 @@ actions:
   # For each security type delete the specified security subtype.
   - action: UcdGetSecurityTypes
     actionReturnPropertyName: "securityTypes"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:securityTypes}
     itemProperty: "securityType"

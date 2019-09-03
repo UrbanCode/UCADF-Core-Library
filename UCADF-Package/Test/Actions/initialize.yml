@@ -19,7 +19,7 @@ actions:
   # Delete the test applications.
   - action: UcdGetApplications
     match: "^UCADFCORETEST.*"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:actionReturn}
     actions:
@@ -30,7 +30,7 @@ actions:
   # Delete the test components.    
   - action: UcdGetComponents
     match: "^UCADFCORETEST.*"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:actionReturn}
     actions:
@@ -41,7 +41,7 @@ actions:
   # Delete the test component templates.    
   - action: UcdGetComponentTemplates
     match: "^UCADFCORETEST.*"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:actionReturn}
     actions:
@@ -52,7 +52,7 @@ actions:
   # Delete the test generic processes.  
   - action: UcdGetGenericProcesses
     match: "^UCADFCORETEST.*"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:actionReturn}
     actions:
@@ -68,7 +68,7 @@ actions:
   # Delete the test test users.    
   - action: UcdGetUsers
     match: "^UCADFCORETEST.*"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:actionReturn}
     actions:
@@ -79,7 +79,7 @@ actions:
   # Delete the test test teams.
   - action: UcdGetTeams
     match: "^UCADFCORETEST.*"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:actionReturn}
     actions:
@@ -90,7 +90,7 @@ actions:
   # Delete the test test roles.
   - action: UcdGetRoles
     match: "^UCADFCORETEST.*"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:actionReturn}
     actions:
@@ -101,7 +101,7 @@ actions:
   # Delete the test test security subtypes.
   - action: UcdGetSecuritySubtypes
     match: "^UCADFCORETEST.*"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:actionReturn}
     actions:

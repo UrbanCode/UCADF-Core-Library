@@ -21,7 +21,7 @@ actions:
   - action: UcdGetComponentConfigTemplates
     component: "${u:coreTestCompDelete}"
     actionReturnPropertyName: componentConfigTemplates
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:componentConfigTemplates}
     actions:

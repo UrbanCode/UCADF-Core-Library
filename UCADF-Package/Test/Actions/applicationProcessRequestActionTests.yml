@@ -201,7 +201,7 @@ actions:
     requestId: "${u:requestStatus/requestId}"
     returnAs: MAP
     actionReturnPropertyName: "requestVersions"
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:requestVersions}
     actions:

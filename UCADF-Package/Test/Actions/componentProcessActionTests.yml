@@ -16,7 +16,7 @@ actions:
     actionReturnPropertyName: componentProcesses
     
   # Show each component process.
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     items: ${u:componentProcesses}
     actions:
       - action: UcAdfComment

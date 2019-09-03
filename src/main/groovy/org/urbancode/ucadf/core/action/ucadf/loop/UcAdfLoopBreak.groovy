@@ -1,7 +1,7 @@
 /**
  * This action is used to break out of the current loop.
  */
-package org.urbancode.ucadf.core.action.ucadf.general
+package org.urbancode.ucadf.core.action.ucadf.loop
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 

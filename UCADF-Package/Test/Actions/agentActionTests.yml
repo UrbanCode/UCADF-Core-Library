@@ -30,7 +30,7 @@ actions:
   # Get the list of agents.
   - action: UcdGetAgents
     actionReturnPropertyName: agents
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:agents}
     actions:

@@ -30,7 +30,7 @@ actions:
       - ${u:actionReturn}
     
   - action: UcdGetUsers
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     items: ${u:actionReturn}
     actions:
       - action: UcAdfComment

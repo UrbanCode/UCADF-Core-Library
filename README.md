@@ -7,7 +7,7 @@ The [UCADF-Core-Plugin](https://github.com/UrbanCode/UCADF-Core-Plugin) and [UCA
 # Key Features
 
 ## Abstraction/Isolation Layer
-UrbanCode provides an extensive set of both documented, and undocumented RESTful APIs. The behavior of these APIs can change with each UrbanCode release as the production functionality is changed or new functionality is added.
+UrbanCode provides an extensive set of both documented, and undocumented RESTful APIs. The behavior of these APIs can change with each UrbanCode release as the product functionality is changed or new functionality is added.
 
 The UCADF actions provide an abstraction/isolation layer that has the logic to perform a given action, e.g. create a component, predictably across versions while being backward, and forward compatible.
 
@@ -17,7 +17,7 @@ While UrbanCode may provide an extensive set of RESTful APIs, many UrbanCode adm
 The UCADF provides actions as a DSL that allows administrators to define a set of actions to perform using a YAML syntax.
 
 ## Complex Action Sets
-The UrbanCode UI has steps that allow administrators to create a process to can manage UrbanCode entities, e.g. create an application and set the application security, create a component and set the component security, create resources for the applications/components and set the security, create environments and set the security, etc. However, these processes can be time-consuming to create and may take a long time to run when managing a lot of entities as each step runs separately on an agent.
+The UrbanCode UI has steps that allow administrators to create processes to manage UrbanCode entities, e.g. create an application and set the application security, create a component and set the component security, create resources for the applications/components and set the security, create environments and set the security, etc. However, these processes can be time-consuming to create and may take a long time to run when managing a lot of entities as each step runs separately on an agent.
 
 The UCADF provides the ability to define a large set of complex task actions as YAML and run those as one plugin step.
 
@@ -27,7 +27,7 @@ In larger companies there can be a need to have multiple UrbanCode instances whi
 The UCADF provides actions to automate many of the tasks that would normally be done manually.
 
 ## UrbanCode Application Deployment Framework Life Cycle
-An application deployment framework is a term used to refer to a package of UrbanCode processes and actions used to manage entities in UrbanCode and run UrbanCode processes in a predefined way for a given application type. This allows the package of functionality to be developed, tested, and released with more predictable outcomes.
+The term "application deployment framework" refers to a package of UrbanCode processes and actions used to manage entities in UrbanCode and run UrbanCode processes in a predefined way for a given application type. This allows the package of functionality to be developed, tested, and released with more predictable outcomes.
 
 The UCADF provides actions that to manage these UCADF packages and move them from one UrbanCode instance to another.
 
@@ -159,14 +159,19 @@ Would output:<br>
 My comment: This is my comment.
 ```
 
-### UcAdfLoop/UcAdfBreak/UcAdfContinue
-Iterates over the items (may be list or map) and performs the specified actions. By default the ***"item"*** property value is set for every iteration but that property name may be overridden by specifying an ***"itemProperty"*** value.<br>
-A optional "when" value be specified to determine if the loop should be performed.<br>
-The ***UcAdfContinue*** action can be used as a child action of a loop to determine when certain items should be skipped.<br>
-The ***UcAdfBreak*** action can be used as a child action of a loop to determine when the loop should be terminated.
+### UCADF Loops
+The UCADF supports a variety of loop actions. These loop actions can all use the following features.
+- The ***UcAdfContinue*** action can be used as a child action of a loop to determine when certain items should be skipped.
+
+- The ***UcAdfBreak*** action can be used as a child action of a loop to determine when the loop should be terminated.
+
+- An optional ***when*** value be specified to determine if the loop should be performed.
+
+#### UcAdfItemsLoop
+This loop type iterates over the items (may be list or map) and performs the specified actions. By default the ***"item"*** property value is set for every iteration but that property name may be overridden by specifying an ***"itemProperty"*** value.
 ```
 actions:
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     when: 'Eval(true)'
     waitIntervalSecs: 2
@@ -199,9 +204,8 @@ Skipping action [UcAdfLoopBreak}] when [false].
 My item key is 2 and item is MyItem2.
 Skipping action [UcAdfLoopContinue}] when [false].
 ```
-
-#### Wait Loops (Polling)
-The UcAdfLoop action may also be used for a wait (polling) loop instead of processing a list of items. You may specify the following combination of properties:
+#### UcAdfWaitLoop
+This loop type can be used for a wait (polling) loop. You may specify the following combination of properties:
 * waitIntervalSecs and maxWaitSecs
 * waitintervalSecs, maxWaitSecs, and maxTries
 * waitIntervalsecs and maxTries
@@ -210,7 +214,7 @@ The UcAdfLoop action may also be used for a wait (polling) loop instead of proce
 Example:
 ```
 actions:
-  - action: UcAdfLoop
+  - action: UcAdfWaitLoop
     waitIntervalSecs: 2 
     maxWaitSecs: 600 
     maxTries: 10 
@@ -219,6 +223,62 @@ actions:
         when: 'Some condition here'
 ```
 The above would retry every 2 seconds for a maximum of 600 seconds or 10 tries, whichever comes first. The UcAdfLoopBreak is used to exit the loop when the desired condition exists.
+
+#### UcAdfCounterLoop
+The UcAdfCounterLoop action may also be used for a counter loop.
+
+Example:
+```
+actions:
+  - action: UcAdfCounterLoop
+    counterBegin: 1 
+    counterChange: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Counter control %s"
+        values:
+          - ${u:counterLoopControl}
+```
+The above would output.
+```
+Counter control {counterBegin=1, counterChange=1, counterEnd=2, counterValue=1}
+Counter control {counterBegin=1, counterChange=1, counterEnd=2, counterValue=2}
+```
+
+#### UcAdfPageLoop
+The UcAdfPageLoop action may also be used for a page loop needed for certain actions that can return a large number of items. The loop defines a property name that stores that page control information throughout the invocation of the child actions.
+
+Example:
+```
+actions:
+  - action: UcAdfPageLoop
+    actionInfo: false
+    rowsPerPage: 20
+    actions:
+      - action: UcdGetVersions
+        actionInfo: false
+        component: "${u:coreTestComp1}"
+        actionReturnPropertyName: versions
+      - action: UcAdfItemsLoop
+        actionInfo: false
+        items: ${u:versions}
+        actions:
+          - action: UcAdfComment
+            actionInfo: false
+            comment: "Component [%s] Version [%s] Page [%s]"
+            values:
+              - ${u:item/component/name}
+              - ${u:item/name}
+              - ${u:pageLoopControl/pageNumber}
+```
+The above would output.
+```
+Component [UCADFCORETEST-Comp1] Version [201909021402560343] Page [{rowsPerPage=20, pageNumber=1, rangeStart=0, rangeEnd=20, size=98, pages=5}]
+Component [UCADFCORETEST-Comp1] Version [201909021402560929] Page [{rowsPerPage=20, pageNumber=1, rangeStart=0, rangeEnd=20, size=98, pages=5}]
+...
+```
 
 ### UcAdfRunActionsFromFile
 This action will run actions contained in a file.
@@ -258,7 +318,7 @@ Usage note: This action may be used to set multiple properties. If one propertyâ
 Actions may be nested.
 ```
 actions:
-  - action: UcAdfLoop
+  - action: UcAdfItemsLoop
     actionInfo: false
     items:
       - "MyItem1"
@@ -269,7 +329,7 @@ actions:
         actionInfo: false
         when: 'Eval("MyItem1".equals("${u:myItem}"))'
         actions:
-          - action: UcAdfLoop
+          - action: UcAdfItemsLoop
             actionInfo: false
             items:
               - "MyChildItem1"
