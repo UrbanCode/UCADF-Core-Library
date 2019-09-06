@@ -12,6 +12,8 @@ import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 import groovy.json.JsonBuilder
 
 class UcdSetComponentProcessRequestProperties extends UcAdfAction {
@@ -20,6 +22,7 @@ class UcdSetComponentProcessRequestProperties extends UcAdfAction {
 	String requestId
 	
 	/** The list of properties. */
+	@JsonProperty("properties")
 	List<UcdProperty> ucdProperties
 	
 	/**
