@@ -18,6 +18,7 @@ import org.urbancode.ucadf.core.action.ucd.user.UcdGetUser
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.general.UcdSecureString
 import org.urbancode.ucadf.core.model.ucd.system.UcdSystemConfiguration
+import org.urbancode.ucadf.core.model.ucd.team.UcdTeamRole
 import org.urbancode.ucadf.core.model.ucd.user.UcdUser
 
 import groovy.text.Template
@@ -51,7 +52,7 @@ class UcdSendMail extends UcAdfAction {
     List<String> users = []
 	
 	/** (Optional) The list of team roles. */
-	List<TeamRole> teamRoles = []
+	List<UcdTeamRole> teamRoles = []
 	
 	/** (Optional) The list of user names to exclude. */
 	List<String> excludeUsers = []
@@ -248,11 +249,5 @@ class UcdSendMail extends UcAdfAction {
 			
 			logInfo("Mail sent.")
         }
-	}
-	
-	// Team/role definition.
-	private static class TeamRole {
-		String team = ""
-		String role = ""
 	}
 }

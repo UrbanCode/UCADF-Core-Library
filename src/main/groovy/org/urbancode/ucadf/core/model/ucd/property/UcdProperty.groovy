@@ -42,4 +42,20 @@ class UcdProperty extends UcdObject {
 		this.description = description
 		this.secure = secure
 	}
+
+	/**
+	 * Convert a Properties collection to a UcdProperty lsit.
+	 * @param properties - The Properties collection.
+	 * @return - The UcdProperty list.
+	 */
+	public static List<UcdProperty> propertiesToUcdProperties(Properties properties) {	
+		List<UcdProperty> ucdProperties = []
+		properties.each { k, v ->
+			ucdProperties.add(
+				new UcdProperty(k, v)
+			)
+		}
+		
+		return ucdProperties
+	}
 }

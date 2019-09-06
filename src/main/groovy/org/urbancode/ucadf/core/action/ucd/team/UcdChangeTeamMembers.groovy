@@ -12,15 +12,15 @@ import org.urbancode.ucadf.core.action.ucd.group.UcdAddLdapGroups
 import org.urbancode.ucadf.core.action.ucd.group.UcdGetGroup
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
-import org.urbancode.ucadf.core.model.ucd.general.UcdConstants
 import org.urbancode.ucadf.core.model.ucd.general.UcdSecureString
 import org.urbancode.ucadf.core.model.ucd.group.UcdGroup
 import org.urbancode.ucadf.core.model.ucd.system.UcdSession
 import org.urbancode.ucadf.core.model.ucd.team.UcdTeam
+import org.urbancode.ucadf.core.model.ucd.team.UcdTeamRole
 
 class UcdChangeTeamMembers extends UcAdfAction {
 	/** The list of team roles. */
-	List<TeamRole> teamRoles = []
+	List<UcdTeamRole> teamRoles = []
 	
 	/** The list of group names or IDs to add. */
 	List<String> addGroups = []
@@ -184,11 +184,5 @@ class UcdChangeTeamMembers extends UcAdfAction {
 				}
 			}
 		}
-	}
-
-	// Team/role definition.
-	private static class TeamRole {
-		String team = ""
-		String role = ""
 	}
 }
