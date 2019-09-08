@@ -71,8 +71,8 @@ class UcdRunApplicationProcess extends UcAdfAction {
 	/** (Optional) The expected status return values. */
 	UcdApplicationProcessRequestResponseExpectEnum expect
 
-	/** (Optional) The scheduled start date. */	
-	Date scheduledStartDate
+	/** (Optional) The scheduled start date (GMT). */	
+	String scheduledStartDate
 	
 	/** (Optional) The file to which the status will be written. */
 	File processResultsFile
@@ -121,13 +121,13 @@ class UcdRunApplicationProcess extends UcAdfAction {
 		}
 		
 		if (scheduledStartDate) {
-			requestMap["date"] = new SimpleDateFormat(SCHEDULED_DATE_FORMAT).format(scheduledStartDate)
+			requestMap["date"] = scheduledStartDate
 		}
 		
 		JsonBuilder jsonBuilder = new JsonBuilder(requestMap)
-		
+
 		logDebug("Application process request:\n${jsonBuilder.toPrettyString()}")
-		
+
 		// Run the application process.
 		logInfo("Running application [$application] environment [$environment] process [$process] on ${ucdSession.getUcdUrl()}.")
 		
