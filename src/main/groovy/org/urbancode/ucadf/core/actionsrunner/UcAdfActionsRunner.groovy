@@ -46,7 +46,7 @@ class UcAdfActionsRunner {
 	// The initialized UCD sessions.
 	private static Map<String, Map<String, Map<String, UcdSession>>> ucdSessions = [:]
 	
-	// The properties to return for a plugin invocation.
+	// The properties to return for a plugin invocation. These properties are accrued as set by all actions run in a single plugin step.
 	Properties outProps = new Properties()
 
 	// The stack of actions being run.
@@ -156,7 +156,10 @@ class UcAdfActionsRunner {
 	public Object runActions(final UcAdfActions actions) {
 		// Initialie the ACTIONPACKAGES runner property.
 		initializeActionPackagesProperty()
-		
+
+		// Initialize the outProps runner property so that the properties can be set/used by each action.
+		setPropertyValue(UcAdfActionPropertyEnum.OUTPROPS.getPropertyName(), outProps)
+
 		// Set the runner property values from the actions property values.
 		setPropertyValues(actions.getPropertyValues())
 		
@@ -283,8 +286,10 @@ class UcAdfActionsRunner {
 			// Run the action and return the object.
 			returnObject = action.run()
 			
-			// Set the output properties to the action output properties.
-			outProps = action.getOutProps()
+			// Add the action outProps the action runner outProps.
+			action.getOutProps().each { k, v ->
+				outProps.put(k, v)
+			}
 			
 			debugMessage("action ${action.getAction()} return ${returnObject}.")
 		}
