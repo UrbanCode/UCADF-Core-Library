@@ -24,7 +24,9 @@ import org.urbancode.ucadf.core.model.ucd.user.UcdUser
 import groovy.text.Template
 import groovy.text.markup.MarkupTemplateEngine
 import groovy.text.markup.TemplateConfiguration
+import groovy.util.logging.Slf4j
 
+@Slf4j
 class UcdSendMail extends UcAdfAction {
 	// Action properties.
 	/** The subject. */
@@ -114,7 +116,7 @@ class UcdSendMail extends UcAdfAction {
         if (derivedAddresses.size() > 0) {
 			sendMailToAddresses()
 		} else {
-			logInfo("No email addresses found.")
+			log.info("No email addresses found.")
 		}
 	}
 	
@@ -123,6 +125,7 @@ class UcdSendMail extends UcAdfAction {
 		for (user in users) {
 			UcdUser ucdUser = actionsRunner.runAction([
 				action: UcdGetUser.getSimpleName(),
+				actionInfo: actionInfo,
 				user: user,
 				failIfNotFound: false
 			])
@@ -140,6 +143,7 @@ class UcdSendMail extends UcAdfAction {
 		for (teamRole in teamRoles) {
 			List<UcdUser> ucdUsers = actionsRunner.runAction([
 				action: UcdGetTeamUsers.getSimpleName(),
+				actionInfo: actionInfo,
 				team: teamRole.getTeam(),
 				role: teamRole.getRole()
 			])
@@ -174,7 +178,8 @@ class UcdSendMail extends UcAdfAction {
 	private sendMailToAddresses() {
 		// Get the UrbanCode system configuration.
 		UcdSystemConfiguration ucdSystemConfiguration = actionsRunner.runAction([
-			action: UcdGetSystemConfiguration.getSimpleName()
+			action: UcdGetSystemConfiguration.getSimpleName(),
+			actionInfo: actionInfo
 		])
 
 		String mailHost = ucdSystemConfiguration.getDeployMailHost()
@@ -185,10 +190,10 @@ class UcdSendMail extends UcAdfAction {
 			emailUserIdStr = ucdSystemConfiguration.getDeployMailUsername()
 		}
 		
-		logInfo("Sending mail from [$mailSender] [$emailUserIdStr] to [$mailHost:$mailPort] [$derivedAddresses] subject [$subject].")
+		log.info("Sending mail from [$mailSender] [$emailUserIdStr] to [$mailHost:$mailPort] [$derivedAddresses] subject [$subject].")
 		
 		if (mailSecure && !emailUserPwStr) {
-			logInfo(("Skipping sending email because configuration is for secure email but no password was provided."))
+			log.info(("Skipping sending email because configuration is for secure email but no password was provided."))
 		} else {
 			// TODO: Needs to be more generic.
     		// Set up the properties for the mail session
@@ -247,7 +252,7 @@ class UcdSendMail extends UcAdfAction {
     		transporter.connect()
     		transporter.send(mimeMessage)
 			
-			logInfo("Mail sent.")
+			log.info("Mail sent.")
         }
 	}
 }
