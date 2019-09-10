@@ -25,7 +25,7 @@ enum UcdProcessRequestResponseResultEnum {
 		this.value = value
 	}
 
-	/** Get the application process request response result value. This is the value to use for serialization. */
+	/** Get the process request response result value. This is the value to use for serialization. */
 	@JsonValue	
 	public String getValue() {
 		return value
