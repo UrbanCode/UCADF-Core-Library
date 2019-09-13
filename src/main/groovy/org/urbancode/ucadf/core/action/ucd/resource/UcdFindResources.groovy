@@ -59,8 +59,6 @@ class UcdFindResources extends UcAdfAction {
 
 		logInfo("Found ${ucdResources.size()} resources.")
 
-		ucdResources.each { println it.getPath() }
-
 		return ucdResources
 	}
 
@@ -72,6 +70,7 @@ class UcdFindResources extends UcAdfAction {
 		// Get the parent resource to get the resource ID to use for the find.			
 		UcdResource ucdParentResource = actionsRunner.runAction([
 			action: UcdGetResource.getSimpleName(),
+			actionInfo: false,
 			resource: parent,
 			failIfNotFound: failIfNotFound
 		])
@@ -80,14 +79,14 @@ class UcdFindResources extends UcAdfAction {
 			String resource = ucdParentResource.getId()
 
 			// Construct the query fields.
-			List<UcdFilterField> filterFields = [
+			filterFields.add(
 				new UcdFilterField(
 					"active",
 					"true",
 					UcdFilterFieldTypeEnum.eq,
 					UcdFilterFieldClassEnum.Boolean
 				)
-			]
+			)
 
 			WebTarget target = UcdFilterField.addFilterFieldQueryParams(
 				ucdSession.getUcdWebTarget().path("/rest/resource/resource/{resource}/resourcesTree").resolveTemplate("resource", resource),
@@ -102,7 +101,7 @@ class UcdFindResources extends UcAdfAction {
 			]
 			
 			JsonBuilder jsonBuilder = new JsonBuilder(requestMap)
-			
+
 			UcdResourceTree ucdResourceTree
 			Response response = target.request().post(Entity.json(jsonBuilder.toString()))
 			if (response.getStatus() == 200) {
