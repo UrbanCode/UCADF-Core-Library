@@ -139,6 +139,19 @@ actions:
     version: "${u:coreTestVersion1}"
     status: "Active"
 
+  # Get resource inventory.
+  - action: UcdGetResourceInventory
+    resource: "${u:coreTestTopResource}/${u:agents/0/name}/${u:coreTestComp1}"
+  - action: UcAdfItemsLoop
+    actionInfo: false
+    items: ${u:actionReturn}
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Resource inventory %s"
+        values:
+          - ${u:item/version/name}
+
   # Remove resource inventory for a component.
   - action: UcdRemoveResourceInventory
     resource: "${u:coreTestTopResource}/${u:agents/0/name}/${u:coreTestComp1}"
@@ -177,9 +190,10 @@ actions:
     values:
       - ${u:actionReturn}
 
-  # Get resource properties.
+  # Get resource properties as list.
   - action: UcdGetResourceProperties
     resource: "${u:coreTestTopResource}"
+    returnAs: LIST
   - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:actionReturn}
@@ -189,6 +203,16 @@ actions:
         comment: "Resource property %s"
         values:
           - ${u:item}
+    
+  # Get resource properties as map.
+  - action: UcdGetResourceProperties
+    resource: "${u:coreTestTopResource}"
+    returnAs: MAPBYNAME
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "Resource properties %s"
+    values:
+      - ${u:actionReturn}
     
   # Get child resources.
   - action: UcdGetChildResources

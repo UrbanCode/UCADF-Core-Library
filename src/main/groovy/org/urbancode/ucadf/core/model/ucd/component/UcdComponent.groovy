@@ -3,8 +3,11 @@
  */
 package org.urbancode.ucadf.core.model.ucd.component
 
+import org.urbancode.ucadf.core.model.ucd.agent.UcdAgent
 import org.urbancode.ucadf.core.model.ucd.application.UcdApplication
+import org.urbancode.ucadf.core.model.ucd.componentTemplate.UcdComponentTemplate
 import org.urbancode.ucadf.core.model.ucd.general.UcdSecurityTypeObject
+import org.urbancode.ucadf.core.model.ucd.plugin.UcdSourceConfigPlugin
 import org.urbancode.ucadf.core.model.ucd.property.UcdPropSheet
 import org.urbancode.ucadf.core.model.ucd.property.UcdPropSheetDef
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
@@ -44,7 +47,10 @@ class UcdComponent extends UcdSecurityTypeObject {
 	
 	/** The flag that indicates this is an active component. */
 	Boolean active
-	
+
+	/** The source configuration plugin name. */
+	UcdSourceConfigPlugin sourceConfigPlugin
+		
 	/** The flag that indicates integration failed. */
 	Boolean integrationFailed
 	
@@ -114,8 +120,8 @@ class UcdComponent extends UcdSecurityTypeObject {
 	/** TODO: What is this? */
 	Boolean sourceConfigPluginNameMatchesPlugin
 	
-	/** The template. TODO: Need class type. */
-	Object template
+	/** The component template. */
+	UcdComponentTemplate template
 	
 	/** The security resource ID. */
 	String securityResourceId
@@ -126,6 +132,12 @@ class UcdComponent extends UcdSecurityTypeObject {
 	/** The extended security. */
 	UcdExtendedSecurity extendedSecurity
 
+	/** The integration agent. */
+	UcdAgent integrationAgent
+	
+	/** The integration tag. */
+	UcdTag integrationTag
+	
 	// Constructors.	
 	UcdComponent() {
 	}

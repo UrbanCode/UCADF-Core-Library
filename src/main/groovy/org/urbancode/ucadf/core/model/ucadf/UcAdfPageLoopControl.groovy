@@ -16,7 +16,7 @@ class UcAdfPageLoopControl extends UcdObject {
 	public static LOOPCONTROLPROPERTYNAME = "pageLoopControl"
 	
 	/** The number of rows to return per page. Default is 10. */
-	Integer rowsPerPage
+	Integer rowsPerPage = 10
 	
 	/** The current page number. Default is 1. */
 	Integer pageNumber = 1
