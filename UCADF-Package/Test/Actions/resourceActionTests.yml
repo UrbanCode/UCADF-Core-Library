@@ -318,3 +318,13 @@ actions:
     resource: "${u:coreTestTopResource}/${u:coreTestGroupResource1}-from-${u:coreTestResourceTemplate1}"
     template: "${u:coreTestResourceTemplate1}"
     failIfExists: false
+
+  # Find resources.
+  - action: UcdFindResources
+    parent: "${u:coreTestTopResource}"
+    filterFields:
+      - fieldName: "name"
+        fieldValue: "MoveTo"
+        fieldType: "eq"
+        fieldClass: "String"
+    actionReturnPropertyName: "foundResources"
