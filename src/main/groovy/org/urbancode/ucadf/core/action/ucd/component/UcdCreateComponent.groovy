@@ -15,8 +15,6 @@ import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.version.UcdVersionTypeEnum
 
-import com.fasterxml.jackson.annotation.JsonProperty
-
 import groovy.json.JsonBuilder
 
 class UcdCreateComponent extends UcAdfAction {

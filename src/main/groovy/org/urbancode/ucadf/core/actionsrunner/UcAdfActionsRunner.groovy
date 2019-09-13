@@ -561,7 +561,14 @@ class UcAdfActionsRunner {
 		if (object instanceof Map) {
 			// Set map values with replaced variables.
 			object.each { key, childObj ->
-				object.put(key, replaceVariablesInMap(childObj, indent))
+				// If the key has a property name in it then it needs to be replaced.
+				String replacedKey = replaceVariablesInMap(key, indent)
+				if (key.equals(replacedKey)) {
+					object.put(key, replaceVariablesInMap(childObj, indent))
+				} else {
+					object.remove(key)
+					object.put(replacedKey, replaceVariablesInMap(childObj, indent))
+				}
 			}
 		} else if (object instanceof List) {
 			// Process each list item.
@@ -575,6 +582,8 @@ class UcAdfActionsRunner {
 				object = replaceVariablesInText(object)
 			}
 		}
+		
+		//println "\t".multiply(indent) + "returning object=$object class=${object.getClass()}"
 
 		return object
 	}

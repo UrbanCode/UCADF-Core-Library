@@ -12,10 +12,22 @@ import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
 
 class UcdGetResourceProperties extends UcAdfAction {
+	/** The type of collection to return. */
+	enum ReturnAsEnum {
+		/** Return as a list. */
+		LIST,
+		
+		/** Return as a map having the property name as the key. */
+		MAPBYNAME
+	}
+
 	// Action properties.
 	/** The resource path or ID. */
 	String resource
 	
+	/** The type of collection to return. */
+	ReturnAsEnum returnAs = ReturnAsEnum.LIST
+
 	/** The flag that indicates fail if the resource is not found. Default is true. */
 	Boolean failIfNotFound = true
 	
@@ -24,7 +36,7 @@ class UcdGetResourceProperties extends UcAdfAction {
 	 * @return The list of resource property objects.
 	 */
 	@Override
-	public List<UcdProperty> run() {
+	public Object run() {
 		// Validate the action properties.
 		validatePropsExist()
 
@@ -45,6 +57,18 @@ class UcdGetResourceProperties extends UcAdfAction {
 			}
 		}
 		
-		return ucdProperties
+		// Return as requested.
+		Object resourceProperties
+		Map<String, UcdProperty> propertiesMap = [:]
+		if (ReturnAsEnum.LIST.equals(returnAs)) {
+			resourceProperties = ucdProperties
+		} else {
+			ucdProperties.each {
+				propertiesMap[it.getName()] = it.getValue()
+			}
+			resourceProperties = propertiesMap
+		}
+		
+		return resourceProperties
 	}
 }

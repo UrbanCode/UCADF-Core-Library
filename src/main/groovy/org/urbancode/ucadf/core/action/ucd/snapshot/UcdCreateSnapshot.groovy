@@ -41,7 +41,7 @@ class UcdCreateSnapshot extends UcAdfAction {
 		
 		Boolean created = false
 		
-		logInfo("Creating application [$application] snapshot [$name].")
+		logInfo("Creating application [$application] snapshot [$name] with versions\n$versions.")
 		
 		Map requestMap = [
 			name: name, 
