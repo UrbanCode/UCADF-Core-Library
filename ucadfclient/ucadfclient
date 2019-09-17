@@ -5,7 +5,7 @@
 ####################################################################################################
 if [ -n "$JAVA_HOME" ];
 then
-	JAVACOMMAND="$JAVA_HOME\bin\java"
+	JAVACOMMAND="$JAVA_HOME/bin/java"
 	
     SCRIPTNAME=$0
     SCRIPTPATH=`dirname ${SCRIPTNAME}`
@@ -27,10 +27,17 @@ then
 		UCADF_PACKAGES_CLASSPATH=`echo "$UCADF_PACKAGES_CLASSPATH" | sed -e 's/^\///' -e 's/\\//\\\\/g' -e 's/^./\0:/'`
 		LOG4JPROPS=`echo "$LOG4JPROPS" | sed -e 's/^\///' -e 's/\\//\\\\/g' -e 's/^./\0:/'`
 	fi
+
+    # Initialize the class path.	
+	if [ -z "$UCADF_PACKAGES_CLASSPATH" ]; then
+		UCADF_CLASSPATH=$UCADFJAR
+	else
+		UCADF_CLASSPATH="$UCADF_PACKAGES_CLASSPATH;$UCADFJAR"
+	fi
 	
     if [ -f "$UCADFJAR" ];
     then
-		"$JAVACOMMAND" -classpath "$UCADF_PACKAGES_CLASSPATH;$UCADFJAR" -Dlog4j.configuration=file:"$LOG4JPROPS" org.urbancode.ucadf.core.client.UcAdfClient $@
+		"$JAVACOMMAND" -classpath "$UCADF_CLASSPATH" -Dlog4j.configuration=file:"$LOG4JPROPS" org.urbancode.ucadf.core.client.UcAdfClient $@
 	else
 		echo "$UCADFJAR file not found."
 		exit 1
