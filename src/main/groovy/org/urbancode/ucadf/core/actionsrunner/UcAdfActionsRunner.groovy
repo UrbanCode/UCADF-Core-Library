@@ -45,6 +45,15 @@ class UcAdfActionsRunner {
 	
 	// The initialized UCD sessions.
 	private static Map<String, Map<String, Map<String, UcdSession>>> ucdSessions = [:]
+
+	// Pattern to match nested properties in replacement text.
+	private Pattern nestedPropertiesPattern = Pattern.compile('\\$\\{u[\\?]*?:.*\\$\\{(u[\\?]*)?:(.*?)\\}.*?}')
+	
+	// Pattern to match properties in replacement text.
+	private Pattern propertiesPattern = Pattern.compile('\\$\\{(u[\\?]?):(.*?)\\}')
+
+	// Pattern to match a property value in replacement text.	
+	private Pattern propertyValuePattern = Pattern.compile("[^\\/\"']+|\"([^\"]*)\"|'([^']*)'")
 	
 	// The properties to return for a plugin invocation. These properties are accrued as set by all actions run in a single plugin step.
 	Properties outProps = new Properties()
@@ -501,8 +510,7 @@ class UcAdfActionsRunner {
 
 		// Each property name is delimited by a / unless enclosed in single or double quotes.		
 		List<String> keys = new ArrayList<String>()
-		Pattern regex = Pattern.compile("[^\\/\"']+|\"([^\"]*)\"|'([^']*)'")
-		Matcher regexMatcher = regex.matcher(propertyName)
+		Matcher regexMatcher = propertyValuePattern.matcher(propertyName)
 		while (regexMatcher.find()) {
 			if (regexMatcher.group(1) != null) {
 				// Add double-quoted string without the quotes
@@ -592,12 +600,36 @@ class UcAdfActionsRunner {
     public Object replaceVariablesInText(final String text) {
     	debugMessage("Properties replace text before [$text].")
 
+		// Initialize the text to be replaced.
+		String returnText = text
+		
+		// Replace nested property values first.
+		Boolean replaceNested = true
+		while (replaceNested) {
+			Matcher nestedPropertiesMatches = nestedPropertiesPattern.matcher(returnText)
+
+			replaceNested = false
+			while (nestedPropertiesMatches.find()) {
+				// First group in match is u or u?, second group in match is the property name.
+				String uValue = nestedPropertiesMatches.group(1)
+				String propName = nestedPropertiesMatches.group(2)
+
+				// Get the property value for the nested property.				
+				String propertyValueText = replaceVariablesInText('${' + uValue + ':' + propName + '}')
+
+				// Replace the nested property variable with the property value.				
+				String regex = '\\$\\{' + (uValue == 'u?' ? 'u\\?:' : 'u:') + propName + '\\}'
+				returnText = returnText.replaceAll(regex, propertyValueText)
+				
+				// Indicate to keep processing.
+				replaceNested = true
+			}
+		}
+
+		// Replace the property values.
     	Object returnObject
     	Boolean isTextReturn = true
-    	String returnText = text
-    	String pattern = '\\$\\{(u[\\?]?):(.*?)\\}'
-    	Pattern expr = Pattern.compile(pattern)
-    	Matcher matcher = expr.matcher(text)
+    	Matcher matcher = propertiesPattern.matcher(returnText)
     	while (matcher.find()) {
     		// First group in match is u or u?, second group in match is the property name.
     		Object propertyValue = getPropertyValue(
@@ -610,7 +642,7 @@ class UcAdfActionsRunner {
 				String propertyValueText = propertyValue
 
 				// Recursively replace property values.			
-				if (expr.matcher(propertyValueText).find()) {
+				if (propertiesPattern.matcher(propertyValueText).find()) {
 					propertyValueText = replaceVariablesInText(propertyValueText)
 				}
 				
