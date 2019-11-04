@@ -42,15 +42,31 @@ class UcdDeleteAgent extends UcAdfAction {
 				.queryParam("agent", agent)
 			logDebug("target=$target")
 			
-			Response response = target.request(MediaType.APPLICATION_JSON).delete()
-			if (response.getStatus() == 204) {
-				logInfo("Agent [$agent] deleted.")
-				deleted = true
-			} else {
-				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-				logInfo(errMsg)
-				if (response.getStatus() != 404 || failIfNotFound) {
-					throw new UcdInvalidValueException(errMsg)
+			// Had to add logic to handle concurrency issue discovered in UCD 7.0.1.2.
+			final Integer MAXATTEMPTS = 5
+			for (Integer iAttempt = 1; iAttempt <= MAXATTEMPTS; iAttempt++) {
+				Response response = target.request(MediaType.APPLICATION_JSON).delete()
+				
+				if (response.status == 204) {
+					logInfo("Agent [$agent] deleted.")
+					deleted = true
+					break
+				} else if (response.status == 404) {
+					String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+					logInfo(errMsg)
+					if (failIfNotFound) {
+						throw new UcdInvalidValueException(errMsg)
+					}
+					break
+				} else {
+					String responseStr = response.readEntity(String.class)
+					logInfo(responseStr)
+					if (responseStr ==~ /.*bulk manipulation query.*/ && iAttempt < MAXATTEMPTS) {
+						logInfo("Attempt $iAttempt failed. Waiting to try again.")
+						Thread.sleep(2000)
+					} else {
+						throw new UcdInvalidValueException(response)
+					}
 				}
 			}
 		}
