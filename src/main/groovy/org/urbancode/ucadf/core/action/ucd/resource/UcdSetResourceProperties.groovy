@@ -59,7 +59,7 @@ class UcdSetResourceProperties extends UcAdfAction {
 				resource : resource,
 				name : ucdProperty.getName(),
 				description : ucdProperty.getDescription(),
-				secure : ucdProperty.getSecure(),
+				isSecure : ucdProperty.getSecure(),
 				value : ucdProperty.getValue()
 			]
 

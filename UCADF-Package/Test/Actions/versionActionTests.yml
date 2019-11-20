@@ -27,17 +27,12 @@ actions:
   - action: UcdAddVersionFiles
     component: "${u:coreTestComp1}"
     version: "${u:coreTestVersionDelete}"
- #   base: "."
-#    offset: MyDir
-    base: C:\Dev\junk\UcdAddVersionFilesAPIAttempt
+    base: "UCADF-Package/Test/Applications"
+    offset: MyDir
     saveExecuteBits: true
     include:
-        - "foo/**/*"
-#       - "pom*"
-#      - "pom.7z"
-#    exclude:
-#        - "*.7z"
-        
+      - "**/*"
+ 
   # Download a version's files.
   - action: UcdDownloadVersionFiles
     component: "${u:coreTestComp1}"

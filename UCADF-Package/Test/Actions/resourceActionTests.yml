@@ -1,4 +1,4 @@
-
+# ===============================================================================
 # This actions file runs resource action tests.
 # ===============================================================================
 propertyFiles:
@@ -311,6 +311,11 @@ actions:
   - action: UcdMoveResource
     resourceFrom: "${u:coreTestTopResource}/${u:coreTestGroupResource1}"
     resourceTo: "${u:coreTestTopResource}/MoveTo"
+
+  # Rename a resource.
+  - action: UcdRenameResource
+    resource: "${u:coreTestTopResource}/MoveTo"
+    name: "MoveTo2"
 
   # Create a resource from a template.
   - action: UcdCreateResourceFromTemplate
