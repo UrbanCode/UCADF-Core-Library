@@ -81,9 +81,8 @@ actions:
     conditions:
       -
         - "${u:coreTestVersionStatus1}"
-        - "${u:coreTestVersionStatus2}"
       -
-        - "${u:coreTestVersionStatusDelete}"
+        - "${u:coreTestVersionStatus2}"
       
   # Get environment base resources.
   - action: UcdGetEnvironmentBaseResources

@@ -419,11 +419,11 @@ This is an example of running the actions file that runs all of the action tests
 
 ***From Eclipse***
 ```
--f Test/Actions/allActionTests.yml -DUCADF_STORE=C:/Dev/git/UCADF-Store -DucAdfInstance=ucadfdev
+-f UCADF-Package/Test/allActionTests.yml -DUCADF_STORE=C:/Dev/git/UCADF-Store -DucAdfInstance=ucadfdev
 ```
 ***From the Command Line***
 ```
-ucadfclient -f src/test/resources/Test/Actions/allActionTests.yml -DUCADF_STORE=C:/Dev/git/UCADF-Store -DucAdfInstance=ucadfdev
+ucadfclient -f UCADF-Package/Test/Actions/allActionTests.yml -DUCADF_STORE=C:/Dev/git/UCADF-Store -DucAdfInstance=ucadfdev
 ```
 
 # UrbanCode Deploy Versions Tested

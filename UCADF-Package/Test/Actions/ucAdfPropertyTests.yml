@@ -1,0 +1,34 @@
+propertyValues:
+  abc:
+    foo:
+      bar:
+        jkl: "DOG"
+  def: "foo"
+  ghi: "bar"
+  
+actions:
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "abc=%s def=%s ghi=%s"
+    values:
+      - "${u:abc}"
+      - "${u:def}"
+      - "${u:ghi}"
+    
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "First nested value=%s"
+    values:
+      - "FOO ${u:abc/${u?:def}} BAR"
+    
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "Second nested value=%s"
+    values:
+      - "FOO ${u:abc/${u?:def}/${u?:ghi}} BAR"
+    
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "Third nested value=%s"
+    values:
+      - "FOO ${u:abc/${u:def}/${u:ghi}/jkl} BAR"

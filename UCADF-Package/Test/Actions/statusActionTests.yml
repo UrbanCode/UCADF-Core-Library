@@ -10,19 +10,32 @@ actions:
   #==============================================================================          
   # Run the tests.
   #==============================================================================          
-  # Delete a status.
-  - action: UcdDeleteStatus
-    type: SNAPSHOT
-    status: "${u:coreTestSnapshotStatus1}"
-    
-  # Create a status.
+  #------------------------------------
+  # Snapshot statuses.
+  #------------------------------------
+  # Create snapshot statuses.
   - action: UcdCreateStatus
     type: SNAPSHOT
     name: "${u:coreTestSnapshotStatus1}"
     color: RED
     failIfExists: false
+  - action: UcdCreateStatus
+    type: SNAPSHOT
+    name: "${u:coreTestSnapshotStatus2}"
+    color: RED
+    failIfExists: false
+  - action: UcdCreateStatus
+    type: SNAPSHOT
+    name: "${u:coreTestSnapshotStatusDelete}"
+    color: RED
+    failIfExists: false
     
-  # Get a status.
+  # Delete a snapshot status.
+  - action: UcdDeleteStatus
+    type: SNAPSHOT
+    status: "${u:coreTestSnapshotStatusDelete}"
+    
+  # Get a snapshot status.
   - action: UcdGetStatus
     type: SNAPSHOT
     status: "${u:coreTestSnapshotStatus1}"
@@ -32,3 +45,37 @@ actions:
     values:
       - ${u:actionReturn}
  
+  #------------------------------------
+  # Version statuses.
+  #------------------------------------
+   # Create version statuses.
+  - action: UcdCreateStatus
+    type: VERSION
+    name: "${u:coreTestVersionStatus1}"
+    color: RED
+    failIfExists: false
+  - action: UcdCreateStatus
+    type: VERSION
+    name: "${u:coreTestVersionStatus2}"
+    color: RED
+    failIfExists: false
+  - action: UcdCreateStatus
+    type: VERSION
+    name: "${u:coreTestVersionStatusDelete}"
+    color: RED
+    failIfExists: false
+
+  # Delete a version status.
+  - action: UcdDeleteStatus
+    type: VERSION
+    status: "${u:coreTestVersionStatusDelete}"
+
+  # Get a version status.
+  - action: UcdGetStatus
+    type: VERSION
+    status: "${u:coreTestVersionStatus1}"
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "Status %s"
+    values:
+      - ${u:actionReturn}

@@ -16,6 +16,28 @@ actions:
   #==============================================================================          
   # Delete all test entities from previous testing.
   #==============================================================================          
+  # Delete the version statuses.
+  - action: UcdDeleteStatus
+    type: VERSION
+    status: "${u:coreTestVersionStatus1}"
+  - action: UcdDeleteStatus
+    type: VERSION
+    status: "${u:coreTestVersionStatus2}"
+  - action: UcdDeleteStatus
+    type: VERSION
+    status: "${u:coreTestVersionStatusDelete}"
+    
+  # Delete the snapshot statuses.
+  - action: UcdDeleteStatus
+    type: SNAPSHOT
+    status: "${u:coreTestSnapshotStatus1}"
+  - action: UcdDeleteStatus
+    type: SNAPSHOT
+    status: "${u:coreTestSnapshotStatus2}"
+  - action: UcdDeleteStatus
+    type: SNAPSHOT
+    status: "${u:coreTestSnapshotStatusDelete}"
+    
   # Delete the test applications.
   - action: UcdGetApplications
     match: "^UCADFCORETEST.*"

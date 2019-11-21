@@ -21,6 +21,9 @@ actions:
     fileName: "${u:testActionsDir}/ucAdfLoopActionTests.yml"
     
   - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/statusActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
     fileName: "${u:testActionsDir}/agentActionTests.yml"
     
   - action: UcAdfRunActionsFromFile
@@ -95,9 +98,6 @@ actions:
  
   # TODO: Need snapshot configuration tests.
   
-  - action: UcAdfRunActionsFromFile
-    fileName: "${u:testActionsDir}/statusActionTests.yml"
-    
   - action: UcAdfRunActionsFromFile
     fileName: "${u:testActionsDir}/systemActionTests.yml"
 

@@ -86,13 +86,6 @@ actions:
         values:
           - ${u:item}
           
-  # Add version statuses.
-  - action: UcdAddVersionStatuses
-    component: "${u:coreTestComp1}"
-    version: "${u:coreTestVersionDelete}"
-    statuses:
-      - "${u:coreTestVersionStatus1}"
-
   # Get a version.
   - action: UcdGetVersion
     component: "${u:coreTestComp1}"
