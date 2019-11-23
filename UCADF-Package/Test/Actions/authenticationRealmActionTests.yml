@@ -32,3 +32,5 @@ actions:
         comment: "Authentication realm %s"
         values:
           - ${u:item}
+
+  # TODO: Add delete authentication realm test.

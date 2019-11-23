@@ -20,6 +20,9 @@ class UcdDeleteApplicationProperty extends UcAdfAction {
 	/** The property name. */
 	String property
 	
+	/** The flag that indicates to perform the delete, otherwise show that the delete would be done. Default is true. */
+	Boolean commit = true
+	
 	/** The flag that indicates fail if the application is not found. Default is false. */
 	Boolean failIfNotFound = false
 	
@@ -33,38 +36,42 @@ class UcdDeleteApplicationProperty extends UcAdfAction {
 
 		Boolean deleted = false
 		
-		logInfo("Deleting application [$application] property [$property].")
-
-		// If an application ID was provided then use it. Otherwise get the application information to get the ID.
-		String applicationId = application
-		if (!UcdObject.isUUID(application)) {
-			UcdApplication ucdApplication = actionsRunner.runAction([
-				action: UcdGetApplication.getSimpleName(),
-				application: application,
-				failIfNotFound: true
-			])
-			applicationId = ucdApplication.getId()
-		}
-		
-		// Get the propSheet so we can get the current version number from it.
-		UcdPropSheet ucdPropSheet = actionsRunner.runAction([
-			action: UcdGetApplicationPropSheet.getSimpleName(),
-			application: applicationId
-		])
-
-		WebTarget target = ucdSession.getUcdWebTarget()
-			.path("/property/propSheet/applications&{applicationId}&propSheet.-1/propValues/{propertyName}")
-			.resolveTemplate("applicationId", applicationId)
-			.resolveTemplate("propertyName", property
-		)
-		logDebug("target=$target")
-
-		Response response = target.request().header("Version", ucdPropSheet.getVersion()).delete()
-		if (response.getStatus() == 200) {
-			logInfo("Application [$application] property [$property] deleted.")
-			deleted = true
+		if (!commit) {
+			logInfo("Would delete application [$application] property [$property].")
 		} else {
-            throw new UcdInvalidValueException(response)
+			logInfo("Deleting application [$application] property [$property].")
+	
+			// If an application ID was provided then use it. Otherwise get the application information to get the ID.
+			String applicationId = application
+			if (!UcdObject.isUUID(application)) {
+				UcdApplication ucdApplication = actionsRunner.runAction([
+					action: UcdGetApplication.getSimpleName(),
+					application: application,
+					failIfNotFound: true
+				])
+				applicationId = ucdApplication.getId()
+			}
+			
+			// Get the propSheet so we can get the current version number from it.
+			UcdPropSheet ucdPropSheet = actionsRunner.runAction([
+				action: UcdGetApplicationPropSheet.getSimpleName(),
+				application: applicationId
+			])
+	
+			WebTarget target = ucdSession.getUcdWebTarget()
+				.path("/property/propSheet/applications&{applicationId}&propSheet.-1/propValues/{propertyName}")
+				.resolveTemplate("applicationId", applicationId)
+				.resolveTemplate("propertyName", property
+			)
+			logDebug("target=$target")
+	
+			Response response = target.request().header("Version", ucdPropSheet.getVersion()).delete()
+			if (response.getStatus() == 200) {
+				logInfo("Application [$application] property [$property] deleted.")
+				deleted = true
+			} else {
+	            throw new UcdInvalidValueException(response)
+			}
 		}
 		
 		return deleted

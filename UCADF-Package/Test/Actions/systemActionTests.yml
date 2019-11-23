@@ -22,3 +22,4 @@ actions:
     configMap:
       messageOfTheDay: "This is the message of the day X."
       
+  # TODO: Add system property tests.

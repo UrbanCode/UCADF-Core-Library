@@ -419,7 +419,11 @@ This is an example of running the actions file that runs all of the action tests
 
 ***From Eclipse***
 ```
+Program arguments:
 -f UCADF-Package/Test/allActionTests.yml -DUCADF_STORE=C:/Dev/git/UCADF-Store -DucAdfInstance=ucadfdev
+
+VM arguments:
+-Dlog4j.configuration=file:log4j.properties
 ```
 ***From the Command Line***
 ```
