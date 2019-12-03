@@ -26,7 +26,7 @@ class UcAdfUpdatePropertiesFile extends UcAdfAction {
 			lines = propsFile.readLines()
 		} else {
 			logInfo("Creating new properties file [$fileName].")
-			propsFile.getParentFile().mkdirs()
+			propsFile.getParentFile()?.mkdirs()
 		}
 
 		List<String> setProperties = []

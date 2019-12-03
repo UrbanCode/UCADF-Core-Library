@@ -38,29 +38,36 @@ class UcdDeleteComponentTemplate extends UcAdfAction {
 
 		if (commit) {
 			// If a component template ID was provided then use it. Otherwise get the component template information to get the ID.
-			String componentTemplateId = componentTemplate
-			if (!UcdObject.isUUID(componentTemplate)) {
+			String componentTemplateId
+			if (UcdObject.isUUID(componentTemplate)) {
+				componentTemplateId = componentTemplate
+			} else {
 				UcdComponentTemplate ucdComponentTemplate = actionsRunner.runAction([
 					action: UcdGetComponentTemplate.getSimpleName(),
 					componentTemplate: componentTemplate,
-					failIfNotFound: true
+					failIfNotFound: failIfNotFound
 				])
-				componentTemplateId = ucdComponentTemplate.getId()
+				
+				if (ucdComponentTemplate) {
+					componentTemplateId = ucdComponentTemplate.getId()
+				}
 			}
-			
-			WebTarget target = ucdSession.getUcdWebTarget().path("/rest/deploy/componentTemplate/{compoonentTemplateId}")
-				.resolveTemplate("compoonentTemplateId", componentTemplateId)
-			logDebug("target=$target")
-			
-			Response response = target.request(MediaType.APPLICATION_JSON).delete()
-			if (response.getStatus() == 204) {
-				logInfo("Component template [$componentTemplate] deleted.")
-				deleted = true
-			} else {
-				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-				logInfo(errMsg)
-				if (response.getStatus() != 404 || failIfNotFound) {
-					throw new UcdInvalidValueException(errMsg)
+
+			if (componentTemplateId) {
+				WebTarget target = ucdSession.getUcdWebTarget().path("/rest/deploy/componentTemplate/{compoonentTemplateId}")
+					.resolveTemplate("compoonentTemplateId", componentTemplateId)
+				logDebug("target=$target")
+				
+				Response response = target.request(MediaType.APPLICATION_JSON).delete()
+				if (response.getStatus() == 204) {
+					logInfo("Component template [$componentTemplate] deleted.")
+					deleted = true
+				} else {
+					String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+					logInfo(errMsg)
+					if (response.getStatus() != 404 || failIfNotFound) {
+						throw new UcdInvalidValueException(errMsg)
+					}
 				}
 			}
 		} else {

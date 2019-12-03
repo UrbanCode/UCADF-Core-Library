@@ -39,7 +39,8 @@ class UcdGetComponentTemplate extends UcAdfAction {
 		} else {
 			// No API found to get a single template by name so have to get the list of all templates then select the one from it.
 			List<UcdComponentTemplate> ucdComponentTemplates = actionsRunner.runAction([
-				action: UcdGetComponentTemplates.getSimpleName()
+				action: UcdGetComponentTemplates.getSimpleName(),
+				actionInfo: false
 			])
 	
 			UcdComponentTemplate ucdFindComponentTemplate = ucdComponentTemplates.find {

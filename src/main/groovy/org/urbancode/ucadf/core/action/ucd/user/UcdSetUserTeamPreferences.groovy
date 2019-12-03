@@ -5,17 +5,19 @@ package org.urbancode.ucadf.core.action.ucd.user
 
 import javax.ws.rs.client.Entity
 import javax.ws.rs.client.WebTarget
+import javax.ws.rs.core.GenericType
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
-import org.urbancode.ucadf.core.action.ucd.team.UcdGetTeam
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
-import org.urbancode.ucadf.core.model.ucd.team.UcdTeam
 import org.urbancode.ucadf.core.model.ucd.user.UcdUserTeamMappingsEnum
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
 import groovy.json.JsonBuilder
+
 // Set the user team preferences.
-// The session that is running this must have permissions to manage security in order to get the team ID.
 class UcdSetUserTeamPreferences extends UcAdfAction {
 	// Action properties.
 	/** The team mapping type. */
@@ -38,9 +40,9 @@ class UcdSetUserTeamPreferences extends UcAdfAction {
 		}
 		
 		logInfo("Set user team preferences type [$defaultTeamMappingType] teamNames [$teamNames].")
-		WebTarget target = ucdSession.getUcdWebTarget().path("/rest/security/userPreferences")
-		logDebug("target=$target")
-			
+		
+		WebTarget target
+		
 		// Build a custom body that includes only the required fields.
 		Map requestMap = [
 			defaultTeamMappingType: defaultTeamMappingType
@@ -48,15 +50,34 @@ class UcdSetUserTeamPreferences extends UcAdfAction {
 		JsonBuilder jsonBuilder = new JsonBuilder(requestMap)
 
 		if (UcdUserTeamMappingsEnum.DEFAULT_TEAM_MAPPINGS_SPECIFIC_TEAMS == defaultTeamMappingType) {
-			List<String> teamIds = new ArrayList<String>()
+			// Get the list of groups the user belongs to. Have to do this because the user might not have manage security privileges to use UcdGetTeam.
+			List<UserGroup> userGroups
+			
+			target = ucdSession.getUcdWebTarget().path("/security/team")
+				.queryParam("filterFields", "username")
+				.queryParam("filterValue_username", ucdUserId)
+				.queryParam("filterType_username", "eq")
+				.queryParam("filterClass_username", "String&name=*")
+			logDebug("target=$target")
+			
+			Response response = target.request().get()
+			if (response.getStatus() == 200) {
+				userGroups = target.request().get(new GenericType<List<UserGroup>>(){})
+			} else {
+				throw new UcdInvalidValueException(response)
+			}
+		
+			List<String> teamIds = []
 			for (teamName in teamNames) {
-				UcdTeam ucdTeam = actionsRunner.runAction([
-					action: UcdGetTeam.getSimpleName(),
-					team: teamName,
-					failIfNotFound: true
-				])
+				UserGroup userTeam = userGroups.find {
+					it.getName().equals(teamName)
+				}
 				
-				String teamId = ucdTeam.getId()
+				if (!userTeam) {
+					throw new UcdInvalidValueException("User [$ucdUserId] is not a member of team [$teamName].")
+				}
+				
+				String teamId = userTeam.getId()
 		
 				logInfo("Found team [$teamName] ID [$teamId].")
 				teamIds.add(teamId)
@@ -66,9 +87,21 @@ class UcdSetUserTeamPreferences extends UcAdfAction {
 		
 		logInfo("jsonBuilder=$jsonBuilder")
 		
+		target = ucdSession.getUcdWebTarget().path("/rest/security/userPreferences")
+		logDebug("target=$target")
+		
 		Response response = target.request(MediaType.WILDCARD).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() != 200) {
             throw new UcdInvalidValueException(response)
 		}
 	}	
+}
+
+// Used just for getting the available team IDs for setting the user preferences.
+@JsonIgnoreProperties(ignoreUnknown = true)
+class UserGroup {
+	String id
+	String name
+	String description
+	Boolean isDeletable
 }

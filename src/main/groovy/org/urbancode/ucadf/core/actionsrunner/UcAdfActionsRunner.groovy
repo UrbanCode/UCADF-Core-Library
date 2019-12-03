@@ -40,6 +40,8 @@ class UcAdfActionsRunner {
 	// 1-Parameters provided at run time, e.g. ucdUrl override all others.
 	private Map<String, String> propertyValues = new TreeMap<String, String>()
 
+	private Map<String, String> commandLinePropertyValues = [:]
+	
 	// The map of action names with their respective classes.	
 	private Map<String, JavaActionClass> javaActionClasses = [:]
 	
@@ -61,6 +63,12 @@ class UcAdfActionsRunner {
 	// The stack of actions being run.
 	Stack<String> actionsStack = []
 
+	// The current UCD session for the actions runner.
+	UcdSession ucdSession
+	
+	// The stack of UCD sessions for actions being run.
+	Stack<UcdSession> sessionsStack = []
+	
 	// Constructors.
 	UcAdfActionsRunner() {
 		// Initialize the system properties.
@@ -175,6 +183,9 @@ class UcAdfActionsRunner {
 		// Set the runner property values from property files.
 		setPropertyValuesFromFiles(actions.getPropertyFiles())
 
+		// Override the property values with any command line property values.
+		setPropertyValues(commandLinePropertyValues)
+
 		if (debug) {
 			dump()
 		}
@@ -238,6 +249,9 @@ class UcAdfActionsRunner {
 		// Set the runner property values from property files.
 		setPropertyValuesFromFiles(actionMap.get(UcAdfActionPropertyEnum.PROPERTYFILES.getPropertyName()))
 
+		// Override the property values with any command line property values.
+		setPropertyValues(commandLinePropertyValues)
+		
 		// The object value that will be returned.
 		Object returnObject = new Properties()
 
@@ -274,15 +288,13 @@ class UcAdfActionsRunner {
 		} else {
 			// Show the action properties.
 			action.showProperties()
-			
+
+			// Add the UCD session to the stack.
+			sessionsStack.push(ucdSession)
+		
 			// The UCD configuration may have been provided as properties of the individual action.
 			// Start with those values and determine if they need to be supplemented with property values from the runner.
-			UcdSession ucdSession = getUcdSession(
-				action.getUcdUrl(),
-				action.getUcdUserId(),
-				action.getUcdUserPw()?.toString(),
-				action.getUcdAuthToken()?.toString()
-			)
+			initializeUcdSession(action)
 
 			// The action can access the UCD session.
 			action.setUcdSession(ucdSession)
@@ -301,6 +313,9 @@ class UcAdfActionsRunner {
 			}
 			
 			debugMessage("action ${action.getAction()} return ${returnObject}.")
+			
+			// Remove the session from the stack.
+			ucdSession = sessionsStack.pop()
 		}
 
 		// Set the return object in the actionReturn property.
@@ -327,66 +342,92 @@ class UcAdfActionsRunner {
 	}
 
 	// Gets a UCD session using the provided connection information and/or the current actions runner property values.
-	public UcdSession getUcdSession(
-		String ucdUrl = "",
-		String ucdUserId = "",
-		String ucdUserPw = "",
-		String ucdAuthToken = "") {
+	public initializeUcdSession(final UcAdfAction action) {
+		// Values from the action properties.
+		String ucdUrl = action.getUcdUrl()
+		String ucdUserId = action.getUcdUserId()
+		String ucdUserPw = action.getUcdUserPw()
+		String ucdAuthToken = action.getUcdAuthToken()
+
+		UcdSession saveUcdSession = ucdSession
 		
-		// Set the UCD connection URL.
-		if (!ucdUrl) {
-			ucdUrl = getPropertyValue(UcdSession.PROPUCDURL)
+		// Determine if a new session is needed.
+		Boolean needNewSession = true
+		if (ucdSession) {
+			if (ucdSession.getUcdUrl() == ucdUrl && (ucdSession.getUcdUserId() == ucdUserId && ucdSession.getUcdUserPw() == ucdUserPw) || (PASSWORDISAUTHTOKEN.equals(ucdUserId) && ucdSession.getUcdUserPw() == ucdAuthToken)) {
+				// There's currently a session and the action properties match it.
+				needNewSession = false
+			} else {
+				// There's currently a session and no action properties to override it.
+				if (!ucdUrl && !ucdUserId && !ucdUserPw && !ucdAuthToken) {
+					needNewSession = false
+				}
+			}
 		}
 
-		// If the action didn't specify connection information then use the values from the runner properties.
-		if (!ucdUserId && !ucdUserPw && !ucdAuthToken) {
-			ucdUserId = getPropertyValue(UcdSession.PROPUCDUSERID)
-			ucdUserPw = getPropertyValue(UcdSession.PROPUCDUSERPW).toString()
-			ucdAuthToken = getPropertyValue(UcdSession.PROPUCDAUTHTOKEN).toString()
-		}
-		
-		// Determine if the user ID/password or an auth token should be used for authentication.
-		// If no user ID was provided then set the user ID for token authentication.
-		if (!ucdUserId) {
-			ucdUserId = PASSWORDISAUTHTOKEN
-		}
-		
-		// If the user ID is a token user and no password was provided then use the auth token as the user password.
-		if (PASSWORDISAUTHTOKEN.equals(ucdUserId) && !ucdUserPw.toString()) {
-			ucdUserPw = ucdAuthToken
-		}
+		if (needNewSession) {
+			// Set the UCD connection URL.
+			if (!ucdUrl) {
+				ucdUrl = getPropertyValue(UcdSession.PROPUCDURL)
+			}
 
-		// If the UCD connection has never been initialized then save the properties of the first initializtion to use going forward.
-		if (!ucdUrl) {
-			setPropertyValue(UcdSession.PROPUCDURL, ucdUrl)
-		}
-		
-		if (!ucdUserId) {
-			setPropertyValue(UcdSession.PROPUCDUSERID, ucdUserId)
-			setPropertyValue(UcdSession.PROPUCDUSERPW, ucdUserPw)
-			setPropertyValue(UcdSession.PROPUCDAUTHTOKEN, ucdAuthToken)
-		}
-
-		// If the specific session has already been created then reuse it, otherwise create a new session.		
-		if (!ucdSessions.containsKey(ucdUrl)) {
-			ucdSessions[ucdUrl] = [:]
-		}
-		if (!ucdSessions[ucdUrl].containsKey(ucdUserId)) {
-			ucdSessions[ucdUrl][ucdUserId] = [:]
-		}
-
-		// Initialize the UCD session based on the derived connection values.
-		if (!ucdSessions[ucdUrl][ucdUserId].containsKey(ucdUserPw)) {
-			UcdSession ucdSession = new UcdSession(
-				ucdUrl,
-				ucdUserId,
-				ucdUserPw
-			)
+			// If the action didn't specify connection information then use the values from the runner properties.
+			if (!ucdUserId && !ucdUserPw && !ucdAuthToken) {
+				ucdUserId = getPropertyValue(UcdSession.PROPUCDUSERID)
+				ucdUserPw = getPropertyValue(UcdSession.PROPUCDUSERPW).toString()
+				ucdAuthToken = getPropertyValue(UcdSession.PROPUCDAUTHTOKEN).toString()
+			}
 			
-			ucdSessions[ucdUrl][ucdUserId][ucdUserPw] = ucdSession
+			// Determine if the user ID/password or an auth token should be used for authentication.
+			// If no user ID was provided then set the user ID for token authentication.
+			if (!ucdUserId) {
+				ucdUserId = PASSWORDISAUTHTOKEN
+			}
+			
+			// If the user ID is a token user and no password was provided then use the auth token as the user password.
+			if (PASSWORDISAUTHTOKEN.equals(ucdUserId) && !ucdUserPw.toString()) {
+				ucdUserPw = ucdAuthToken
+			}
+	
+			// If the UCD connection has never been initialized then save the properties of the first initializtion to use going forward.
+			if (!ucdUrl) {
+				setPropertyValue(UcdSession.PROPUCDURL, ucdUrl)
+			}
+			
+			if (!ucdUserId) {
+				setPropertyValue(UcdSession.PROPUCDUSERID, ucdUserId)
+				setPropertyValue(UcdSession.PROPUCDUSERPW, ucdUserPw)
+				setPropertyValue(UcdSession.PROPUCDAUTHTOKEN, ucdAuthToken)
+			}
+	
+			// If the specific session has already been created then reuse it, otherwise create a new session.		
+			if (!ucdSessions.containsKey(ucdUrl)) {
+				ucdSessions[ucdUrl] = [:]
+			}
+			if (!ucdSessions[ucdUrl].containsKey(ucdUserId)) {
+				ucdSessions[ucdUrl][ucdUserId] = [:]
+			}
+
+			if (!ucdSessions[ucdUrl][ucdUserId].containsKey(ucdUserPw)) {
+				// Initialize the UCD session based on the derived connection values.
+				if (ucdUrl && ucdUserId && ucdUserPw) {
+					ucdSession = new UcdSession(
+						ucdUrl,
+						ucdUserId,
+						ucdUserPw
+					)
+					
+					ucdSessions[ucdUrl][ucdUserId][ucdUserPw] = ucdSession
+				}
+			} else {
+				// Get the existing session based on the derived connection values.
+				ucdSession = ucdSessions[ucdUrl][ucdUserId][ucdUserPw]
+			}
 		}
 		
-		return ucdSessions[ucdUrl][ucdUserId][ucdUserPw]
+		if (ucdSession && (saveUcdSession != ucdSession)) {
+			log.info "Actions runner current session ucdUrl=[${ucdSession.getUcdUrl()}] ucdUser=[${ucdSession.getUcdUserId()}]."
+		}
 	}	
 	
 	// Output a debug message.
@@ -497,6 +538,23 @@ class UcAdfActionsRunner {
 	public setPropertyValues(final Map<String, Object> propertyValues) {
 		propertyValues.each { k, v ->
 			setPropertyValue(k, v)
+		}
+	}	
+	
+	// Set a command line property.
+	public setCommandLinePropertyValue(
+		final String propertyName, 
+		final Object propertyValue) {
+
+		debugMessage("Setting command line property name [$propertyName] value [$propertyValue].")
+			
+		commandLinePropertyValues.put(propertyName, propertyValue)
+	}
+
+	// Set command line property values from a map collection.
+	public setCommandLinePropertyValues(final Properties commandLinePropertyValues) {
+		commandLinePropertyValues.each { k, v ->
+			setCommandLinePropertyValue(k, v)
 		}
 	}	
 	
@@ -651,9 +709,14 @@ class UcAdfActionsRunner {
 					// Needed for the upcoming replaceAll so that it doesn't lose the backslashes.
 					propertyValueText = propertyValueText.replace("\\", "\\\\")
 	    	    }
-	
-	    	    Pattern subexpr = Pattern.compile(Pattern.quote(matcher.group(0)))
-	    	    returnText = subexpr.matcher(returnText).replaceAll(propertyValueText)
+
+				// Skip replacing a property value that has syntax like a variable name, e.g. ${p:foo}
+				if (propertyValueText ==~ /\$\{.*\}/) {
+					returnText = propertyValueText
+				} else {
+					Pattern subexpr = Pattern.compile(Pattern.quote(matcher.group(0)))
+					returnText = subexpr.matcher(returnText).replaceAll(propertyValueText)
+				}
 			} else {
 				// If the property value is a complex type then return it as-is.
 				// This only works for a single property replacement in a given string.

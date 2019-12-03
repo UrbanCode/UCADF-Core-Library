@@ -18,6 +18,7 @@ import org.urbancode.ucadf.core.action.ucd.component.UcdImportComponent
 import org.urbancode.ucadf.core.action.ucd.componentTemplate.UcdGetComponentTemplate
 import org.urbancode.ucadf.core.action.ucd.componentTemplate.UcdImportComponentTemplate
 import org.urbancode.ucadf.core.action.ucd.genericProcess.UcdImportGenericProcess
+import org.urbancode.ucadf.core.action.ucd.security.UcdGetSecuritySubtype
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.application.UcdApplication
 import org.urbancode.ucadf.core.model.ucd.application.UcdApplicationImport
@@ -25,10 +26,11 @@ import org.urbancode.ucadf.core.model.ucd.component.UcdComponentImport
 import org.urbancode.ucadf.core.model.ucd.componentTemplate.UcdComponentTemplate
 import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.genericProcess.UcdGenericProcessImport
-import org.urbancode.ucadf.core.model.ucd.importExport.UcdImport
 import org.urbancode.ucadf.core.model.ucd.importExport.UcdImportActionEnum
 import org.urbancode.ucadf.core.model.ucd.importExport.UcdImportTypeEnum
+import org.urbancode.ucadf.core.model.ucd.security.UcdSecuritySubtype
 import org.urbancode.ucadf.core.model.ucd.system.UcdSession
+import org.urbancode.ucadf.core.model.ucd.team.UcdTeamSecurity
 
 import com.fasterxml.jackson.databind.ObjectMapper
 
@@ -76,12 +78,12 @@ class UcdImportApplication extends UcAdfAction {
 
 		// Load the application object from a file.
 		File importFile = new File(fileName)
-		UcdApplicationImport appImport = new ObjectMapper().readValue(
+		UcdApplicationImport ucdApplicationImport = new ObjectMapper().readValue(
 			importFile, 
 			UcdApplicationImport.class
 		)
 		
-		String application = appImport.name
+		String application = ucdApplicationImport.getName()
 		logInfo("Processing import for [$application] appUpgradeType [$appUpgradeType] compUpgradeType [$compUpgradeType] compTempUpgradeType [$compTempUpgradeType] genProcessUpgradeType [$genProcessUpgradeType] removeCrypt [$removeCrypt] compMatch [$compMatch] compTempMatch [$compTempMatch] genProcessMatch [$genProcessMatch]")
 
 		// Validate the application upgrade options.
@@ -100,7 +102,7 @@ class UcdImportApplication extends UcAdfAction {
 		}
 
 		// Import the generic processes.
-		for (processImport in appImport.getAllGenericProcessImports(compMatch, compTempMatch, genProcessMatch).values()) {
+		for (processImport in ucdApplicationImport.getAllGenericProcessImports(compMatch, compTempMatch, genProcessMatch).values()) {
 			UcdImportGenericProcess.importGenericProcess(
 				actionsRunner,
 				processImport, 
@@ -109,7 +111,7 @@ class UcdImportApplication extends UcAdfAction {
 		}
 
 		// Import the application component templates.
-		for (ucdComponentTemplateImport in appImport.getComponentTemplateImports(compMatch, compTempMatch).values()) {
+		for (ucdComponentTemplateImport in ucdApplicationImport.getComponentTemplateImports(compMatch, compTempMatch).values()) {
 			// Will always use UcdImportRule.FAIL_IF_DOESNT_EXIST for the generic process import option here so that this import only affects the templates, not the generic processes the template may use
 			UcdImportComponentTemplate.importComponentTemplate(
 				actionsRunner,
@@ -120,7 +122,7 @@ class UcdImportApplication extends UcAdfAction {
 		}
 
 		// Import the application components.
-		for (ucdComponentImport in appImport.getComponentImports(compMatch).values()) {
+		for (ucdComponentImport in ucdApplicationImport.getComponentImports(compMatch).values()) {
 			// In UCD 6.1 we always used UcdImportRule.FAIL_IF_DOESNT_EXIST for options here so that this import only affects the components, 
             // not the templates or generic processes.
             // In UCD 6.2 this option is broken so we use the UcdImportRule.USE_EXISTING_IF_EXISTS option but validate the template exists first.
@@ -147,16 +149,17 @@ class UcdImportApplication extends UcAdfAction {
 		}
 
 		// Determine if the application import needs to be done. Only appUpgradeType when it won't be done is USE_EXISTING_IF_EXISTS.
+		List<UcdTeamSecurity> reAddTeamSubtypes = []
 		if (appUpgradeType != UcdImportTypeEnum.USE_EXISTING_IF_EXISTS) {
 			// Save the list of components and set the application import components list to empty so that no components are imported with the application.
-			List<UcdComponentImport> savedComponents = appImport.getComponents()
-			appImport.setComponents(new ArrayList<UcdComponentImport>())
+			List<UcdComponentImport> savedComponents = ucdApplicationImport.getComponents()
+			ucdApplicationImport.setComponents(new ArrayList<UcdComponentImport>())
 			
 			// Set the generic processes list to empty so that no components are imported with the application.
-			appImport.setGenericProcesses(new ArrayList<UcdGenericProcessImport>())
+			ucdApplicationImport.setGenericProcesses(new ArrayList<UcdGenericProcessImport>())
 	
 			// Only keep the desired environments.
-			appImport.filterEnvironments(envMatch)
+			ucdApplicationImport.filterEnvironments(envMatch)
 	
 			// Determine if creating a new application or upgrading an existing one.
 			UcdImportActionEnum importAction
@@ -166,13 +169,11 @@ class UcdImportApplication extends UcAdfAction {
 				importAction = UcdImportActionEnum.IMPORT
 			}
 
-			// Replace the HTTP-type property definitions temporarily so the import can happen correctly	
-            if (ucdSession.isUcdVersion(UcdSession.UCDVERSION_61)) {
-                appImport.replaceProcessHttpPropDefs()
-            }
+			// Fix HTTP-type property definition problem that very between UCD versions.
+			ucdApplicationImport.fixProcessHttpPropDefs(ucdSession)
 
 			logInfo("$importAction Application [$application] into [" + ucdSession.getUcdUrl() + "]")
-			String jsonStr = appImport.toJsonString(removeCrypt)
+			String jsonStr = ucdApplicationImport.toJsonString(removeCrypt)
 			
 			logInfo("jsonStr=\n$jsonStr")
 			
@@ -194,7 +195,7 @@ class UcdImportApplication extends UcAdfAction {
 				logError("$errorMsg\n${errorMsg.replaceAll(/.*(Error importing.*?)&quot.*/, '$1')}")
 				throw new UcdInvalidValueException("Status: ${response.getStatus()} Unable to import application. $target")
 			}
-			
+
 			// Re-add the components from the saved list.
 			for (UcdComponentImport savedComponent in savedComponents) {
 				actionsRunner.runAction([

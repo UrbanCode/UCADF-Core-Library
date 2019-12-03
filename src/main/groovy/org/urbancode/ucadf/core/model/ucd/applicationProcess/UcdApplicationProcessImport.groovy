@@ -4,6 +4,7 @@
 package org.urbancode.ucadf.core.model.ucd.applicationProcess
 
 import org.urbancode.ucadf.core.model.ucd.property.UcdPropDef
+import org.urbancode.ucadf.core.model.ucd.system.UcdSession
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
@@ -34,18 +35,20 @@ class UcdApplicationProcessImport {
 	List versionPresets
 	
 	/**
-	 * Replaces the HTTP values in the property definitions.
+	 * Fixes the HTTP values in the property definitions.
 	 * @param application The application name or ID.
 	 * @param process The process name or ID.
-	 * @return The list of property definitions with the HTTP values replaced.
 	 */
-	public List<UcdPropDef> replaceHttpPropDefs(
+	public fixHttpPropDefs(
 		final String application, 
-		final String process) {
+		final String process,
+		final UcdSession ucdSession) {
 		
-		return UcdPropDef.replaceHttpPropDefs(
-			application, process, 
-			propDefs
+		UcdPropDef.fixHttpPropDefs(
+			application,
+			process, 
+			propDefs,
+			ucdSession
 		)
 	}
 }

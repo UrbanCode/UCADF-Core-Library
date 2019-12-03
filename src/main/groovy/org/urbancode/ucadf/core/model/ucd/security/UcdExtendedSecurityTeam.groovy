@@ -20,19 +20,19 @@ class UcdExtendedSecurityTeam extends UcdObject {
 	/** The security type ID. (Known to the UCD APIs as resourceTypeId. */	
 	@JsonProperty("resourceTypeId")
 	String typeId
-	
+
 	/** The security type name. (Known to the UCD APIs as resourceTypeName. */	
 	@JsonProperty("resourceTypeName")
 	String typeName
-	
+
 	/** The security subtype ID. (Known to the UCD APIs as resourceRoleId. */	
 	@JsonProperty("resourceRoleId")
 	String subtypeId
-	
+
 	/** The security subtype name. (Known to the UCD APIs as resourceRoleLabel. */	
 	@JsonProperty("resourceRoleLabel")
 	String subtypeName
-
+	
 	// Constructors.	
 	UcdExtendedSecurityTeam() {
 	}

@@ -46,7 +46,14 @@ class UcdExportComponent extends UcAdfAction {
 		// Optionally save to file.
 		if (fileName) {
 			logInfo("Saving component [$component] export to file [$fileName].")
-			new File(fileName).write(ucdComponentImport.toJsonString())
+			
+			File exportFile = new File(fileName)
+			
+			// Create the file's target directory.
+			exportFile.getParentFile()?.mkdirs()
+			
+			// Write the export file.
+			exportFile.write(ucdComponentImport.toJsonString())
 		}
 		
 		return new UcdExport(ucdComponentImport)

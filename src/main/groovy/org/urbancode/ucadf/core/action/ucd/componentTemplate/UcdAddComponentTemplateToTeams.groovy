@@ -13,7 +13,6 @@ import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.security.UcdSecuritySubtype
-import org.urbancode.ucadf.core.model.ucd.security.UcdSecurityTypeEnum
 import org.urbancode.ucadf.core.model.ucd.team.UcdTeamSecurity
 
 class UcdAddComponentTemplateToTeams extends UcAdfAction {
@@ -36,26 +35,25 @@ class UcdAddComponentTemplateToTeams extends UcAdfAction {
 			String team = teamSecurity.getTeam()
 			String subtype = teamSecurity.getSubtype()
 			
-			logInfo("Adding component template [$componentTemplate] to team [$team]subtype [$subtype].")
+			logInfo("Adding component template [$componentTemplate] to team [$team] subtype [$subtype].")
 			
-			// Get the subtype ID.
-			String subtypeId = subtype
-			if (subtype && !UcdObject.isUUID(subtype)) {
+			// Get the subtype name required for the API call.
+			String subtypeName = subtype
+			if (subtype && UcdObject.isUUID(subtype)) {
 				UcdSecuritySubtype ucdSecuritySubtype = actionsRunner.runAction([
 					action: UcdGetSecuritySubtype.getSimpleName(),
-					type: UcdSecurityTypeEnum.COMPONENTTEMPLATE,
 					subtype: subtype
 				])
 				
-				subtypeId = ucdSecuritySubtype.getId()
+				subtypeName = ucdSecuritySubtype.getName()
 			}
 
 	        WebTarget target = ucdSession.getUcdWebTarget().path("/cli/componentTemplate/teams")
 				.queryParam("componentTemplate", componentTemplate)
 				.queryParam("team", team)
-				.queryParam("type", subtypeId)
+				.queryParam("type", subtypeName)
 	        logDebug("target=$target")
-	
+
 	        Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(""))
 	        if (response.getStatus() == 204) {
 	            logInfo("Component template [$componentTemplate] added to team [$team].")

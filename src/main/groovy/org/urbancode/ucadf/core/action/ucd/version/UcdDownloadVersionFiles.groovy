@@ -47,7 +47,7 @@ class UcdDownloadVersionFiles extends UcAdfAction {
 		logInfo("Downloading artifacts file [${artifactsFile.getPath()}] for component [$component] version [$version].")
 
 		// Create the artifacts file target directory.
-		artifactsFile.getParentFile().mkdirs()
+		artifactsFile.getParentFile()?.mkdirs()
 
         // Make sure the component exists.
 		UcdComponent ucdComponent = actionsRunner.runAction([

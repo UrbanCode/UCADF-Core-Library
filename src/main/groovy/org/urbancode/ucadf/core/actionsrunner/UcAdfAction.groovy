@@ -175,12 +175,6 @@ abstract class UcAdfAction extends UcdObject {
 				
 				Object propValue = this.properties.get(propName)
 				
-//				if (UcAdfActionPropertyName.isSuppressedStaticPropertyName(propName)
-//					&& ((propValue instanceof List && (propValue as List).size() < 1) || !propValue)) {
-//					
-//					continue
-//				}
-	
 				// Suppress showing properties with empty property values.
 				if ((propValue instanceof List && (propValue as List).size() < 1) || !propValue) {
 					if (UcAdfActionPropertyEnum.WHEN.getPropertyName().equals(propName) || UcAdfActionPropertyEnum.isSuppressedEmptyPropertyName(propName)) {

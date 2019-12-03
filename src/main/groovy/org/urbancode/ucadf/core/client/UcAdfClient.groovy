@@ -129,6 +129,8 @@ public class UcAdfClient {
 		// UCD session needs no connection information because it's only going to run an action that runs an actions file.
 		UcAdfActionsRunner actionsRunner = new UcAdfActionsRunner()
 
+		actionsRunner.setCommandLinePropertyValues(propertyValues)
+
 		// Run the actions from a file.
 		actionsRunner.runAction(
 			[
