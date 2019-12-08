@@ -732,11 +732,11 @@ class UcAdfActionsRunner {
 			// Determine if string needs to be evaluated as Groovy code.		
 			if (returnText ==~ /^\s*Eval\(.*?\)\s*$/) {
 				String evalStr = returnText.replaceAll(/^\s*Eval\((.*?)\)\s*$/, '$1')
-				returnText = Eval.me(evalStr)
-				debugMessage("Properties replace text after Eval [$returnText].")
+				returnObject = Eval.me(evalStr)
+				debugMessage("Properties replace text after Eval [$returnObject].")
+			} else {
+				returnObject = returnText
 			}
-			
-			returnObject = returnText
 		}
 	
     	return returnObject

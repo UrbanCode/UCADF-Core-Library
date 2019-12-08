@@ -40,7 +40,7 @@ class UcAdfRunActionsFromFile extends UcAdfAction {
 		println "=".multiply(5) + "Running actions file [$fileName]."
 
 		// Validate the action properties.	/**
-		validatePropsExistExclude([ 'ucdSession' ])
+		validatePropsExist()
 
 		// If this is the first invocation of running files then initialize the actions runner.
 		// Otherwise, the same actions runner is used across the nested runs.

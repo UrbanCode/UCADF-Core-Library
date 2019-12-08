@@ -218,6 +218,28 @@ actions:
     values:
       - "${u:requestVersions/components/UCADFCORETEST-CompStandardFull1/versions/1.0.0/name}"
 
+  # Get the application process request versions as a map/list collection.
+  - action: UcdGetApplicationProcessRequestVersions
+    requestId: "${u:requestStatus/requestId}"
+    returnAs: MAPLIST
+    actionReturnPropertyName: "requestVersions"
+  - action: UcAdfItemsLoop
+    actionInfo: false
+    items: ${u:requestVersions}
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Request version %s"
+        values:
+          - ${u:item}
+
+  # Show direct access to component version property.
+  - action: UcAdfComment
+    comment: "Version %s"
+    actionInfo: false
+    values:
+      - "${u:requestVersions/components/UCADFCORETEST-CompStandardFull1/versions/0/name}"
+
   # Run an application process that sleeps and cancel it.
   - action: UcdRunApplicationProcess
     application: "${u:coreTestAppTest}"

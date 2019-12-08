@@ -18,6 +18,9 @@ class UcdDeleteResource extends UcAdfAction {
 	/** The flag that indicates to perform the delete, otherwise show that the delete would be done. Default is true. */
 	Boolean commit = true
 	
+	/** The flag that indicates fail if the resource property is not found. Default is false. */
+	Boolean failIfNotFound = false
+
 	/**
 	 * Runs the action.	
 	 */
@@ -41,17 +44,21 @@ class UcdDeleteResource extends UcAdfAction {
 				if (response.getStatus() == 204) {
 					logInfo("Resource deleted.")
 					break
-				} else if (response.getStatus() == 404) {
-					logInfo("Resource not found.")
-					break
 				} else {
 					String responseStr = response.readEntity(String.class)
 					logInfo(responseStr)
-					if (responseStr ==~ /.*bulk manipulation query.*/ && iAttempt < MAXATTEMPTS) {
-						logInfo("Attempt $iAttempt failed. Waiting to try again.")
-						Thread.sleep(2000)
+					if (response.getStatus() == 404) {
+						if (failIfNotFound) {
+							throw new UcdInvalidValueException(response)
+						}
+						break
 					} else {
-						throw new UcdInvalidValueException(response)
+						if (responseStr ==~ /.*bulk manipulation query.*/ && iAttempt < MAXATTEMPTS) {
+							logInfo("Attempt $iAttempt failed. Waiting to try again.")
+							Thread.sleep(2000)
+						} else {
+							throw new UcdInvalidValueException(response)
+						}
 					}
 				}
 			}

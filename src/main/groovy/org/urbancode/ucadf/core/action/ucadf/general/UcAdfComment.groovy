@@ -19,7 +19,7 @@ class UcAdfComment extends UcAdfAction {
 	@Override
 	public Object run() {
 		// Validate the action properties.
-		validatePropsExistExclude([ 'ucdSession' ])
+		validatePropsExist()
 		
 		printf("$comment\n", values)
 	}

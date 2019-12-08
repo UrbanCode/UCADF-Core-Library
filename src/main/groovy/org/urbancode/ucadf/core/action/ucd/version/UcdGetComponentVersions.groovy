@@ -21,7 +21,10 @@ class UcdGetComponentVersions extends UcAdfAction {
 
 	/** The number of results to return. A value greater than 0 limits the results. Default is -1 (all versions). */
 	Integer numResults = -1
-		
+
+	/** (Optional) If specified then get versions with names that match this regular expression. */
+	String match = ""
+
 	/** The flag that indicates fail if the component is not found. Default is true. */
 	Boolean failIfNotFound = true
 	
@@ -59,6 +62,18 @@ class UcdGetComponentVersions extends UcAdfAction {
 			}
 		}
 		
-		return ucdVersions
+		List<UcdVersion> ucdReturnVersions = []
+		
+		if (match) {
+			for (ucdVersion in ucdVersions) {
+				if (ucdVersion.getName() ==~ match) {
+					ucdReturnVersions.add(ucdVersion)
+				}
+			}
+		} else {
+			ucdReturnVersions = ucdVersions
+		}
+		
+		return ucdReturnVersions
 	}
 }

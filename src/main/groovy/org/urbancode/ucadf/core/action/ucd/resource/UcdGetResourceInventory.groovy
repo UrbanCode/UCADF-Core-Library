@@ -18,22 +18,37 @@ import org.urbancode.ucadf.core.model.ucd.resource.UcdResourceInventory
 import org.urbancode.ucadf.core.model.ucd.resource.UcdResourceInventoryTable
 
 class UcdGetResourceInventory extends UcAdfAction {
+	/** The type of collection to return. */
+	enum ReturnAsEnum {
+		/** Return as a list of UcdResourceInventory objects. This is the way the UCD API returns it. */
+		LIST,
+		
+		/** Return as a map constructed as: {"components":{"MyComp":{"component":{"id":"123456","name":"MyComp"},"versions":{"MyVersion":{"id":"234566","name":"MyVersion"}}}}} */
+		MAP
+	}
+	
 	// Action properties.
 	/** The resource name or ID. */
 	String resource
 	
+	/** (Optional) If specified then get versions with names that match this regular expression. */
+	String match = ""
+
 	/** The name of the property that has the page control information. */
 	String pageControlPropertyName = UcAdfPageLoopControl.LOOPCONTROLPROPERTYNAME
 
 	/** The flag that indicates fail if the resource is not found. Default is true. */
 	Boolean failIfNotFound = true
 	
+	/** The type of colleciton to return. */
+	ReturnAsEnum returnAs = ReturnAsEnum.MAP
+
 	/**
 	 * Runs the action.	
-	 * @return The list of resource inventory objects.
+	 * @return The specified type of collection.
 	 */
 	@Override
-	public List<UcdResourceInventory> run() {
+	public Object run() {
 		// Validate the action properties.
 		validatePropsExist()
 
@@ -92,6 +107,39 @@ class UcdGetResourceInventory extends UcAdfAction {
 			throw new UcdInvalidValueException(response)
 		}
 
-		return ucdResourceInventoryEntries
+		// Return the specified collection type.
+		Object inventoryVersions
+		if (ReturnAsEnum.LIST.equals(returnAs)) {
+			if (match) {
+				List<UcdResourceInventory> resourceVersionsList = []
+				for (ucdResourceInventoryEntry in ucdResourceInventoryEntries) {
+					if (ucdResourceInventoryEntry.getVersion().getName() ==~ match) {
+						resourceVersionsList.add(ucdResourceInventoryEntry)
+					}
+				}
+				
+				inventoryVersions = resourceVersionsList
+			} else {
+				inventoryVersions = ucdResourceInventoryEntries
+			}
+		} else {
+			// Initialize the inventory versions map.
+			Map<String, Map> resourceVersionsMap = [
+				versions: new LinkedHashMap()
+			]
+	
+			for (ucdResourceInventoryEntry in ucdResourceInventoryEntries) {
+				String versionName = ucdResourceInventoryEntry.getVersion().getName()
+				
+				// Add the inventory to the version as a map item.
+				if (!match || versionName ==~ match) {
+					resourceVersionsMap['versions'][versionName] = ucdResourceInventoryEntry
+				}
+			}
+			
+			inventoryVersions = resourceVersionsMap
+		}
+
+		return inventoryVersions
 	}
 }
