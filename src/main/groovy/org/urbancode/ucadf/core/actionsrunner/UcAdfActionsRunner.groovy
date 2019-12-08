@@ -50,13 +50,13 @@ class UcAdfActionsRunner {
 
 	// Pattern to match nested properties in replacement text.
 	private Pattern nestedPropertiesPattern = Pattern.compile('\\$\\{u[\\?]*?:.*\\$\\{(u[\\?]*)?:(.*?)\\}.*?}')
-	
+  
 	// Pattern to match properties in replacement text.
 	private Pattern propertiesPattern = Pattern.compile('\\$\\{(u[\\?]?):(.*?)\\}')
 
 	// Pattern to match a property value in replacement text.	
 	private Pattern propertyValuePattern = Pattern.compile("[^\\/\"']+|\"([^\"]*)\"|'([^']*)'")
-	
+  
 	// The properties to return for a plugin invocation. These properties are accrued as set by all actions run in a single plugin step.
 	Properties outProps = new Properties()
 
