@@ -24,8 +24,8 @@ import org.urbancode.ucadf.core.integration.ldap.model.LdapUserResult
 @Slf4j
 public class LdapManager {
 	private final String ldapUrl
-	private final String bindDn
-	private final String bindPw
+	private final String connectionDn
+	private final String connectionPassword
 	private final String userSearchDc
 	private final String groupSearchDc
 
@@ -35,14 +35,14 @@ public class LdapManager {
 	
 	public LdapManager(
 		final String ldapUrl,
-		final String bindDn,
-		final String bindPw,
+		final String connectionDn,
+		final String connectionPassword,
 		final String userSearchDc,
 		final String groupSearchDc) {
 		
 		this.ldapUrl = ldapUrl
-		this.bindDn = bindDn
-		this.bindPw = bindPw
+		this.connectionDn = connectionDn
+		this.connectionPassword = connectionPassword
 		this.userSearchDc = userSearchDc
 		this.groupSearchDc = groupSearchDc
 	}
@@ -124,10 +124,10 @@ public class LdapManager {
 		env.put(Context.PROVIDER_URL, ldapUrl)
 
 		// Use credentials if required.
-		if (bindDn) {
+		if (connectionDn) {
 			env.put(Context.SECURITY_AUTHENTICATION, "simple");
-			env.put(Context.SECURITY_PRINCIPAL, bindDn);
-			env.put(Context.SECURITY_CREDENTIALS, bindPw);
+			env.put(Context.SECURITY_PRINCIPAL, connectionDn);
+			env.put(Context.SECURITY_CREDENTIALS, connectionPassword);
 		}
 		
 		DirContext ctx = new InitialDirContext((Hashtable<String, String>) env)

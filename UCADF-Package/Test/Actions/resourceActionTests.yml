@@ -150,7 +150,12 @@ actions:
         actionInfo: false
         comment: "Resource inventory %s"
         values:
-          - ${u:item/version/name}
+          - ${u:item}
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Resource inventory %s"
+        values:
+          - ${u:item/${u:coreTestVersion1}/version/name}
 
   # Remove resource inventory for a component.
   - action: UcdRemoveResourceInventory

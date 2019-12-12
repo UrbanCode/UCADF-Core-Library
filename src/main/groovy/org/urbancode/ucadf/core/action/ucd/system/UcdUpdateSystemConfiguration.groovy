@@ -10,7 +10,6 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
-import org.urbancode.ucadf.core.model.ucd.system.UcdSystemConfiguration
 
 import groovy.json.JsonBuilder
 
@@ -28,24 +27,23 @@ class UcdUpdateSystemConfiguration extends UcAdfAction {
 		validatePropsExist()
 		
 		// Get the UrbanCode system configuration.
-		UcdSystemConfiguration ucdSystemConfiguration = actionsRunner.runAction([
-			action: UcdGetSystemConfiguration.getSimpleName()
+		Map existingConfigMap = actionsRunner.runAction([
+			action: UcdGetSystemConfiguration.getSimpleName(),
+			returnAs: UcdGetSystemConfiguration.ReturnAsEnum.MAP
 		])
 		
+		// Can't use this because it comes back masked.
+		existingConfigMap.remove('deployMailPassword')
+
 		// Replace the affected properties.		
 		configMap.each { key, value ->
-			println "Replacing $key [${ucdSystemConfiguration.getProperty(key)}] with [$value]."
+			println "Replacing $key [${existingConfigMap.get(key)}] with [$value]."
+			existingConfigMap.put(key, configMap.get(key))
 		}
 		
 		logInfo("Updating the system configuration.")
 
-		Map requestMap = [:]
-		configMap.each { k, v ->
-			println "$k=$v"
-			requestMap.put(k, v)
-		}
-
-		JsonBuilder jsonBuilder = new JsonBuilder(requestMap)
+		JsonBuilder jsonBuilder = new JsonBuilder(existingConfigMap)
 		println jsonBuilder
 
 		WebTarget target = ucdSession.getUcdWebTarget().path("/rest/system/configuration")

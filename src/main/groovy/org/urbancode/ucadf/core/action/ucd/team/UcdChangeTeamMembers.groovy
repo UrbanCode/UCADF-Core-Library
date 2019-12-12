@@ -43,8 +43,8 @@ class UcdChangeTeamMembers extends UcAdfAction {
 	/** The authentication realm to use if auto-adding groups by importing a user. */
 	String authenticationRealm = ""	
 	
-	/** The bind password. */
-	UcdSecureString bindPw = new UcdSecureString()
+	/** The connection password. */
+	UcdSecureString connectionPassword = new UcdSecureString()
 
 	/**
 	 * Runs the action.	
@@ -166,7 +166,7 @@ class UcdChangeTeamMembers extends UcAdfAction {
 						actionInfo: false,
 						authorizationRealm: authorizationRealm,
 						authenticationRealm: authenticationRealm,
-						bindPw: bindPw,
+						connectionPassword: connectionPassword,
 						groups: [ groupName ]
 					])
 				}

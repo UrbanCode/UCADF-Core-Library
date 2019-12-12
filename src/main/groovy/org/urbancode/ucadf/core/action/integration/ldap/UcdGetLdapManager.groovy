@@ -19,8 +19,8 @@ class UcdGetLdapManager extends UcAdfAction {
 	/** The LDAP authorization realm. */
 	String authorizationRealm
 	
-	/** (Optional) The LDAP bind password. */
-	UcdSecureString bindPw = new UcdSecureString()
+	/** (Optional) The LDAP connection password. */
+	UcdSecureString connectionPassword = new UcdSecureString()
 	
 	private ldapManagerPropertyName
 	
@@ -62,7 +62,7 @@ class UcdGetLdapManager extends UcAdfAction {
 			ldapManager = new LdapManager(
 				ucdAuthenticationRealm.getProperties().getUrl(),
 				ucdAuthenticationRealm.getProperties().getConnectionName(),
-				bindPw.toString(),
+				connectionPassword.toString(),
 				ucdAuthenticationRealm.getProperties().getUserBase(),
 				ucdAuthorizationRealm.getProperties().getGroupBase()
 			)

@@ -282,7 +282,7 @@ class UcAdfActionsRunner {
 			throw new UcdInvalidValueException(e.getMessage() + "\n" + actionMap)
 		}
 
-		// If there's an action match value then evaluate it to determine if the action should be run.
+		// If there's a when property value then evaluate it to determine if the action should be run.
 		if (action.getWhen().toString().equals(false.toString())) {
 			log.debug("Skipping action [$actionName}] when [${action.getWhen()}].")
 		} else {

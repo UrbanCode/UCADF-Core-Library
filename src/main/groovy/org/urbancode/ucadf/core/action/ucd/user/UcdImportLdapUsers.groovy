@@ -22,8 +22,8 @@ class UcdImportLdapUsers extends UcAdfAction {
 	/** The authorization realm name or ID. */
 	String authorizationRealm
 	
-	/** The bind password. */
-	UcdSecureString bindPw = new UcdSecureString()
+	/** The connection password. */
+	UcdSecureString connectionPassword = new UcdSecureString()
 	
 	/** The list of user names. */
 	List<String> users = []
@@ -44,7 +44,7 @@ class UcdImportLdapUsers extends UcAdfAction {
 			action: UcdGetLdapManager.getSimpleName(),
 			authenticationRealm: authenticationRealm,
 			authorizationRealm: authorizationRealm,
-			bindPw: bindPw.toString()
+			connectionPassword: connectionPassword.toString()
 		])
 		
 		for (user in users) {
