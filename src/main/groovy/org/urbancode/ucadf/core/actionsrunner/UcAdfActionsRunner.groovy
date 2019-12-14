@@ -715,7 +715,7 @@ class UcAdfActionsRunner {
 					returnText = propertyValueText
 				} else {
 					Pattern subexpr = Pattern.compile(Pattern.quote(matcher.group(0)))
-					returnText = subexpr.matcher(returnText).replaceAll(propertyValueText)
+					returnText = subexpr.matcher(returnText).replaceAll(Matcher.quoteReplacement(propertyValueText))
 				}
 			} else {
 				// If the property value is a complex type then return it as-is.
