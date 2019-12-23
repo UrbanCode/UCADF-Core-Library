@@ -1,0 +1,121 @@
+# ===============================================================================
+# This actions file runs role action tests.
+# ===============================================================================
+propertyFiles:
+  - fileName: "UCADF-Package-Test/Test/UcAdfCoreTestProperties.yml"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.properties"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.secure.properties"
+  
+actions:
+  #==============================================================================          
+  # Run the tests.
+  #==============================================================================          
+  # Create a role.
+  - action: UcdCreateRole
+    name: "${u:coreTestRole1}"
+    description: "Test role description."
+    failIfExists: false
+
+  # Add every permission to the role.
+  - action: UcdGetSecurityTypePermissions
+    returnAs: MAPBYNAME
+    actionReturnPropertyName: "securityTypePermissions"
+  - action: UcAdfItemsLoop
+    actionInfo: false
+    items: ${u:securityTypePermissions}
+    itemKeyProperty: "securityTypeKey"
+    actions:
+      # Show the security type.
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Security type [%s]."
+        values:
+          - ${u:securityTypeKey}
+      # Iterate the security type permissions.
+      - action: UcAdfItemsLoop
+        actionInfo: false
+        items: ${u:item}
+        itemKeyProperty: "permissionKey"
+        actions:
+          # Show the permission.
+          - action: UcAdfComment
+            actionInfo: false
+            comment: "Security type [%s] Permission [%s]."
+            values:
+              - ${u:securityTypeKey}
+              - ${u:permissionKey}
+          # Add the permission to the role.
+          - action: UcdAddRolePermissions
+            role: "${u:coreTestRole1}"
+            type: "${u:securityTypeKey}"
+            subtype: ""
+            permissions:
+              - ${u:permissionKey}
+          
+  # Get information about a specific role.
+  - action: UcdGetRole
+    role: "${u:coreTestRole1}"
+    failIfNotFound: false
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "Role %s"
+    values:
+      - ${u:actionReturn}
+
+  # Get the list of roles.
+  - action: UcdGetRoles
+    actionReturnPropertyName: "roles"
+  - action: UcAdfItemsLoop
+    actionInfo: false
+    items: ${u:roles}
+    itemProperty: "role"
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Role %s"
+        values:
+          - ${u:role}
+
+  # Write the role permissions
+  - action: UcdWriteSecurityRolesPermissions
+    fileName: "temp/coreTestRolesPermissions.json"
+    
+  # Remove every permission from the role.
+  - action: UcdGetSecurityTypePermissions
+    returnAs: MAPBYNAME
+    actionReturnPropertyName: "securityTypePermissions"
+  - action: UcAdfItemsLoop
+    actionInfo: false
+    items: ${u:securityTypePermissions}
+    itemKeyProperty: "securityTypeKey"
+    actions:
+      # Show the security type.
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Security type [%s]."
+        values:
+          - ${u:securityTypeKey}
+      # Iterate the security type permissions.
+      - action: UcAdfItemsLoop
+        actionInfo: false
+        items: ${u:item}
+        itemKeyProperty: "permissionKey"
+        actions:
+          # Show the permission.
+          - action: UcAdfComment
+            actionInfo: false
+            comment: "Security type [%s] Permission [%s]."
+            values:
+              - ${u:securityTypeKey}
+              - ${u:permissionKey}
+          # Remove the permission to the role.
+          - action: UcdRemoveRolePermissions
+            role: "${u:coreTestRole1}"
+            type: "${u:securityTypeKey}"
+            subtype: ""
+            permissions:
+              - ${u:permissionKey}
+              
+  # Delete a role.
+  - action: UcdDeleteRole
+    role: "${u:coreTestRole1}"

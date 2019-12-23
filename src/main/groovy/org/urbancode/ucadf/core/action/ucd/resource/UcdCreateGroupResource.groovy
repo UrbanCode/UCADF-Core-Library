@@ -42,6 +42,7 @@ class UcdCreateGroupResource extends UcAdfAction {
 
 		created = actionsRunner.runAction([
 			action: UcdCreateResource.getSimpleName(),
+			actionInfo: actionInfo,
 			name: name,
 			parent: parent,
 			description: description,

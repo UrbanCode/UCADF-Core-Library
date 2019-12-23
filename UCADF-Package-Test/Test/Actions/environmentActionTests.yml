@@ -1,0 +1,193 @@
+
+# This actions file runs environment action tests.
+# ===============================================================================
+propertyFiles:
+  - fileName: "UCADF-Package-Test/Test/UcAdfCoreTestProperties.yml"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.properties"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.secure.properties"
+  
+actions:
+  #==============================================================================          
+  # Run the tests.
+  #==============================================================================          
+  # Create an environment.
+  - action: UcdCreateEnvironment
+    application: "${u:coreTestApp1}"
+    name: "${u:coreTestEnv1}"
+    color: "RED"
+    description: "Test environment"
+    failIfExists: false
+
+  # Add team security to a specified environment.
+  - action: UcdAddEnvironmentToTeams
+    application: "${u:coreTestApp1}"
+    environment: "${u:coreTestEnv1}"
+    teams:
+      - team: "${u:coreTestTeam1}"
+    removeOthers: true
+    
+  # Determine if user has environment team role.
+  - action: UcdUserHasEnvironmentTeamRole
+    application: "${u:coreTestApp1}"
+    environment: "${u:coreTestEnv1}"
+    role: "Administrator"
+    user: "admin"
+    
+  # Set environment properties.
+  - action: UcdSetEnvironmentProperties
+    application: "${u:coreTestApp1}"
+    environment: "${u:coreTestEnv1}"
+    properties:
+      - name: "PROPERTY1"
+        value: "PROPERTYVALUE1"
+    
+  # Get environment property.
+  - action: UcdGetEnvironmentProperty
+    application: "${u:coreTestApp1}"
+    environment: "${u:coreTestEnv1}"
+    property: "PROPERTY1"
+    actionReturnPropertyName: environmentProperty
+  - action: UcAdfComment
+    comment: "Environment property %s"
+    values:
+        - ${u:environmentProperty}
+    
+  # Get environment properties.
+  - action: UcdGetEnvironmentProperties
+    application: "${u:coreTestApp1}"
+    environment: "${u:coreTestEnv1}"
+    actionReturnPropertyName: environmentProperties
+    
+  # Show each environment property.
+  - action: UcAdfItemsLoop
+    items: ${u:environmentProperties}
+    actions:
+      - action: UcAdfComment
+        comment: "Environment property %s"
+        values:
+            - ${u:item}
+        
+  # Add base resources to the environment.
+  - action: UcdAddEnvironmentBaseResources
+    application: "${u:coreTestApp1}"
+    environment: "${u:coreTestEnv1}"
+    resources:
+      - "${u:coreTestTopResource}"
+
+  # Add environment conditions.
+  - action: UcdAddEnvironmentConditions
+    application: "${u:coreTestApp1}"
+    environment: "${u:coreTestEnv1}"
+    conditions:
+      -
+        - "${u:coreTestVersionStatus1}"
+      -
+        - "${u:coreTestVersionStatus2}"
+      
+  # Get environment base resources.
+  - action: UcdGetEnvironmentBaseResources
+    application: "${u:coreTestApp1}"
+    environment: "${u:coreTestEnv1}"
+    actionReturnPropertyName: environmentBaseResources
+    
+  # Show each base resource.
+  - action: UcAdfItemsLoop
+    items: ${u:environmentBaseResources}
+    actions:
+      - action: UcAdfComment
+        comment: "Environment base resource %s."
+        values:
+          - ${u:item}
+          
+  # Get the snapshot associated with the environment.
+  - action: UcdGetEnvironmentSnapshot
+    application: "${u:coreTestApp1}"
+    environment: "${u:coreTestEnv1}"
+    actionReturnPropertyName: environmentSnapshot
+  - action: UcAdfComment
+    comment: "Environment snapshot %s"
+    values:
+      - ${u:environmentSnapshot}
+    
+  # Get information about the environment.
+  - action: UcdGetEnvironment
+    application: "${u:coreTestApp1}"
+    environment: "${u:coreTestEnv1}"
+    withDetails: true
+    actionReturnPropertyName: environment
+  - action: UcAdfComment
+    comment: "Environment %s"
+    values:
+      - ${u:environment}
+      
+  # Create an environment to delete.
+  - action: UcdCreateEnvironment
+    application: "${u:coreTestApp1}"
+    name: "${u:coreTestEnvDelete}"
+    color: "RED"
+    description: "Test environment"
+    failIfExists: false
+
+  # Get the list of environments.
+  - action: UcdGetEnvironments
+    application: "${u:coreTestApp1}"
+    actionReturnPropertyName: environments
+  - action: UcAdfItemsLoop
+    actionInfo: false
+    items: ${u:environments}
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Environment %s."
+        values:
+          - ${u:item}
+          
+  # Remove base resources from the environment.
+  - action: UcdRemoveEnvironmentBaseResources
+    application: "${u:coreTestApp1}"
+    environment: "${u:coreTestEnv1}"
+    resources:
+      - "${u:coreTestTopResource}"
+      
+  # Remove team security to a specified environment.
+  - action: UcdRemoveEnvironmentFromTeams
+    application: "${u:coreTestApp1}"
+    environment: "${u:coreTestEnv1}"
+    teams:
+      - team: "${u:coreTestTeam1}"
+
+  # Get inventory by component.
+  - action: UcdGetEnvironmentInventoryByComponent
+    application: "${u:coreTestApp1}"
+    environment: "${u:coreTestEnv1}"
+  - action: UcAdfItemsLoop
+    items: ${u:actionReturn}
+    actions:
+      - action: UcAdfComment
+        comment: "Environment inventory by component %s."
+        values:
+          - ${u:item}
+    
+  # Get inventory by resource.
+  - action: UcdGetEnvironmentInventoryByResource
+    application: "${u:coreTestApp1}"
+    environment: "${u:coreTestEnv1}"
+  - action: UcAdfItemsLoop
+    items: ${u:actionReturn}
+    actions:
+      - action: UcAdfComment
+        comment: "Environment inventory by resource %s."
+        values:
+          - ${u:item}
+    
+  # Delete desired inventory versions.
+  - action: UcdDeleteDesiredInventoryVersions
+    application: "${u:coreTestApp1}"
+    environment: "${u:coreTestEnv1}"
+    component: "${u:coreTestComp1}"
+
+  # Delete an environment.
+  - action: UcdDeleteEnvironment
+    application: "${u:coreTestApp1}"
+    environment: "${u:coreTestEnvDelete}"
+    failIfNotFound: true

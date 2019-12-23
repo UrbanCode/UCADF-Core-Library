@@ -44,8 +44,10 @@ class UcdCreateSnapshotWithRequestVersions extends UcAdfAction {
 		// Get the versions from the application process request.
 		List<Map<String, String>> requestVersions = actionsRunner.runAction([
 			action: UcdGetApplicationProcessRequestVersions.getSimpleName(),
+			actionInfo: actionInfo,
 			requestId: requestId,
-			validateSingleFullVersions: validateSingleFullVersions
+			validateSingleFullVersions: validateSingleFullVersions,
+			returnAs: UcdGetApplicationProcessRequestVersions.ReturnAsEnum.LISTMAP
 		])
 
 		if (requireVersions && requestVersions.size() < 1) {
@@ -55,6 +57,7 @@ class UcdCreateSnapshotWithRequestVersions extends UcAdfAction {
 		// Create the snapshot with the versions.
 		created = actionsRunner.runAction([
 			action: UcdCreateSnapshot.getSimpleName(),
+			actionInfo: actionInfo,
 			application: application,
 			name: name,
 			description: description,

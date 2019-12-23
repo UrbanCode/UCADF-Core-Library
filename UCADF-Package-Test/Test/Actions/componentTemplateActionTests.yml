@@ -1,0 +1,113 @@
+# ===============================================================================
+# This actions file runs component template action tests.
+# ===============================================================================
+propertyFiles:
+  - fileName: "UCADF-Package-Test/Test/UcAdfCoreTestProperties.yml"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.properties"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.secure.properties"
+  
+actions:
+  #==============================================================================          
+  # Run the tests.
+  #==============================================================================          
+  # Create a component template.
+  - action: UcdCreateComponentTemplate
+    name: "${u:coreTestCompTemplate1}"
+    description: "Test component template."
+    componentType: STANDARD
+    failIfExists: false
+    
+  # Add team security to a specified component.
+  - action: UcdAddComponentTemplateToTeams
+    componentTemplate: "${u:coreTestCompTemplate1}"
+    teams:
+      - team: "${u:coreTestTeam1}"
+    
+  # Get the component template.
+  - action: UcdGetComponentTemplate
+    componentTemplate: "${u:coreTestCompTemplate1}"
+    actionReturnPropertyName: componentTemplate
+  
+  - action: UcAdfComment
+    comment: "Component template %s"
+    values:
+      - ${u:componentTemplate}
+    
+  # Create a component template.
+  - action: UcdCreateComponentTemplate
+    name: "${u:coreTestCompTemplate2}"
+    description: "Test component template."
+    componentType: STANDARD
+    failIfExists: false
+    
+  # Get the list of component templates.
+  - action: UcdGetComponentTemplates
+    actionReturnPropertyName: componentTemplates
+    
+  # Show each component template.
+  - action: UcAdfItemsLoop
+    items: ${u:componentTemplates}
+    actions:
+      - action: UcAdfComment
+        comment: "Component template %s"
+        values:
+          - ${u:item}
+
+  # Create a component template to delete.
+  - action: UcdCreateComponentTemplate
+    name: "${u:coreTestCompTemplateDelete}"
+    description: "Test component."
+    componentType: STANDARD
+    failIfExists: false
+    
+   # Export a component template to a file.
+  - action: UcdExportComponentTemplate
+    componentTemplate: "${u:coreTestCompTemplateDelete}"
+    fileName: "temp/${u:coreTestCompTemplateDelete}.json"
+
+ # Delete a component template.
+  - action: UcdDeleteComponentTemplate
+    componentTemplate: "${u:coreTestCompTemplateDelete}"
+    failIfNotFound: true
+    
+ # Import a component template to delete.
+  - action: UcdImportComponentTemplate
+    fileName: "temp/${u:coreTestCompTemplateDelete}.json"
+    compTempUpgradeType: "UPGRADE_IF_EXISTS"
+    genProcessUpgradeType: "UPGRADE_IF_EXISTS"
+    
+  # Set component template properties.
+  - action: UcdSetComponentTemplateProperties
+    componentTemplate: "${u:coreTestCompTemplate1}"
+    properties:
+      - name: "PROPERTY1"
+        value: "PROPERTYVALUE1"
+      - name: "PROPERTY2"
+        value: "PROPERTYVALUE2"
+      - name: "PROPERTY3"
+        value: "PROPERTYVALUE3"
+    
+  # Get a component template property.
+  - action: UcdGetComponentTemplateProperty
+    componentTemplate: "${u:coreTestCompTemplate1}"
+    property: "PROPERTY1"
+    actionReturnPropertyName: componentTemplateProperty
+    
+  - action: UcAdfComment
+    comment: "Component template property %s"
+    values:
+      - ${u:componentTemplateProperty}
+   
+  # Get component template properties.
+  - action: UcdGetComponentTemplateProperties
+    componentTemplate: "${u:coreTestCompTemplate1}"
+    actionReturnPropertyName: componentTemplateProperties
+    
+  # Show each component property.
+  - action: UcAdfItemsLoop
+    items: ${u:componentTemplateProperties}
+    actions:
+      - action: UcAdfComment
+        comment: "Component template property %s"
+        values:
+          - ${u:item}

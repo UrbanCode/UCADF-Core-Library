@@ -169,7 +169,8 @@ class UcdRunApplicationProcess extends UcAdfAction {
 					actionInfo: false,
 					requestId: requestId,
 					waitIntervalSecs: waitIntervalSecs,
-					maxWaitSecs: maxWaitSecs
+					maxWaitSecs: maxWaitSecs,
+					throwException: throwException
 				])
 			} else {
 				ucdApplicationProcessRequestStatus.setApplicationProcessStatus(UcdApplicationProcessRequestStatusEnum.SUCCESS)

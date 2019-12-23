@@ -43,7 +43,7 @@ class UcAdfActionsRunner {
 	private Map<String, String> commandLinePropertyValues = [:]
 	
 	// The map of action names with their respective classes.	
-	private Map<String, JavaActionClass> javaActionClasses = [:]
+	private static Map<String, JavaActionClass> javaActionClasses
 	
 	// The initialized UCD sessions.
 	private static Map<String, Map<String, Map<String, UcdSession>>> ucdSessions = [:]
@@ -80,16 +80,20 @@ class UcAdfActionsRunner {
 			[:]
 		)
 
-		// Load the Java action packages found in the system class paths.
-		findJavaActionPackages(
-			System.getProperty("java.class.path"),
-			System.getProperty("path.separator")
-		)
+		// Load the Java action packages found in the system class paths but only do it once even if multiple action runners are initialized.
+		if (!javaActionClasses) {
+			javaActionClasses = [:]
+			
+			findJavaActionPackages(
+				System.getProperty("java.class.path"),
+				System.getProperty("path.separator")
+			)
+		}
 	}
 
 	// Get the current system environment propertys.
 	public initializeSystemProperties() {
-		log.info "Setting action runner properties from system variables."
+		log.debug "Setting action runner properties from system variables."
 		Map<String, String> envMap = System.getenv()
 		for (final String name : envMap.keySet()) {
 			setPropertyValue(name, envMap.get(name))
@@ -171,7 +175,12 @@ class UcAdfActionsRunner {
 
 	// Run the actions.
 	public Object runActions(final UcAdfActions actions) {
-		// Initialie the ACTIONPACKAGES runner property.
+		// Set debug flag from property value.
+		if (!debug) {
+			debug = getPropertyValue(UcAdfActionPropertyEnum.ACTIONDEBUG.getPropertyName())
+		}
+		
+		// Initialize the ACTIONPACKAGES runner property.
 		initializeActionPackagesProperty()
 
 		// Initialize the outProps runner property so that the properties can be set/used by each action.
@@ -236,7 +245,7 @@ class UcAdfActionsRunner {
 		// Add the action to the stack.
 		String actionName = actionMap.get(UcAdfActionPropertyEnum.ACTION.getPropertyName())
 		actionsStack.push(actionName)
-
+		
 		// If no value was provided for actionInfo then default it to true.
 		Boolean actionInfo = actionMap.get(UcAdfActionPropertyEnum.ACTIONINFO.getPropertyName())
 		if (actionInfo) {
@@ -337,7 +346,7 @@ class UcAdfActionsRunner {
 		
 		// Remove the action from the stack.
 		actionsStack.pop()
-					
+		
 		return returnObject
 	}
 
@@ -349,6 +358,8 @@ class UcAdfActionsRunner {
 		String ucdUserPw = action.getUcdUserPw()
 		String ucdAuthToken = action.getUcdAuthToken()
 
+		debugMessage("Initializing UCD session ucdUrl=[$ucdUrl] ucdUserId=[$ucdUserId] ucdSession=[$ucdSession].")
+		
 		UcdSession saveUcdSession = ucdSession
 		
 		// Determine if a new session is needed.
@@ -356,10 +367,12 @@ class UcAdfActionsRunner {
 		if (ucdSession) {
 			if (ucdSession.getUcdUrl() == ucdUrl && (ucdSession.getUcdUserId() == ucdUserId && ucdSession.getUcdUserPw() == ucdUserPw) || (PASSWORDISAUTHTOKEN.equals(ucdUserId) && ucdSession.getUcdUserPw() == ucdAuthToken)) {
 				// There's currently a session and the action properties match it.
+				debugMessage("Using existing matching session [$ucdSession].")
 				needNewSession = false
 			} else {
 				// There's currently a session and no action properties to override it.
 				if (!ucdUrl && !ucdUserId && !ucdUserPw && !ucdAuthToken) {
+					debugMessage("Using existing session [$ucdSession].")
 					needNewSession = false
 				}
 			}
@@ -368,24 +381,38 @@ class UcAdfActionsRunner {
 		if (needNewSession) {
 			// Set the UCD connection URL.
 			if (!ucdUrl) {
+				// Use action property value if set.
 				ucdUrl = getPropertyValue(UcdSession.PROPUCDURL)
+				
+				// If no action property value then use the AH_WEB_URL system enviornment variable.
+				if (!ucdUrl) {
+					ucdUrl = getPropertyValue(UcdSession.PROPUCDAHWEBURL)
+				}
 			}
-
+			
 			// If the action didn't specify connection information then use the values from the runner properties.
 			if (!ucdUserId && !ucdUserPw && !ucdAuthToken) {
 				ucdUserId = getPropertyValue(UcdSession.PROPUCDUSERID)
 				ucdUserPw = getPropertyValue(UcdSession.PROPUCDUSERPW).toString()
 				ucdAuthToken = getPropertyValue(UcdSession.PROPUCDAUTHTOKEN).toString()
 			}
-			
+
 			// Determine if the user ID/password or an auth token should be used for authentication.
 			// If no user ID was provided then set the user ID for token authentication.
 			if (!ucdUserId) {
 				ucdUserId = PASSWORDISAUTHTOKEN
+				debugMessage("No ucdUserId value so setting it to PasswordIsAuthToken.")
 			}
 			
 			// If the user ID is a token user and no password was provided then use the auth token as the user password.
 			if (PASSWORDISAUTHTOKEN.equals(ucdUserId) && !ucdUserPw.toString()) {
+				debugMessage("User is PasswordIsAuthToken and no password provided so setting ucdUserPw to ucdAuthToken.")
+				
+				// If no auth token value then use DS_AUTH_TOKEN system environment variable.
+				if (!ucdAuthToken) {
+					ucdAuthToken = getPropertyValue(UcdSession.PROPUCDDSAUTHTOKEN)
+				}
+				
 				ucdUserPw = ucdAuthToken
 			}
 	
@@ -408,7 +435,11 @@ class UcAdfActionsRunner {
 				ucdSessions[ucdUrl][ucdUserId] = [:]
 			}
 
-			if (!ucdSessions[ucdUrl][ucdUserId].containsKey(ucdUserPw)) {
+			if (ucdSessions[ucdUrl][ucdUserId].containsKey(ucdUserPw)) {
+				// Get the existing session based on the derived connection values.
+				ucdSession = ucdSessions[ucdUrl][ucdUserId][ucdUserPw]
+				debugMessage("Using session found for ucdUrl=[$ucdUrl] ucdUserId=[$ucdUserId] ucdSession=[$ucdSession].")
+			} else {
 				// Initialize the UCD session based on the derived connection values.
 				if (ucdUrl && ucdUserId && ucdUserPw) {
 					ucdSession = new UcdSession(
@@ -418,10 +449,9 @@ class UcAdfActionsRunner {
 					)
 					
 					ucdSessions[ucdUrl][ucdUserId][ucdUserPw] = ucdSession
+					
+					debugMessage("New session ucdUrl=[$ucdUrl] ucdUserId=[$ucdUserId] ucdSession=[$ucdSession].")
 				}
-			} else {
-				// Get the existing session based on the derived connection values.
-				ucdSession = ucdSessions[ucdUrl][ucdUserId][ucdUserPw]
 			}
 		}
 		

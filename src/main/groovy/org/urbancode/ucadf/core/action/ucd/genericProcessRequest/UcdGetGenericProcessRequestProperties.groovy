@@ -1,7 +1,7 @@
 /**
- * This action gets an application process request's properties.
+ * This action gets an generic process request's properties.
  */
-package org.urbancode.ucadf.core.action.ucd.applicationProcessRequest
+package org.urbancode.ucadf.core.action.ucd.genericProcessRequest
 
 import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.GenericType
@@ -11,7 +11,7 @@ import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
 
-class UcdGetApplicationProcessRequestProperties extends UcAdfAction {
+class UcdGetGenericProcessRequestProperties extends UcAdfAction {
 	/** The type of collection to return. */
 	enum ReturnAsEnum {
 		/** Return as a list. */
@@ -22,9 +22,9 @@ class UcdGetApplicationProcessRequestProperties extends UcAdfAction {
 	}
 
 	// Action properties.
-	/** The application process request ID. */
+	/** The generic process request ID. */
 	String requestId
-	
+
 	/** The type of collection to return. */
 	ReturnAsEnum returnAs = ReturnAsEnum.MAPBYNAME
 
@@ -37,7 +37,7 @@ class UcdGetApplicationProcessRequestProperties extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		WebTarget target = ucdSession.getUcdWebTarget().path("/rest/deploy/applicationProcessRequest/{requestId}/properties")
+		WebTarget target = ucdSession.getUcdWebTarget().path("/rest/process/request/{requestId}/properties")
 			.resolveTemplate("requestId", requestId)
 		logDebug("target=$target")
 
@@ -45,8 +45,8 @@ class UcdGetApplicationProcessRequestProperties extends UcAdfAction {
 				
 		Response response = target.request().get()
 		if (response.getStatus() == 200) {
-			Map responseMap = response.readEntity(new GenericType<Map<String, List<UcdProperty>>>(){})
-			List<UcdProperty> ucdProperties = responseMap.get("properties")
+			List<UcdProperty> ucdProperties = response.readEntity(new GenericType<List<UcdProperty>>(){})
+			
 			if (ReturnAsEnum.LIST.equals(returnAs)) {
 				processProperties = ucdProperties
 			} else {

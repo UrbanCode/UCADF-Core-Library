@@ -110,7 +110,7 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 		
 			UcdGroup ucdGroup = actionsRunner.runAction([
 				action: UcdGetGroup.getSimpleName(),
-				team: groupName,
+				group: groupName,
 				failIfNotFound: true
 			])
 

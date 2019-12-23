@@ -59,16 +59,15 @@ class UcdSetApplicationProcessRequestProperties extends UcAdfAction {
 			logDebug("target=$target")
 			
 			Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
-			if (response.getStatus() != 200) {	
-				throw new UcdInvalidValueException(response)
-			} else if (response.getStatus() == 409) {
-				String responseStr = response.readEntity(String.class)
-				logInfo(responseStr)
-				if (iAttempt < MAXATTEMPTS) {
-					logInfo("Attempt $iAttempt failed. Waiting to try again.")
+			if (response.getStatus() == 200) {
+				break
+			} else {
+				logInfo response.readEntity(String.class)
+				if (response.getStatus() == 409 && iAttempt < MAXATTEMPTS) {
+					logInfo "Attempt $iAttempt failed. Waiting to try again."
 					Thread.sleep(2000)
 				} else {
-					throw new UcdInvalidValueException(response)
+					throw new UcdInvalidValueException("Status: ${response.getStatus()} Unable to set application process request property. $target")
 				}
 			}
 		}

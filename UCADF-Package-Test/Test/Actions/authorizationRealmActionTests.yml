@@ -1,0 +1,36 @@
+# ===============================================================================
+# This actions file runs authorization realm action tests.
+# ===============================================================================
+propertyFiles:
+  - fileName: "UCADF-Package-Test/Test/UcAdfCoreTestProperties.yml"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.properties"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.secure.properties"
+  
+actions:
+  #==============================================================================          
+  # Run the tests.
+  #==============================================================================          
+  # Get an authorization realm.
+  - action: UcdGetAuthorizationRealm
+    realm: "${u:coreTestAuthorizationRealm1}"
+    failIfNotFound: false
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "Authorization realm %s"
+    values:
+      - ${u:actionReturn}
+    
+  # Get the list of authorization realms.
+  - action: UcdGetAuthorizationRealms
+    actionReturnPropertyName: "AuthorizationRealms"
+  - action: UcAdfItemsLoop
+    actionInfo: false
+    items: ${u:AuthorizationRealms}
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Authorization realm %s"
+        values:
+          - ${u:item}
+          
+  # TODO: Add delete authentication realm test.
