@@ -1,0 +1,116 @@
+# ===============================================================================
+# This actions file runs all of the action tests.
+# ===============================================================================
+propertyValues:
+  testActionsDir: "UCADF-Package-Test/Test/Actions"
+  
+actions:
+  #==============================================================================          
+  # Initialize for tests. (Cleans out entities from previous tests.)
+  #==============================================================================          
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/initialize.yml"
+    
+  #==============================================================================          
+  # Run the tests.
+  #==============================================================================          
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/ucAdfPropertyTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/ucAdfLoopActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/statusActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/agentActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/agentpoolActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/agentrelayActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/applicationActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/applicationProcessActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/applicationProcessRequestActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/authenticationRealmActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/authorizationRealmActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/authTokenActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/componentActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/componentConfigTemplateActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/componentProcessActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/componentProcessRequestActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/componentTemplateActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/componentTemplateProcessActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/environmentActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/genericProcessActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/genericProcessRequestActionTests.yml"
+
+  # TODO: Need group action tests.
+  
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/lockActionTests.yml"
+
+  # TODO: Need plugin action tests.
+  
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/resourceActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/roleActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/securityActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/snapshotActionTests.yml"
+ 
+  # TODO: Need snapshot configuration tests.
+  
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/systemActionTests.yml"
+
+  # TODO: Need team tests.
+
+  # TODO: Need post-processing script tests.
+  
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/userActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/versionActionTests.yml"
+    
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "!!! ALL TESTS COMPLETED !!!"

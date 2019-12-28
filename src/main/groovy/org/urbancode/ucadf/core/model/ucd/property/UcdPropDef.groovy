@@ -4,6 +4,7 @@
 package org.urbancode.ucadf.core.model.ucd.property
 
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
+import org.urbancode.ucadf.core.model.ucd.system.UcdSession
 
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
@@ -65,34 +66,36 @@ abstract class UcdPropDef extends UcdObject {
 	Boolean inherited
 
 	/**
-	 * A workaround to replace HTTP property definitions temporarily then update them later.
+	 * A workaround to fix HTTP property definitions exported from an older version and imported to a new version.
 	 * @param application The application name or ID.
 	 * @param process The process name or ID.
 	 * @param ucdPropDefs The list of property definitions.
-	 * @return
 	 */
-	public static List<UcdPropDef> replaceHttpPropDefs(
+	public static fixHttpPropDefs(
 		final String application, 
 		final String process, 
-		final List<UcdPropDef> ucdPropDefs) {
-		
-		List<UcdPropDef> replacedPropDefs = []
+		final List<UcdPropDef> ucdPropDefs,
+		final UcdSession ucdSession) {
 		
 		for (int i = 0; i < ucdPropDefs.size(); i++) {
-			UcdPropDef propDef = ucdPropDefs[i]
-			if (propDef.getType() == UcdPropDef.TYPE_HTTP_SELECT || propDef.getType() == UcdPropDef.TYPE_HTTP_MULTI_SELECT) {
-				// Add the HTTP property definition to the list of definitions that will need to be updated
-				replacedPropDefs.add(propDef)
+			if (ucdPropDefs[i].getType() == UcdPropDef.TYPE_HTTP_SELECT || ucdPropDefs[i].getType() == UcdPropDef.TYPE_HTTP_MULTI_SELECT) {
+				UcdPropDefHttpSelect propDef = ucdPropDefs[i]
 				
-				// Temporarily replace the HTTP property definition with a SELECT property definition of the same name
-				log.info "Replacing HTTP property definition for application [$application] process [$process] property [$propDef.name] httpUrl [${((UcdPropDefHttpSelect)propDef).getHttpUrl()}]"
-				
-				UcdPropDef newPropDef = new UcdPropDefSelect()
-				newPropDef.name = propDef.name
-				ucdPropDefs[i] = newPropDef
+				if (ucdSession.isUcdVersion(UcdSession.UCDVERSION_61)) {
+					// Temporarily replace the HTTP property definition with a SELECT property definition of the same name.
+					log.info "Replacing HTTP property definition for application [$application] process [$process] property [${propDef.getName()}] httpUrl [${((UcdPropDefHttpSelect)propDef).getHttpUrl()}]."
+					
+					UcdPropDefSelect newPropDef = new UcdPropDefSelect()
+					newPropDef.setName(propDef.getName())
+					ucdPropDefs[i] = newPropDef
+				} else if (ucdSession.isUcdVersion(UcdSession.UCDVERSION_70)) {
+					// Fix the HTTP authentication type value.
+					if (!propDef.getHttpAuthenticationType()) {
+						log.info "Fixing HTTP property definition for application [$application] process [$process] property [${propDef.getName()}] httpUrl [${propDef.getHttpUrl()}]."
+						propDef.setHttpAuthenticationType("BASIC")
+					}
+				}
 			}
 		}
-		
-		return replacedPropDefs
 	}
 }

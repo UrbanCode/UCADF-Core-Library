@@ -60,120 +60,29 @@ class UcdSession {
 	private Client ucdWebNonCompliantClient
 
 	// Constructors.
-	public UcdSession() {
-		this("", "", "")
-	}
-		
-	public UcdSession(final Properties props) {
-		this(
-			props, 
-			new ConfigObject()
-		)
-	}
-	
-	public UcdSession(
-		final Properties props, 
-		final ConfigObject config) {
-		
-		String ucdUrl = ""
-		String ucdUserId = ""
-		String ucdUserPwOrToken = ""
-		if (config) {
-			if (config.get(PROPUCDURL)) {
-				ucdUrl = config.get(PROPUCDURL)
-			}
-			
-			if (config.get("ucdUserId")) {
-				ucdUserId = config.ucdUserId
-			}
-			
-			if (config.get("ucdUserPw")) {
-				ucdUserPwOrToken = config.ucdUserPw
-			}
-		}
-		
-		initializeSession(
-			props, 
-			ucdUrl, 
-			ucdUserId, 
-			ucdUserPwOrToken
-		)
-	}
-
-	public UcdSession(
-		final Properties props, 
-		final String ucdUserId,
-		final String ucdUserPwOrToken) {
-		
-		initializeSession(
-			props, 
-			ucdUserId, 
-			ucdUserPwOrToken
-		)
-	}
-	
 	public UcdSession(
 		final URL ucdUrl, 
 		final String ucdUserId, 
 		final String ucdUserPwOrToken) {
 		
-		Properties inProps = new Properties()
-		inProps.put(UcdSession.PROPUCDAHWEBURL, ucdUrl.toString())
-		inProps.put(UcdSession.PROPUCDDSAUTHTOKEN, "")
-
-		initializeSession(
-			inProps, 
+		this(
+			ucdUrl.toString(), 
 			ucdUserId, 
 			ucdUserPwOrToken
 		)
 	}
 	
-	public UcdSession(
+	// Defaults to using URL and token values from the environment.
+	UcdSession(
 		final String ucdUrl, 
 		final String ucdUserId, 
 		final String ucdUserPwOrToken) {
 		
-		Properties inProps = new Properties()
-		inProps.put(UcdSession.PROPUCDAHWEBURL, ucdUrl)
-		inProps.put(UcdSession.PROPUCDDSAUTHTOKEN, "")
-
-		initializeSession(
-			inProps, 
-			ucdUserId, 
-			ucdUserPwOrToken
-		)
-	}
-
-	private initializeSession(
-		final Properties props, 
-		final String ucdUserId, 
-		final String ucdUserPwOrToken) {
-		
-		initializeSession(
-			props, 
-			"", 
-			ucdUserId, 
-			ucdUserPwOrToken
-		)
-	}
-	
-	// Defaults to using URL and token values from the environment or properties.
-	// A property is typically set for workstation unit testing when it's not available as an environment variable.
-	private initializeSession(
-		final Properties props, 
-		final String ucdUrl, 
-		final String ucdUserId, 
-		final String ucdUserPwOrToken) {
-		
-		final def env = System.getenv()
+		final Map<String, String> env = System.getenv()
 
 		String derivedUcdUrl = ucdUrl
 		if (!derivedUcdUrl) {
-			if (props[PROPUCDAHWEBURL]) {
-				derivedUcdUrl = props[PROPUCDAHWEBURL]
-			} else {
-				derivedUcdUrl = env[PROPUCDAHWEBURL]
-			}
+			derivedUcdUrl = env[PROPUCDAHWEBURL]
 		}
 		this.ucdUrl = derivedUcdUrl
 		
@@ -194,9 +103,6 @@ class UcdSession {
 			String ucdAuthToken = env[PROPUCDDSAUTHTOKEN]
 			if (ucdAuthToken) {
 				log.debug "Using session token from $PROPUCDDSAUTHTOKEN environment variable."
-			} else {
-				log.debug "Using session token from $PROPUCDDSAUTHTOKEN property."
-				ucdAuthToken = props[PROPUCDDSAUTHTOKEN]
 			}
 		
 			ucdHttpAuthStr = /PasswordIsAuthToken:{"token":"$ucdAuthToken"}/
@@ -233,8 +139,16 @@ class UcdSession {
 		return ucdUserId
 	}
 	
+	public setUcdUserId(final String ucdUserId) {
+		this.ucdUserId = ucdUserId
+	}
+
 	public String getUcdUserPw() {
 		return ucdUserPw
+	}
+
+	public void setUcdUserPw(final String ucdUserPw) {
+		this.ucdUserPw = ucdUserPw
 	}
 
 	/**

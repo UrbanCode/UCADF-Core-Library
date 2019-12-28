@@ -16,7 +16,7 @@ import org.urbancode.ucadf.core.model.ucd.team.UcdTeam
 import org.urbancode.ucadf.core.model.ucd.user.UcdUser
 
 // Synchronizes the LDAP group members.
-// May provide authorizationRealm, authenticationRealm, and bindPw or ldapManager (for efficiency if called many times).
+// May provide authorizationRealm, authenticationRealm, and connectionPassword or ldapManager (for efficiency if called many times).
 class UcdSyncLdapGroupMembers extends UcAdfAction {
 	// Action properties.
 	/** The authentication realm name or ID. */
@@ -25,8 +25,8 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 	/** The authorization realm name or ID. */
 	String authorizationRealm
 	
-	/** The bind password. */
-	UcdSecureString bindPw = new UcdSecureString()
+	/** The connection password. */
+	UcdSecureString connectionPassword = new UcdSecureString()
 
 	/** (Optional) The name of a group to synchronize. */
 	String group = ""
@@ -53,14 +53,15 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 			action: UcdGetLdapManager.getSimpleName(),
 			authenticationRealm: authenticationRealm,
 			authorizationRealm: authorizationRealm,
-			bindPw: bindPw.toString()
+			connectionPassword: connectionPassword.toString()
 		])
 		
 		if (group) {
 			// Synchronize a single group.
 			UcdGroup ucdGroup = actionsRunner.runAction([
 				action: UcdGetGroup.getSimpleName(),
-				team: group,
+				actionInfo: false,
+				group: group,
 				failIfNotFound: true
 			])
 			
@@ -109,7 +110,7 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 		
 			UcdGroup ucdGroup = actionsRunner.runAction([
 				action: UcdGetGroup.getSimpleName(),
-				team: groupName,
+				group: groupName,
 				failIfNotFound: true
 			])
 
@@ -140,10 +141,11 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 			Map<String, String> ucdUserMap = new HashMap()
 			
 			List<UcdUser> ucdGroupMembers = actionsRunner.runAction([
-				action: UcdGetTeams.getSimpleName(),
+				action: UcdGetGroupMembers.getSimpleName(),
+				actionInfo: false,
 				group: ucdGroup.getId()
 			])
-			
+
 			for (UcdUser ucdUser in ucdGroupMembers) {
 				ucdUserMap.put(ucdUser.getName().toUpperCase(), ucdUser.getId())
 			}
@@ -157,6 +159,7 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 					if (!ucdUserMap.get(ldapUserName)) {
 						UcdUser ucdUser = actionsRunner.runAction([
 							action: UcdGetUser.getSimpleName(),
+							actionInfo: false,
 							user: ldapUserName,
 							failIfNotFound: false
 						])
@@ -168,11 +171,15 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 							} else {
 								actionsRunner.runAction([
 									action: UcdImportLdapUsers.getSimpleName(),
+									authenticationRealm: authenticationRealm,
+									authorizationRealm: authorizationRealm,
+									connectionPassword: connectionPassword,
 									users: [ ldapUserName ]
 								])
 								
 								ucdUser = actionsRunner.runAction([
 									action: UcdGetUser.getSimpleName(),
+									actionInfo: false,
 									user: ldapUserName,
 									failIfNotFound: false
 								])
@@ -195,6 +202,7 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 					if (!ldapUserSet.contains(ucdUserName)) {
 						UcdUser ucdUser = actionsRunner.runAction([
 							action: UcdGetUser.getSimpleName(),
+							actionInfo: false,
 							user: ucdUserMap[ ucdUserName ],
 							failIfNotFound: false
 						])

@@ -16,7 +16,7 @@ import org.urbancode.ucadf.core.model.ucd.group.UcdGroup
 import org.urbancode.ucadf.core.model.ucd.user.UcdUser
 
 // Add LDAP groups.
-// May provide authorizationRealm, authenticationRealm, and bindPw or ldapManager (for efficiency if called many times).
+// May provide authorizationRealm, authenticationRealm, and connectionPassword or ldapManager (for efficiency if called many times).
 class UcdAddLdapGroups extends UcAdfAction {
 	// Action properties.
 	/** The authentication realm name or ID. */
@@ -25,12 +25,15 @@ class UcdAddLdapGroups extends UcAdfAction {
 	/** The authorization realm name or ID. */
 	String authorizationRealm
 	
-	/** The bind password. */
-	UcdSecureString bindPw = new UcdSecureString()
+	/** The connection password. */
+	UcdSecureString connectionPassword = new UcdSecureString()
 	
 	/** The list of group names or IDs. */
 	List<String> groups
 	
+	/** The maximum number of users that can be in a group that is synchronized. (Avoids synchronizing very large groups.) */
+	Long maxSyncUsers = 200
+		
 	// Private properties.
 	private LdapManager ldapManager
 
@@ -47,7 +50,7 @@ class UcdAddLdapGroups extends UcAdfAction {
 			action: UcdGetLdapManager.getSimpleName(),
 			authenticationRealm: authenticationRealm,
 			authorizationRealm: authorizationRealm,
-			bindPw: bindPw.toString()
+			connectionPassword: connectionPassword.toString()
 		])
 
 		// Add the LDAP groups.
@@ -61,6 +64,7 @@ class UcdAddLdapGroups extends UcAdfAction {
 		for (groupName in groupNames) {
 			UcdGroup ucdGroup = actionsRunner.runAction([
 				action: UcdGetGroup.getSimpleName(),
+				actionInfo: false,
 				group: groupName,
 				failIfNotFound: false
 			])
@@ -86,6 +90,9 @@ class UcdAddLdapGroups extends UcAdfAction {
 							// Attempt to import the user.
 							actionsRunner.runAction([
 								action: UcdImportLdapUsers.getSimpleName(),
+								authenticationRealm: authenticationRealm,
+								authorizationRealm: authorizationRealm,
+								connectionPassword: connectionPassword,
 								users: [ userId ]
 							])
 
@@ -108,17 +115,25 @@ class UcdAddLdapGroups extends UcAdfAction {
 					// Get the newly added group to validate it was added.
 					ucdGroup = actionsRunner.runAction([
 						action: UcdGetGroup.getSimpleName(),
-						team: groupName,
+						actionInfo: false,
+						group: groupName,
 						failIfNotFound: true
 					])
 
 					// Synchronize the group's members.
 					actionsRunner.runAction([
-						action: UcdSyncLdapGroupMembers.getSimpleName()
+						action: UcdSyncLdapGroupMembers.getSimpleName(),
+						authenticationRealm: authenticationRealm,
+						authorizationRealm: authorizationRealm,
+						connectionPassword: connectionPassword,
+						group: groupName,
+						maxSyncUsers: maxSyncUsers
 					])
 				} else {
 					throw new UcdInvalidValueException("Unable to automatically add group [$groupName]. This could be because the group has only owners and no members.")
 				}
+			} else {
+				throw new UcdInvalidValueException("LDAP group [$groupName] not found.")
 			}
 		}
 	}

@@ -41,6 +41,7 @@ class UcdCreateAgentResource extends UcAdfAction {
 
 		created = actionsRunner.runAction([
 			action: UcdCreateResource.getSimpleName(),
+			actionInfo: actionInfo,
 			agent: agent,
 			name: name,
 			parent: parent,

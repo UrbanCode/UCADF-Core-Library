@@ -49,7 +49,7 @@ A UCADF action is a Groovy/Java class that implements the action functionality u
 
 There are currently 260+ actions available as part of the UCADF Core Library that has extensive ***JavaDoc***.
 
-The ***[UCADF-Package/Test](./UCADF-Package/Test/Actions)*** directory contains UCADF action files used to test the UCADF-Core-Library and provide usage examples.
+The ***[UCADF-Package-Test/Test](./UCADF-Package-Test/Test/Actions)*** directory contains UCADF action files used to test the UCADF-Core-Library and provide usage examples.
 
 # UCADF Actions Runner
 Many UCADF actions can be run in a given order with the ability to conditionally control the flow of the action processing. This action processing is perform by the ***UCADF-Core-Plugin*** running an UrbanCode process step, or by running the ***ucadfclient*** command line utility. In both cases they process YAML (or JSON) information that describes the actions to be performed.
@@ -413,17 +413,21 @@ mvn -f package-pom.xml package deploy:deploy-file -Dfile="target/UCADF-Core-Pack
 ```
 
 # Running Tests
-The ***[UCADF-Package/Test](./UCADF-Package/Test)*** directory contains the UCADF action files and test data used to test the UCADF-Core-Library.
+The ***[UCADF-Package-Test/Test](./UCADF-Package-Test/Test)*** directory contains the UCADF action files and test data used to test the UCADF-Core-Library.
 
 This is an example of running the actions file that runs all of the action tests.<br>
 
 ***From Eclipse***
 ```
--f Test/Actions/allActionTests.yml -DUCADF_STORE=C:/Dev/git/UCADF-Store -DucAdfInstance=ucadfdev
+Program arguments:
+-f UCADF-Package-Test/Test/allActionTests.yml -DUCADF_STORE=C:/Dev/git/UCADF-Store -DucAdfInstance=ucadfdev
+
+VM arguments:
+-Dlog4j.configuration=file:log4j.properties
 ```
 ***From the Command Line***
 ```
-ucadfclient -f src/test/resources/Test/Actions/allActionTests.yml -DUCADF_STORE=C:/Dev/git/UCADF-Store -DucAdfInstance=ucadfdev
+ucadfclient -f UCADF-Package-Test/Test/Actions/allActionTests.yml -DUCADF_STORE=C:/Dev/git/UCADF-Store -DucAdfInstance=ucadfdev
 ```
 
 # UrbanCode Deploy Versions Tested

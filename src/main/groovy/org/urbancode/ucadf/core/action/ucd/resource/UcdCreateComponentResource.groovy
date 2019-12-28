@@ -60,6 +60,7 @@ class UcdCreateComponentResource extends UcAdfAction {
 		// Create the component resource.
 		created = actionsRunner.runAction([
 			action: UcdCreateResource.getSimpleName(),
+			actionInfo: actionInfo,
 			name: name,
 			parent: parent,
 			role: roleId,

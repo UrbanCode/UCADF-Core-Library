@@ -54,7 +54,7 @@ class UcdComponentTemplate extends UcdSecurityTypeObject {
 	List<UcdTag> tags
 	
 	/** The user. */
-	UcdUser user
+	String user
 	
 	/** The commit information. */
 	UcdComponentTemplateCommit commit

@@ -77,9 +77,15 @@ abstract class UcAdfAction extends UcdObject {
 
 	/**
 	 * The UCD session to use for this action. Set by the {@link #actionsRunner}.
+	 * Had to make ucdSession public to work around problem of static usage of UcdSession properties causing stack overflow.
 	 */
 	public UcdSession ucdSession
 
+	/**
+	 * The list of properties excluded from required.
+	 */
+	private final static List<String> EXCLUDED_PROPS = [ 'ucdSession' ]
+	
 	/**
 	 * The actions runner invoking this action.
 	 */
@@ -96,7 +102,6 @@ abstract class UcAdfAction extends UcdObject {
 	abstract Object run()
 
 	/**
-	 * Had to make ucdSession public to work around problem of static usage of UcdSession properties causing stack overflow.
 	 * @param ucdSession The UCD session for the action.
 	 */
 	public void setUcdSession(final UcdSession ucdSession) {
@@ -142,7 +147,7 @@ abstract class UcAdfAction extends UcdObject {
 			}
 			
 			// Skip excluded property names.
-			if (excludeProps.contains(propName)) {
+			if (excludeProps.contains(propName) || EXCLUDED_PROPS.contains(propName)) {
 				continue
 			}
 
@@ -175,12 +180,6 @@ abstract class UcAdfAction extends UcdObject {
 				
 				Object propValue = this.properties.get(propName)
 				
-//				if (UcAdfActionPropertyName.isSuppressedStaticPropertyName(propName)
-//					&& ((propValue instanceof List && (propValue as List).size() < 1) || !propValue)) {
-//					
-//					continue
-//				}
-	
 				// Suppress showing properties with empty property values.
 				if ((propValue instanceof List && (propValue as List).size() < 1) || !propValue) {
 					if (UcAdfActionPropertyEnum.WHEN.getPropertyName().equals(propName) || UcAdfActionPropertyEnum.isSuppressedEmptyPropertyName(propName)) {

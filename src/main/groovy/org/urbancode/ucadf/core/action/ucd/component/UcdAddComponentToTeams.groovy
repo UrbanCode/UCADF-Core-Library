@@ -58,21 +58,21 @@ class UcdAddComponentToTeams extends UcAdfAction {
 		
 		logInfo("Adding component [$component] to team [$teamName] subtype [$subtype].")
 
-		// Get the subtype ID.
-		String subtypeId = subtype
-		if (subtype && !UcdObject.isUUID(subtype)) {
+		// Get the subtype name required for the API call.
+		String subtypeName = subtype
+		if (subtype && UcdObject.isUUID(subtype)) {
 			UcdSecuritySubtype ucdSecuritySubtype = actionsRunner.runAction([
 				action: UcdGetSecuritySubtype.getSimpleName(),
 				subtype: subtype
 			])
 			
-			subtypeId = ucdSecuritySubtype.getId()
+			subtypeName = ucdSecuritySubtype.getName()
 		}
 
         WebTarget target = ucdSession.getUcdWebTarget().path("/cli/component/teams")
 			.queryParam("component", component)
 			.queryParam("team", teamName)
-			.queryParam("type", subtypeId)
+			.queryParam("type", subtypeName)
 			
         logDebug("target=$target")
 

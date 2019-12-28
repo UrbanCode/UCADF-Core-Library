@@ -46,9 +46,7 @@ class UcdWriteSecurityRolesPermissions extends UcAdfAction {
 		File file = new File(fileName)
 				
 		// Initialize the temporary working directory.
-		if (file.getParentFile()) {
-			file.getParentFile().mkdirs()
-		}
+		file.getParentFile()?.mkdirs()
 
 		logInfo("Writing security actions to file [${file.getAbsolutePath()}].")
 

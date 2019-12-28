@@ -1,0 +1,102 @@
+# ===============================================================================
+# This actions file runs agent action tests.
+# ===============================================================================
+propertyFiles:
+  - fileName: "UCADF-Package-Test/Test/UcAdfCoreTestProperties.yml"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.properties"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.secure.properties"
+  
+actions:
+  #==============================================================================          
+  # Prepare for tests.
+  #==============================================================================          
+  # Create a team for the tests.
+  - action: UcdCreateTeam
+    name: "${u:coreTestTeam1}"
+  
+  #==============================================================================          
+  # Run the tests.
+  #==============================================================================          
+  # Get a value to use for a unique tag name.
+  - action: UcAdfSetActionProperties
+    setStatic: true
+    propertyValues:
+      epoch: 'Eval(new Date().getTime())'
+  - action: UcAdfSetActionProperties
+    setStatic: true
+    propertyValues:
+     agentTag: "${u:coreTestAgentTagPrefix}-${u:epoch}"
+      
+  # Get the list of agents.
+  - action: UcdGetAgents
+    actionReturnPropertyName: agents
+  - action: UcAdfItemsLoop
+    actionInfo: false
+    items: ${u:agents}
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Agent %s"
+        values:
+          - ${u:item}
+          
+  # Get information about an agent.
+  - action: UcdGetAgent
+    agent: "${u:agents/0/name}"
+
+  # Create an agent tag.
+  - action: UcdCreateAgentTag
+    name: "${u:agentTag}"
+    color: RED
+    description: "Test agent tag."
+
+  # Get information about an agent tag.
+  - action: UcdGetAgentTag
+    tag: "${u:agentTag}"
+
+  # Add a tag to an agent.  
+  - action: UcdAddTagsToAgent
+    agent: "${u:agents/0/name}"
+    tags:
+      - "${u:agentTag}"
+
+  # Get agents with the specified tag.
+  - action: UcdGetAgents
+    tag: "${u:agentTag}"
+    actionReturnPropertyName: taggedAgents
+
+  # Remove the specified tag from the specified agent.
+  - action: UcdRemoveTagsFromAgent
+    agent: "${u:taggedAgents/0/name}"
+    tags:
+      - "${u:agentTag}"
+
+  # Add tags to a specified agent.
+  - action: UcdAddTagsToAgent
+    agent: "${u:taggedAgents/0/name}"
+    tags:
+      - "${u:agentTag}"
+
+  # Remove the specified tag from the specified agent.
+  - action: UcdRemoveTagsFromAgent
+    agent: "${u:taggedAgents/0/name}"
+    tags:
+      - "${u:agentTag}"
+
+  # Add team security to a specified agent.
+  - action: UcdAddAgentToTeams
+    agent: "${u:agents/0/name}"
+    teams:
+      - team: "${u:coreTestTeam1}"
+      - team: "Public"
+    removeOthers: true
+    
+  # Remove team security from a specified agent.
+  - action: UcdRemoveAgentFromTeams
+    agent: "${u:agents/0/name}"
+    teams:
+      - team: "${u:coreTestTeam1}"
+      
+  # Delete agents that haven't been contacted in a specified amount of time.
+  - action: UcdDeleteUnusedAgents
+    lastContactMinutesAgo: 1000

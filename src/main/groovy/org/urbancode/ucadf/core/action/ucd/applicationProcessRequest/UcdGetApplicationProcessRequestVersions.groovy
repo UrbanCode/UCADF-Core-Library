@@ -9,23 +9,30 @@ import javax.ws.rs.core.Response
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.applicationProcessRequest.UcdApplicationProcessRequestVersions
 import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucd.version.UcdVersionTypeEnum
 
 class UcdGetApplicationProcessRequestVersions extends UcAdfAction {
 	/** The type of collection to return. */
 	enum ReturnAsEnum {
-		/** Return as a list. This is the way the UCD API returns it. */
+		/** Return as a list of UcdVersion objects. This is the way the UCD API returns it. */
 		LIST,
 		
-		/** Return as a map having the TODO: as the key. */
-		MAP
+		/** Return as a list of version maps, e.g. [ { "comp1" : "version1"}, {"comp2" : "version2" } ]. This is the structure UcdCreateSnapshot requires. */
+		LISTMAP,
+		
+		/** Return Map<String, Map> constructed as: {"components":{"MyComp":{"component":{"id":"123456","name":"MyComp"},"versions":{"MyVersion":{"id":"234566","name":"MyVersion"}}}}} */
+		MAP,
+		
+		/** Return as a map constructed as: {"components":{"MyComp":{"component":{"id":"123456","name":"MyComp"},"versions":[{"id":"234566","name":"MyVersion"}]}}} */
+		MAPLIST
 	}
 
 	// Action properties.
 	/** The application process request ID. */
 	String requestId
 	
-	/** If true then validate that each component has only a single version. */
-	Boolean validateSingle = false
+	/** This flag indicates to validate that only one full version of each component is selected. */
+	Boolean validateSingleFullVersions = false
 	
 	/** The flag that indicates fail if the application process request is not found. Default is true. */
 	Boolean failIfNotFound = true
@@ -33,8 +40,6 @@ class UcdGetApplicationProcessRequestVersions extends UcAdfAction {
 	/** The type of colleciton to return. */
 	ReturnAsEnum returnAs = ReturnAsEnum.MAP
 
-	// TODO: Change the returned map to a defined collection class?
-		
 	/**
 	 * Runs the action.	
 	 * @return The specified type of collection.
@@ -47,7 +52,7 @@ class UcdGetApplicationProcessRequestVersions extends UcAdfAction {
 		logInfo("Getting application process request [$requestId] versions as [$returnAs].")
 		
 		// Initialize the request versions list.		
-		List<Map<String, String>> requestVersionsList = []
+		List<Map<String, String>> requestVersionsListMap = []
 		
 		// Initialize the request versions map.
 		Map<String, Map> requestVersionsMap = [
@@ -61,19 +66,20 @@ class UcdGetApplicationProcessRequestVersions extends UcAdfAction {
 		Response response = target.request().get()
 		UcdApplicationProcessRequestVersions ucdApplicationProcessRequestVersions
 		if (response.status == 200) {
-			// API call returns a list of version objects and for each the associated component object.
+			// API call returns a list of version objects and for each of the associated component objects.
 			ucdApplicationProcessRequestVersions = response.readEntity(UcdApplicationProcessRequestVersions.class)
 
-			// Process the list of versions to create a list of maps.
+			// Process the list of versions returned by the API.
 			Boolean hasMultiple = false
 			for (ucdVersion in ucdApplicationProcessRequestVersions.getVersions()) {
 				String compName = ucdVersion.getComponent().getName()
 				String versionName = ucdVersion.getName()
 
 				println "Request has component [$compName] version [$versionName]."
-				
+
+				// A map is created regardless of the return type in order to determine if multiple full versions exist.
 				if (requestVersionsMap['components'].containsKey(compName)) {
-					if (validateSingle) {
+					if (ucdVersion.getType() == UcdVersionTypeEnum.FULL && validateSingleFullVersions) {
 						logError("Component [$compName] has more than one version selected.")
 						hasMultiple = true
 					}
@@ -83,20 +89,43 @@ class UcdGetApplicationProcessRequestVersions extends UcAdfAction {
 						component: [
 							id: ucdVersion.getComponent().getId(),
 							name: compName
-						],
-						versions: new LinkedHashMap()
+						]
 					]
+
+					// Initialize the component versions map.					
+					if (ReturnAsEnum.MAPLIST.equals(returnAs)) {
+						// Return as MAPLIST.
+						requestVersionsMap['components'][compName]['versions'] = []
+					} else if (ReturnAsEnum.MAP.equals(returnAs)) {
+						// Return as MAP.
+						requestVersionsMap['components'][compName]['versions'] = new LinkedHashMap()
+					}
 				}
 				
-				// Add the version to the component versions map.
-				requestVersionsMap['components'][compName]['versions'][versionName] = [
-					id: ucdVersion.getId(),
-					name: versionName
-				]
+				// Add the version to the collection.
+				if (ReturnAsEnum.MAPLIST.equals(returnAs)) {
+					// Return as MAPLIST. Add the version as a list item.
+					(requestVersionsMap['components'][compName]['versions'] as List).add(
+						[
+							id: ucdVersion.getId(),
+							name: versionName
+						]
+					)
+				} else if (ReturnAsEnum.MAP.equals(returnAs)) {
+					// Return as MAP. Add the version as a map item.
+					requestVersionsMap['components'][compName]['versions'][versionName] = [
+						id: ucdVersion.getId(),
+						name: versionName
+					]
+				} else if (ReturnAsEnum.LISTMAP.equals(returnAs)) {
+					requestVersionsListMap.add(
+						[ (ucdVersion.getComponent().getName()) : ucdVersion.getName() ]
+					)
+				}
 			}
 			
-			if (validateSingle && hasMultiple) {
-				throw new UcdInvalidValueException("A given component is not allowed to have more than one version selected.")
+			if (validateSingleFullVersions && hasMultiple) {
+				throw new UcdInvalidValueException("A given component is not allowed to have more than one full version selected.")
 			}
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
@@ -113,10 +142,12 @@ class UcdGetApplicationProcessRequestVersions extends UcAdfAction {
 		// Return the specified collection type.
 		Object requestVersions
 		if (ReturnAsEnum.LIST.equals(returnAs)) {
-			if (ucdApplicationProcessRequestVersions) {
-				requestVersions = ucdApplicationProcessRequestVersions.getVersions()
-			}
+			// The list of UcdVersion objects.
+			requestVersions = ucdApplicationProcessRequestVersions?.getVersions()
+		} else if (ReturnAsEnum.LISTMAP.equals(returnAs)) {
+			requestVersions = requestVersionsListMap
 		} else {
+			// Return as MAP or MAPLIST.
 			requestVersions = requestVersionsMap
 		}
 

@@ -20,8 +20,8 @@ class UcdCreateSnapshotWithRequestVersions extends UcAdfAction {
 	/** (Optional) The description. */
 	String description = ""
 	
-	/** This flag indicates to validate that only one version of each component is selected. */
-	Boolean validateSingleVersions = true
+	/** This flag indicates to validate that only one full version of each component is selected. */
+	Boolean validateSingleFullVersions = true
 	
 	/** This flag indicates to require versions. */
 	Boolean requireVersions = true
@@ -39,22 +39,15 @@ class UcdCreateSnapshotWithRequestVersions extends UcAdfAction {
 
 		Boolean created = false
 		
-		// Validate the snapshot has single versions selected.
-		if (validateSingleVersions) {
-			Map<String, Set> versionsMap = actionsRunner.runAction([
-				action: UcdGetApplicationProcessRequestVersions.getSimpleName(),
-				requestId: requestId,
-				validateSingle: true
-			])
-		}
-		
 		logInfo("Creating application [$application] snapshot [$name] with versions from application process request [$requestId].")
 		
 		// Get the versions from the application process request.
-		// TODO: Need to change to accommodate new versions structure.
 		List<Map<String, String>> requestVersions = actionsRunner.runAction([
 			action: UcdGetApplicationProcessRequestVersions.getSimpleName(),
-			requestId: requestId
+			actionInfo: actionInfo,
+			requestId: requestId,
+			validateSingleFullVersions: validateSingleFullVersions,
+			returnAs: UcdGetApplicationProcessRequestVersions.ReturnAsEnum.LISTMAP
 		])
 
 		if (requireVersions && requestVersions.size() < 1) {
@@ -64,6 +57,7 @@ class UcdCreateSnapshotWithRequestVersions extends UcAdfAction {
 		// Create the snapshot with the versions.
 		created = actionsRunner.runAction([
 			action: UcdCreateSnapshot.getSimpleName(),
+			actionInfo: actionInfo,
 			application: application,
 			name: name,
 			description: description,

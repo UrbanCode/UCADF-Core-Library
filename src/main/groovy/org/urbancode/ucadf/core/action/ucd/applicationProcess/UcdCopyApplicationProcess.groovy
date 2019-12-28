@@ -77,10 +77,13 @@ class UcdCopyApplicationProcess extends UcAdfAction {
 			}
 		}
 
-		// Replace application process HTTP property definitions with a fake value to prevent application corruption due to UCD problem
-        if (ucdSession.isUcdVersion(UcdSession.UCDVERSION_61)) {
-            UcdPropDef.replaceHttpPropDefs(toApplication, fromProcess.getName(), fromProcess.getPropDefs())
-        }
+		// Fix HTTP property definition problems that vary with UCD versions.
+        UcdPropDef.fixHttpPropDefs(
+			toApplication, 
+			fromProcess.getName(), 
+			fromProcess.getPropDefs(),
+			ucdSession
+		)
 		
 		logDebug("Replaced process.rootActivity\n" + new JsonBuilder(fromProcess.getRootActivity()).toPrettyString())
 		logDebug("Replaced process.propDefs\n" + new JsonBuilder(fromProcess.getPropDefs()).toPrettyString())

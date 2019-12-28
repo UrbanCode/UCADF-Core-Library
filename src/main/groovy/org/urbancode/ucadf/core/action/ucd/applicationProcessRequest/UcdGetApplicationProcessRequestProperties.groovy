@@ -12,36 +12,54 @@ import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
 
 class UcdGetApplicationProcessRequestProperties extends UcAdfAction {
+	/** The type of collection to return. */
+	enum ReturnAsEnum {
+		/** Return as a list. */
+		LIST,
+		
+		/** Return as a map having the property name as the key. */
+		MAPBYNAME
+	}
+
 	// Action properties.
 	/** The application process request ID. */
 	String requestId
+	
+	/** The type of collection to return. */
+	ReturnAsEnum returnAs = ReturnAsEnum.MAPBYNAME
 
 	/**
 	 * Runs the action.	
-	 * @return The map of application process request properties having the property name as the key and the value a property object.
+	 * @return The specified type of collection.
 	 */
 	@Override
-	public Map<String, UcdProperty> run() {
+	public Object run() {
 		// Validate the action properties.
 		validatePropsExist()
 
-		Map<String, UcdProperty> propertiesMap = [:]
-		
 		WebTarget target = ucdSession.getUcdWebTarget().path("/rest/deploy/applicationProcessRequest/{requestId}/properties")
 			.resolveTemplate("requestId", requestId)
 		logDebug("target=$target")
-		
+
+		Object processProperties
+				
 		Response response = target.request().get()
 		if (response.getStatus() == 200) {
 			Map responseMap = response.readEntity(new GenericType<Map<String, List<UcdProperty>>>(){})
 			List<UcdProperty> ucdProperties = responseMap.get("properties")
-			for (ucdProperty in ucdProperties) {
-				propertiesMap.put(ucdProperty.getName(), ucdProperty)
+			if (ReturnAsEnum.LIST.equals(returnAs)) {
+				processProperties = ucdProperties
+			} else {
+				Map<String, UcdProperty> propertiesMap = [:]
+				for (ucdProperty in ucdProperties) {
+					propertiesMap.put(ucdProperty.getName(), ucdProperty)
+				}
+				processProperties = propertiesMap
 			}
 		} else {
             throw new UcdInvalidValueException(response)
 		}
 		
-		return propertiesMap
+		return processProperties
 	}	
 }

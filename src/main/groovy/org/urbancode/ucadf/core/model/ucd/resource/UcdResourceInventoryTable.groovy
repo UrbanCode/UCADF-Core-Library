@@ -7,7 +7,7 @@ import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
-//@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 class UcdResourceInventoryTable extends UcdObject {
 	/** The total records. */
 	Long totalRecords

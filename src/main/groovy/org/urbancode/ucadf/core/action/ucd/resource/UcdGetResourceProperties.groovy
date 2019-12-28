@@ -33,7 +33,7 @@ class UcdGetResourceProperties extends UcAdfAction {
 	
 	/**
 	 * Runs the action.	
-	 * @return The list of resource property objects.
+	 * @return The specified type of collection.
 	 */
 	@Override
 	public Object run() {

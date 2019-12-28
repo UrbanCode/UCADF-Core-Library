@@ -18,6 +18,9 @@ class UcdRemoveTagsFromAgent extends UcAdfAction {
 	/** The list of tag names or IDs. */
 	List<String> tags
 
+	/** The flag that indicates to perform the removal, otherwise show that the removal would be done. Default is true. */
+	Boolean commit = true
+
 	/**
 	 * Runs the action.	
 	 */
@@ -27,17 +30,21 @@ class UcdRemoveTagsFromAgent extends UcAdfAction {
 		validatePropsExist()
 
 		for (tag in tags) {
-			logInfo("Remove tag [$tag] from agent [$agent].")
-			
-			WebTarget target = ucdSession.getUcdWebTarget().path("/cli/agentCLI/tag")
-				.queryParam("agent", agent)
-				.queryParam("tag", tag)
+			if (commit) {
+				logInfo("Remove tag [$tag] from agent [$agent].")
 				
-			Response response = target.request(MediaType.APPLICATION_JSON).delete()
-			if (response.getStatus() == 204) {
-				logInfo("Tag [$tag] removed from agent [$agent].")
+				WebTarget target = ucdSession.getUcdWebTarget().path("/cli/agentCLI/tag")
+					.queryParam("agent", agent)
+					.queryParam("tag", tag)
+					
+				Response response = target.request(MediaType.APPLICATION_JSON).delete()
+				if (response.getStatus() == 204) {
+					logInfo("Tag [$tag] removed from agent [$agent].")
+				} else {
+		            throw new UcdInvalidValueException(response)
+				}
 			} else {
-	            throw new UcdInvalidValueException(response)
+				logInfo("Would remove tag [$tag] from agent [$agent].")
 			}
 		}
 	}

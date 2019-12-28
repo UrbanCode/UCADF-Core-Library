@@ -15,19 +15,8 @@ import groovy.util.logging.Slf4j
 
 @Slf4j
 public class UcAdfPluginActionsRunner {
-	// Properties provided in the configuration.
-	public final static String CONFIGPROP_ACTION = "action"
-	public final static String CONFIGPROP_ENVIRONMENT = "actionEnvironment"
-
 	// Input properties for running UCADF actions.
 	final static String INPROP_ACTIONSTEXT = "actionsText"
-	final static String INPROP_SCRIPTBODY = "scriptBody"
-	final static String INPROP_SCRIPTFILE = "scriptFile"
-
-	// Properties provided to script file or script body execution.
-	public final static String BINDPROP_INPROPS = "inProps"
-	public final static String BINDPROP_OUTPROPS = "outProps"
-	public final static String BINDPROP_CONFIG = "config"
 
 	// Main.
 	public static void main(String[] args) throws Exception {
@@ -75,12 +64,10 @@ public class UcAdfPluginActionsRunner {
 			
 			// Get the plugin input property values.
 			final String actionsText = inProps[INPROP_ACTIONSTEXT]
-			final String scriptFile = inProps[INPROP_SCRIPTFILE]
-			final String scriptBody = inProps[INPROP_SCRIPTBODY]
 		
 			// Validate enough information was provided to execute.		
-			if (!actionsText && !scriptFile && !scriptBody) {
-				throw new UcdInvalidValueException("An actions file, actions text, actions string, or a Groovy file or Groovy text.")
+			if (!actionsText) {
+				throw new UcdInvalidValueException("No actionsText provided.")
 			}
 
 			// The output properties.
@@ -117,25 +104,6 @@ public class UcAdfPluginActionsRunner {
 						throw(e)
 					}
 				}
-			} else if (scriptFile || scriptBody) {
-				// Give the script access to the inProps, outProps, and config objects.
-				Binding binding = new Binding()
-				binding.setVariable(BINDPROP_OUTPROPS, outProps)
-				binding.setVariable(BINDPROP_INPROPS, inProps)
-		
-				// If a script file was specified then read the script body from that file.
-				String derivedScriptBody
-				if (scriptFile) {
-					derivedScriptBody = new File(scriptFile).text
-					log.info "Running actions from Groovy file."
-				} else {
-					log.info "Running actions from Groovy script."
-					derivedScriptBody = scriptBody
-				}
-		
-				// Execute the script.
-				GroovyShell shell = new GroovyShell(binding)
-				shell.evaluate(derivedScriptBody)
 			}
 			
 			// Write the output properties file.
@@ -159,15 +127,5 @@ public class UcAdfPluginActionsRunner {
 		}
 
 		println "DONE"
-	}
-	
-	// Read the file once to see if it has an environment property and if it does read the
-	// same configuration again using that value as the environment value.
-	public static ConfigObject getEnvironmentConfig(String configStr) {
-		ConfigObject config = new ConfigSlurper().parse(configStr)
-		if (config.containsKey(CONFIGPROP_ENVIRONMENT)) {
-			config = new ConfigSlurper(config.getAt(CONFIGPROP_ENVIRONMENT)).parse(configStr)
-		}
-		return config
 	}
 }

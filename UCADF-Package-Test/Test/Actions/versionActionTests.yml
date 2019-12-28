@@ -1,0 +1,157 @@
+# ===============================================================================
+# This actions file runs version action tests.
+# ===============================================================================
+propertyFiles:
+  - fileName: "UCADF-Package-Test/Test/UcAdfCoreTestProperties.yml"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.properties"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.secure.properties"
+  
+actions:
+  #==============================================================================          
+  # Run the tests.
+  #==============================================================================          
+  # Delete a version.
+  - action: UcdDeleteVersion
+    component: "${u:coreTestComp1}"
+    version: "${u:coreTestVersionDelete}"
+    
+  # Create a version to delete.
+  - action: UcdCreateVersion
+    component: "${u:coreTestComp1}"
+    name: "${u:coreTestVersionDelete}"
+    description: "Test version."
+    failIfExists: false
+      
+  # TODO: Need more tests.
+  # Add version files.
+  - action: UcdAddVersionFiles
+    component: "${u:coreTestComp1}"
+    version: "${u:coreTestVersionDelete}"
+    base: "UCADF-Package-Test/Test/Applications"
+    offset: MyDir
+    saveExecuteBits: true
+    include:
+      - "**/*"
+ 
+  # Download a version's files.
+  - action: UcdDownloadVersionFiles
+    component: "${u:coreTestComp1}"
+    version: "${u:coreTestVersionDelete}"
+    fileName: "temp/junk.zip"
+    extractDirName: "temp/junk"
+    
+  # Create a version to delete.
+  - action: UcdCreateVersion
+    component: "${u:coreTestComp1}"
+    name: "${u:coreTestVersionDelete}"
+    description: "Test version."
+    failIfExists: false
+
+  # Set version properties.
+  - action: UcdSetVersionProperties
+    component: "${u:coreTestComp1}"
+    version: "${u:coreTestVersionDelete}"
+    properties:
+      - name: "${u:coreTestProperty1}"
+        value: "${u:coreTestProperty1}-Value"
+
+  # Get version property.
+  - action: UcdGetVersionProperty
+    component: "${u:coreTestComp1}"
+    version: "${u:coreTestVersionDelete}"
+    property: "${u:coreTestProperty1}"
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "Version property %s"
+    values:
+      - ${u:actionReturn}
+    
+  # Get version properties.
+  - action: UcdGetVersionProperties
+    component: "${u:coreTestComp1}"
+    version: "${u:coreTestVersionDelete}"
+    actionReturnPropertyName: versionProperties
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "Version property %s"
+    values:
+      - ${u:versionProperties/UCADFCORETEST-Property1}
+  - action: UcAdfItemsLoop
+    actionInfo: false
+    items: ${u:versionProperties}
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Version property item %s"
+        values:
+          - ${u:item}
+          
+  # Get a version.
+  - action: UcdGetVersion
+    component: "${u:coreTestComp1}"
+    version: "${u:coreTestVersionDelete}"
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "Version %s"
+    values:
+      - ${u:actionReturn}
+      
+  # Get versions.
+  - action: UcdGetComponentVersions
+    component: "${u:coreTestComp1}"
+    actionReturnPropertyName: versions
+  - action: UcAdfItemsLoop
+    actionInfo: false
+    items: ${u:versions}
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Version %s"
+        values:
+          - ${u:item}
+
+  # Remove version statuses.
+  - action: UcdRemoveVersionStatuses
+    component: "${u:coreTestComp1}"
+    version: "${u:coreTestVersionDelete}"
+    statuses:
+      - "${u:coreTestVersionStatus1}"
+
+  # Delete a version.
+  - action: UcdDeleteVersion
+    component: "${u:coreTestComp1}"
+    version: "${u:coreTestVersionDelete}"
+
+  # Bulk add 100 versions.
+  - action: UcAdfCounterLoop
+    counterBegin: 1
+    counterChange: 1
+    counterEnd: 100
+    actionInfo: false
+    actions:
+      - action: UcdCreateVersion
+        component: "${u:coreTestComp1}"
+        name: 'Eval(import java.text.SimpleDateFormat; new SimpleDateFormat("yyyyMMddHHmmssSSSS").format(new Date()))'
+        description: "Test version."
+        failIfExists: false
+
+  # Get versions using page loop.
+  - action: UcAdfPageLoop
+    actionInfo: false
+    rowsPerPage: 20
+    actions:
+      - action: UcdGetVersions
+        actionInfo: false
+        component: "${u:coreTestComp1}"
+        actionReturnPropertyName: versions
+      - action: UcAdfItemsLoop
+        actionInfo: false
+        items: ${u:versions}
+        actions:
+          - action: UcAdfComment
+            actionInfo: false
+            comment: "Component [%s] Version [%s] Page [%s]"
+            values:
+              - ${u:item/component/name}
+              - ${u:item/name}
+              - ${u:pageLoopControl}

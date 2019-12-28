@@ -24,7 +24,7 @@ class UcdCreateSnapshot extends UcAdfAction {
 	/** (Optional) The description. */
 	String description = ""
 	
-	/** The list of version maps. */
+	/** The list of version maps, e.g. [ { "comp1" : "version1"}, {"comp2" : "version2" } ] */
 	List<Map<String, String>> versions = []
 	
 	/** The flag that indicates fail if the snapshot already exists. Default is true. */

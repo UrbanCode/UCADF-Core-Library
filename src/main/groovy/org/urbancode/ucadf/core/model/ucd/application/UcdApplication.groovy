@@ -47,6 +47,11 @@ class UcdApplication extends UcdSecurityTypeObject {
 	/** The extended security. */
 	UcdExtendedSecurity extendedSecurity
 
+	Long templateVersion
+	String templateId
+
+	String notificationSchemeId	
+	
 	// Constructors.
 	UcdApplication() {
 	}

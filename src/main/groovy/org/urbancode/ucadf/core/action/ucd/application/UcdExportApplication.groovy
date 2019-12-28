@@ -55,9 +55,7 @@ class UcdExportApplication extends UcAdfAction {
 			propertiesFile = new File(propertiesFileName)
 			
 			for (file in [ exportFile, actionsFile ]) {
-				if (file.getParentFile()) {
-					file.getParentFile().mkdirs()
-				}
+				file.getParentFile()?.mkdirs()
 			}
 		}
 

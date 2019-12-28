@@ -9,9 +9,9 @@ import org.urbancode.ucadf.core.model.ucd.componentTemplate.UcdComponentTemplate
 import org.urbancode.ucadf.core.model.ucd.environment.UcdEnvironmentImport
 import org.urbancode.ucadf.core.model.ucd.genericProcess.UcdGenericProcessImport
 import org.urbancode.ucadf.core.model.ucd.importExport.UcdImport
-import org.urbancode.ucadf.core.model.ucd.property.UcdPropDef
 import org.urbancode.ucadf.core.model.ucd.property.UcdPropSheet
 import org.urbancode.ucadf.core.model.ucd.status.UcdStatus
+import org.urbancode.ucadf.core.model.ucd.system.UcdSession
 import org.urbancode.ucadf.core.model.ucd.tag.UcdTag
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
@@ -118,17 +118,15 @@ class UcdApplicationImport extends UcdImport {
 	public Map<String, UcdGenericProcessImport> getGenericProcessImports(final String match = "") {
 		return getGenericProcessImports(genericProcesses, match)
 	}
-
-	// Replace application process HTTP property definitions temporarily	
-	public Map<String, List<UcdPropDef>> replaceProcessHttpPropDefs() {
-		Map<String, List<UcdPropDef>> replacedProcessPropDefs = new TreeMap()
+	
+	// Fix HTTP property definition problems that vary between UCD versions.
+	public fixProcessHttpPropDefs(final UcdSession ucdSession) {
 		for (process in processes) {
-			List<UcdPropDef> replacedPropDefs = process.replaceHttpPropDefs(name, process.name)
-			if (replacedPropDefs.size() > 0) {
-				replacedProcessPropDefs[process.name] = replacedPropDefs
-			}
+			process.fixHttpPropDefs(
+				name, 
+				process.getName(),
+				ucdSession
+			)
 		}
-		
-		return replacedProcessPropDefs
 	}
 }

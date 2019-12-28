@@ -1,0 +1,142 @@
+# ===============================================================================
+# This actions file runs security action tests.
+# ===============================================================================
+propertyFiles:
+  - fileName: "UCADF-Package-Test/Test/UcAdfCoreTestProperties.yml"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.properties"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.secure.properties"
+  
+actions:
+  #==============================================================================          
+  # Security type tests.
+  #==============================================================================          
+  # For each security type, get the specific security type.
+  - action: UcdGetSecurityTypes
+    actionReturnPropertyName: "securityTypes"
+  - action: UcAdfItemsLoop
+    actionInfo: false
+    items: ${u:securityTypes}
+    itemProperty: "securityType"
+    actions:
+      - action: UcdGetSecurityType
+        type: "${u:securityType/name}"
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Security type %s"
+        values:
+          - ${u:actionReturn}
+      
+  - action: UcdGetSecurityType
+    type: "Web UI"
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "Security type %s"
+    values:
+      - ${u:actionReturn}
+      
+  # Get the list of the security types.
+  - action: UcdGetSecurityTypes
+  - action: UcAdfItemsLoop
+    actionInfo: false
+    items: ${u:actionReturn}
+    itemProperty: "securityType"
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Security type %s"
+        values:
+          - ${u:securityType}
+
+  # Get a list of the security type permissions.
+  - action: UcdGetSecurityTypePermissions
+    returnAs: MAPBYID
+  - action: UcAdfItemsLoop
+    actionInfo: false
+    items: ${u:actionReturn}
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Security type permission %s %s"
+        values:
+          - ${u:itemKey}
+          - ${u:item}
+
+  #==============================================================================          
+  # Security subtype tests.
+  #==============================================================================          
+  # Create a security subtype for each security type.
+  - action: UcdGetSecurityTypes
+    actionReturnPropertyName: "securityTypes"
+  - action: UcAdfItemsLoop
+    actionInfo: false
+    items: ${u:securityTypes}
+    itemProperty: "securityType"
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Security type %s"
+        values:
+          - ${u:securityType}
+      - action: UcdCreateSecuritySubtype
+        when: "${u:securityType/subtypeAllowed}"
+        type: "${u:securityType/name}"
+        name: "${u:coreTestSecuritySubtypePrefix}${u:securityType/name}"
+        description: "Test security subtype description."
+        failIfExists: false
+
+  # For each security type get the specific security subtype.
+  - action: UcdGetSecurityTypes
+    actionReturnPropertyName: "securityTypes"
+  - action: UcAdfItemsLoop
+    actionInfo: false
+    items: ${u:securityTypes}
+    itemProperty: "securityType"
+    actions:
+      - action: UcdGetSecuritySubtype
+        when: "${u:securityType/subtypeAllowed}"
+        subtype: "${u:coreTestSecuritySubtypePrefix}${u:securityType/name}"
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Security subtype %s"
+        values:
+          - ${u:actionReturn}
+
+  # Get a specific securitiy subtype.
+  - action: UcdGetSecuritySubtype
+    subtype: "${u:coreTestSecuritySubtypePrefix}Component"
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "Security subtype %s"
+    values:
+      - ${u:actionReturn}
+      
+  # Get a list of the security subtypes.
+  - action: UcdGetSecuritySubtypes
+  - action: UcAdfItemsLoop
+    actionInfo: false
+    items: ${u:actionReturn}
+    itemProperty: "securitySubtype"
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Security subtype %s"
+        values:
+          - ${u:securitySubtype}
+          
+  # For each security type delete the specified security subtype.
+  - action: UcdGetSecurityTypes
+    actionReturnPropertyName: "securityTypes"
+  - action: UcAdfItemsLoop
+    actionInfo: false
+    items: ${u:securityTypes}
+    itemProperty: "securityType"
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Security type %s"
+        values:
+          - ${u:securityType}
+      - action: UcdDeleteSecuritySubtype
+        when: "${u:securityType/subtypeAllowed}"
+        subtype: "${u:coreTestSecuritySubtypePrefix}${u:securityType/name}"
+        failIfNotFound: false

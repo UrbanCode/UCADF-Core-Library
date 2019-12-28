@@ -11,4 +11,16 @@ class UcdTeamSecurity extends UcdObject {
 	
 	/** The subtype name or ID. */
 	String subtype = ""
+
+	// Constructors.
+	UcdTeamSecurity() {
+	}
+	
+	UcdTeamSecurity(
+		final String team,
+		final String subtype) {
+		
+		this.team = team
+		this.subtype = subtype
+	}
 }

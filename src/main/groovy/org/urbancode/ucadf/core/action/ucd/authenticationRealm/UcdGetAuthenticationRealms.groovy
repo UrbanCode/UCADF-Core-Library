@@ -1,5 +1,5 @@
 /**
- * This action get a list of authentication realms.
+ * This action gets a list of authentication realms.
  */
 package org.urbancode.ucadf.core.action.ucd.authenticationRealm
 
