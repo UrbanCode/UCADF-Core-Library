@@ -6,15 +6,11 @@ package org.urbancode.ucadf.core.action.ucd.componentProcessRequest
 import java.text.SimpleDateFormat
 import java.util.regex.Matcher
 
-import org.urbancode.ucadf.core.action.ucd.applicationProcessRequest.UcdGetApplicationProcessRequest
-import org.urbancode.ucadf.core.action.ucd.applicationProcessRequest.UcdSetApplicationProcessRequestProperties
 import org.urbancode.ucadf.core.action.ucd.user.UcdGetUser
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.applicationProcessRequest.UcdApplicationProcessRequest
 import org.urbancode.ucadf.core.model.ucd.componentProcessRequest.UcdComponentProcessRequest
 import org.urbancode.ucadf.core.model.ucd.componentProcessRequest.UcdComponentProcessRequestTask
 import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
-import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
 import org.urbancode.ucadf.core.model.ucd.user.UcdUser
 
 class UcdGetComponentProcessRequestTaskCompletionProperties extends UcAdfAction {
@@ -30,26 +26,20 @@ class UcdGetComponentProcessRequestTaskCompletionProperties extends UcAdfAction 
 	/** The task name. */
 	String taskName
 	
-	/** (Optional) The request ID of a process for which the componention properties should be set. */
-	String setPropsProcessRequestId = ""
-	
-	/** (Optional) The propery name suffix for the completion properties set on the specified request. */
-	String setPropsProcessRequestSuffix = ""
-	
 	/** The flag that indicates fail if the task is not found. Default is true. */
 	String failIfNotFound = true
 	
 	/**
 	 * Runs the action.	
-	 * @return The map of component process request properties having the property name as the key and the value a property object.
+	 * @return The task information.
 	 */
 	@Override
-	public Map<String, UcdProperty> run() {
+	public TaskReturn run() {
 		// Validate the action properties.
 		validatePropsExist()
 
-		Map<String, UcdProperty> propertiesMap = [:]
-
+		TaskReturn taskReturn = new TaskReturn()
+		
 		String completedBy, completedByDisplayName
 		Long completedOn
 		String completedOnTs
@@ -84,55 +74,15 @@ class UcdGetComponentProcessRequestTaskCompletionProperties extends UcAdfAction 
 			outProps.put(PROP_TASKCOMPLETEDBYDISPLAYNAME, completedByDisplayName)
 			outProps.put(PROP_TASKCOMPLETEDON, completedOnTs)
 
-			// Construct the properties list.
-			List<UcdProperty> ucdProperties = [
-				[
-					name: "${PROP_TASKCOMPLETEDBY}${setPropsProcessRequestSuffix}",
-					value: completedBy
-				],
-				[
-					name: "${PROP_TASKCOMPLETEDBYDISPLAYNAME}${setPropsProcessRequestSuffix}",
-					value: completedByDisplayName
-				],
-				[
-					name: "${PROP_TASKCOMPLETEDON}${setPropsProcessRequestSuffix}",
-					value: completedOnTs
-				]
-			]
-			
-			// Set process request property values.
-			if (setPropsProcessRequestId) {
-				// Determine if the request ID is for an applicatiion or component process.
-				UcdApplicationProcessRequest appProcessRequest = actionsRunner.runAction([
-					action: UcdGetApplicationProcessRequest.getSimpleName(),
-					requestId: setPropsProcessRequestId
-				])
-		
-				// Set properties on either on application or component process request.
-				if (appProcessRequest) {
-					actionsRunner.runAction([
-						action: UcdSetApplicationProcessRequestProperties.getSimpleName(),
-						requestId: setPropsProcessRequestId,
-						properties: ucdProperties
-					])
-				} else {
-					actionsRunner.runAction([
-						action: UcdSetComponentProcessRequestProperties.getSimpleName(),
-						requestId: setPropsProcessRequestId,
-						properties: ucdProperties
-					])
-				}
-			}
+			// Set the return values.
+			taskReturn.setTaskCompletedBy(completedBy)
+			taskReturn.setTaskCompletedByDisplayName(completedByDisplayName)
+			taskReturn.setTaskCompletedOn(completedOnTs)
 		} else {
 			throw new UcdInvalidValueException("Unable to get task information.")
 		}
 
-		// Construct the return properties map.
-		outProps.each { name, value ->
-			propertiesMap.put(name, new UcdProperty(name, value))
-		}
-
-		return propertiesMap
+		return taskReturn
 	}	
 
 	// Get information about a user using the display name to perform the search.
@@ -152,5 +102,12 @@ class UcdGetComponentProcessRequestTaskCompletionProperties extends UcAdfAction 
 		])
 
 		return ucdUser
+	}
+
+	/** This class returns task information. */
+	static public class TaskReturn {
+		String taskCompletedBy
+		String taskCompletedByDisplayName
+		String taskCompletedOn
 	}
 }

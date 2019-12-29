@@ -115,8 +115,6 @@ actions:
   - action: UcdGetComponentProcessRequestTaskCompletionProperties
     requestId: "${u:requestTask/componentProcessRequest/id}"
     taskName: "TestTask"
-    setPropsProcessRequestId: "${u:applicationRequestStatus/requestId}"
-    setPropsProcessRequestSuffix: "MySuffix"
   - action: UcAdfComment
     actionInfo: false
     comment: "Component process request completion properties %s"

@@ -20,8 +20,8 @@ class UcdDeleteAuthenticationRealm extends UcAdfAction {
 	/** The flag that indicates to perform the delete, otherwise show that the delete would be done. Default is true. */
 	Boolean commit = true
 	
-	/** The flag that indicates fail if the authentication realm is not found. Default is true. */
-	Boolean failIfNotFound = true
+	/** The flag that indicates fail if the authentication realm is not found. Default is false. */
+	Boolean failIfNotFound = false
 	
 	// Private properties.
 	private Boolean deleted = false

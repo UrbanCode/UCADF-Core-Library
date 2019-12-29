@@ -302,19 +302,6 @@
 			</exclusions>
 		</dependency>
 
-		<!-- Only used for UcdDownloadVersionFiles unzip. Might be able to replace with something smaller. -->
-		<dependency>
-			<groupId>org.apache.ant</groupId>
-			<artifactId>ant</artifactId>
-			<version>1.9.13</version>
-			<exclusions>
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
 		<!-- Jersey dependencies. -->
 		<dependency>
 			<groupId>org.glassfish.jersey.core</groupId>

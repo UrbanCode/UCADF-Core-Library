@@ -12,8 +12,8 @@ import org.urbancode.ucadf.core.model.ucd.version.UcdVersion
 
 class UcAdfCacheCleanProcessTemp extends UcAdfAction {
 	// Action properties.
-	/** (Optional) The directory to clean. */
-	String dirName = ""
+	/** (Optional) The cache directory name to clean. */
+	String cacheDirName
 	
 	/** The cache component name or ID. */
 	String component = ""
@@ -30,8 +30,8 @@ class UcAdfCacheCleanProcessTemp extends UcAdfAction {
 		validatePropsExist()
 
 		// Clean the process temporary directory.
-		if (dirName) {
-			cleanProcessTempDir(dirName.trim())
+		if (cacheDirName) {
+			cleanProcessTempDir()
 		}
 		
 		// Clean out any unused cache component versions.
@@ -84,10 +84,10 @@ class UcAdfCacheCleanProcessTemp extends UcAdfAction {
 	}	
 	
 	// Clean up a directory that has subdirectories associated with non-running process names.
-	private cleanProcessTempDir(final String dirName) {
-		logInfo("Cleaning temporary process directories from [$dirName].")
+	private cleanProcessTempDir() {
+		logInfo("Cleaning temporary process directories from [$cacheDirName].")
 		
-		File parentDir = new File(dirName.trim())
+		File parentDir = new File(cacheDirName.trim())
 		
 		for (dir in parentDir.listFiles()) {
 			if (!dir.isDirectory()) {

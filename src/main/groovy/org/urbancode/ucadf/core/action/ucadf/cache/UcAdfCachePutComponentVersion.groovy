@@ -20,9 +20,9 @@ class UcAdfCachePutComponentVersion extends UcAdfAction {
 	/** The version name or ID. */
 	String version
 	
-	/** The directoriy with contents to be cached. */
-	File cacheDir
-	
+	/** The name of the directoriy with the contents to be cached. */
+	String cacheDirName
+
 	/** The process request ID to be associated with the cached version. */
 	String processRequestId
 	
@@ -40,6 +40,8 @@ class UcAdfCachePutComponentVersion extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
+		File cacheDir = new File(cacheDirName)
+		
 		// If the cache directory doesn't exist then don't process it.
 		if (cacheDir.exists()) {
 			// Validate the size of the directory.
