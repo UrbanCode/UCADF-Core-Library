@@ -20,11 +20,9 @@ actions:
   #==============================================================================          
   # Generate a unique application tag name.
   - action: UcAdfSetActionProperties
-    setStatic: true
-    propertyValues:
+    deferredPropertyValues:
       epoch: 'Eval(new Date().getTime())'
   - action: UcAdfSetActionProperties
-    setStatic: true
     propertyValues:
       applicationTag: "${u:coreTestAppTagPrefix}-${u:epoch}"
 

@@ -177,10 +177,11 @@ actions:
     statuses:
       - "${u:coreTestSnapshotStatus1}"
       
-  # Get the snapshot statuses.
+  # Get the snapshot statuses as a list of objects.
   - action: UcdGetSnapshotStatuses
     application: "${u:coreTestApp1}"
     snapshot: "${u:coreTestSnapshotDelete}"
+    returnAs: "OBJECTS"
   - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:actionReturn}
@@ -191,6 +192,28 @@ actions:
         values:
           - ${u:item}
 
+  # Get the snapshot statuses as a list of names.
+  - action: UcdGetSnapshotStatuses
+    application: "${u:coreTestApp1}"
+    snapshot: "${u:coreTestSnapshotDelete}"
+    returnAs: "NAMES"
+  - action: UcAdfItemsLoop
+    actionInfo: false
+    items: ${u:actionReturn}
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Snapshot status %s"
+        values:
+          - ${u:item}
+
+  # Determine if snapshot has statuses.
+  - action: UcdSnapshotHasStatuses
+    application: "${u:coreTestApp1}"
+    snapshot: "${u:coreTestSnapshotDelete}"
+    statuses:
+      - "${u:coreTestSnapshotStatus1}"
+    
   # Remove the snapshot statuses.
   - action: UcdRemoveSnapshotStatuses
     application: "${u:coreTestApp1}"

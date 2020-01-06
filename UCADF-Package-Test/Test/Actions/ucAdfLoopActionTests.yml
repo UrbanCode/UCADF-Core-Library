@@ -24,7 +24,7 @@ actions:
           - ${u:waitLoopControl}
       - action: UcAdfLoopBreak
         actionInfo: false
-        when: 'Eval(${u:waitLoopControl/remainingTries} < 3)'
+        when: '${u:waitLoopControl/remainingTries} < 3'
 
   # Counter loop test.
   - action: UcAdfCounterLoop

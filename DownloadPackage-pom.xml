@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<!--
-	This Maven file is used to download UCADF packages from Maven.
+	This Maven file is used to download UCADF packages from Maven which can be useful to get the ucadfclient if needed for other build activities.
 	-->
 	<name>DownloadPackage</name>
 	<groupId>DownloadPackage</groupId>

@@ -19,11 +19,9 @@ actions:
   #==============================================================================          
   # Get a value to use for a unique tag name.
   - action: UcAdfSetActionProperties
-    setStatic: true
-    propertyValues:
+    deferredPropertyValues:
       epoch: 'Eval(new Date().getTime())'
   - action: UcAdfSetActionProperties
-    setStatic: true
     propertyValues:
      agentTag: "${u:coreTestAgentTagPrefix}-${u:epoch}"
       

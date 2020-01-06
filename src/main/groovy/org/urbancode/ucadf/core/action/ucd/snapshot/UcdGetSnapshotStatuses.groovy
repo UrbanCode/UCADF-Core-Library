@@ -14,19 +14,31 @@ import org.urbancode.ucadf.core.model.ucd.snapshot.UcdSnapshot
 import org.urbancode.ucadf.core.model.ucd.status.UcdStatus
 
 class UcdGetSnapshotStatuses extends UcAdfAction {
+	/** The type of collection to return. */
+	enum ReturnAsEnum {
+		/** Return as a list of UcdSnapshot objects. */
+		OBJECTS,
+		
+		/** Return as a list of snapshot names. */
+		NAMES
+	}
+
 	// Action properties.
 	/** The application name or ID. */
 	String application
 	
 	/** The snapshot name or ID. */
 	String snapshot
-	
+
+	/** The type of collection to return. */
+	ReturnAsEnum returnAs = ReturnAsEnum.OBJECTS
+
 	/**
 	 * Runs the action.	
-	 * @return The list of snapshot status objects.
+	 * @return The specified collection type.
 	 */
 	@Override
-	public List<UcdStatus> run() {
+	public Object run() {
 		// Validate the action properties.
 		validatePropsExist()
 
@@ -57,7 +69,19 @@ class UcdGetSnapshotStatuses extends UcAdfAction {
 		} else {
 			throw new UcdInvalidValueException(response)
 		}
+
+		Object returnList
 		
-		return ucdStatuses
+		if (ReturnAsEnum.OBJECTS.equals(returnAs)) {
+			returnList = ucdStatuses
+		} else {
+			List<String> namesList = []
+			ucdStatuses.each {
+				namesList.add(it.getName())
+			}
+			returnList = namesList
+		}
+
+		return returnList
 	}
 }

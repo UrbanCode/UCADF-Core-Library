@@ -7,12 +7,6 @@ import groovy.util.logging.Slf4j
 // Models the actions to be run by the actions runner.
 @Slf4j
 public class UcAdfActions extends UcdObject {
-	// File types.
-	public final static String FILETYPE_AUTO = "AUTO"
-	public final static String FILETYPE_JSON = "JSON"
-	public final static String FILETYPE_YAML = "YAML"
-	public final static String FILETYPE_PROPERTIES = "PROPERTIES"
-	
 	// The actions property values.	
 	public Map<String, Object> propertyValues = new TreeMap<String, Object>()
 

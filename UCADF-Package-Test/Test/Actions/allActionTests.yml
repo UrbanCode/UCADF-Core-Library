@@ -15,7 +15,13 @@ actions:
   # Run the tests.
   #==============================================================================          
   - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/ucAdfGeneralActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
     fileName: "${u:testActionsDir}/ucAdfPropertyTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/ucAdfWhenTests.yml"
     
   - action: UcAdfRunActionsFromFile
     fileName: "${u:testActionsDir}/ucAdfLoopActionTests.yml"

@@ -292,7 +292,7 @@ actions:
 
       # If the property value has been set then break.          
       - action: UcAdfLoopBreak
-        when: 'Eval("${u?:propertyValue/id}" != "")'
+        when: '"${u?:propertyValue/id}" != ""'
       - action: UcAdfComment
         comment: "maxwaitSecs=%s"
         values:
@@ -300,7 +300,7 @@ actions:
 
       # If the 2nd try then set the resource property.        
       - action: UcdSetResourceProperties
-        when: 'Eval(${u:waitLoopControl/currentTry} == 2)'
+        when: '${u:waitLoopControl/currentTry} == 2'
         resource: "${u:coreTestTopResource}"
         properties:
           - name: "${u:coreTestProperty2}"

@@ -63,7 +63,7 @@ class UcdAddRolePermissions extends UcAdfAction {
 			// Determine if the permission exists for the instance.
 			if (!securityTypePermissionsMapById.find { type.equals(it.value['type']) && permission.equals(it.value['permission']) }) {
 				if (failIfNotFound) {
-					throw new UcdInvalidValueException("Security [$type] [$permission] doesen't exist for this instance.")
+					throw new UcdInvalidValueException("Security [$type] permission [$permission] doesen't exist for this instance.")
 				}
 				
 				println "Skipping [$type] [$permission] that doesen't exist for the instance."

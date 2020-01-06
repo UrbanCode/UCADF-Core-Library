@@ -113,7 +113,26 @@ Each action is processed as follows:
 
 ### Action "when" Property
 
-Each action may have a "when" property that identifies if the action should be run. This property must evaluate to a value of true or false. 'Eval("Dog".equals("${u:foo/bar/1}")'
+Each action may have a "when" property that identifies if the action should be run. This property must evaluate to a value of true or false. Examples:
+```
+actions:
+  # Evaluation in single quotes to be valid YAML.
+  - action: UcAdfComment
+    actionInfo: false
+    when: '"Dog".equals("${u:foo/bar/1}"'
+    comment: "My comment: %s."
+    values:
+      - "This is my comment"
+      
+  # Evaluation block scalar to be valid YAML.
+  - action: UcAdfComment
+    actionInfo: false
+    when: |
+      "Dog".equals("${u:foo/bar/1}"
+    comment: "My comment: %s."
+    values:
+      - "This is my comment"
+```
 
 ### Action Return Properties
 
@@ -149,7 +168,7 @@ An optional "when" value be specified to determine if the action should be perfo
 actions:
   - action: UcAdfComment
     actionInfo: false
-    when: 'Eval(true)'
+    when: 'true'
     comment: "My comment: %s."
     values:
       - "This is my comment"
@@ -173,7 +192,7 @@ This loop type iterates over the items (may be list or map) and performs the spe
 actions:
   - action: UcAdfItemsLoop
     actionInfo: false
-    when: 'Eval(true)'
+    when: 'true'
     waitIntervalSecs: 2
     items:
       - "MyItem1"
@@ -186,10 +205,10 @@ actions:
     actions:
       - action: UcAdfLoopContinue
         actionInfo: false
-        when: 'Eval("MySkipItem".equals("${u:myItem}"))'
+        when: '"MySkipItem".equals("${u:myItem}")'
       - action: UcAdfLoopBreak
         actionInfo: false
-        when: 'Eval("MyBadItem".equals("${u:myItem}"))'
+        when: '"MyBadItem".equals("${u:myItem}")'
       - action: UcAdfComment
         actionInfo: false
         comment: "My item key is ${u:myItemKey} and item is ${u:myItem}."
@@ -302,17 +321,40 @@ Set action properties to be used by the actions runner.
 
 | Property | Description |
 |:-------- |:----------- |
-| setStatic | is true then the property value will be evaluated once then become a static value when used by subsequent actions. If setStatic is not specified or false then the property value will be evaluated each time it is referenced in subsequent actions. |
-| propertyValues | Property values provided to the run files action, e.g. command line options from UcAdfClient. |
+| propertyValues | Property values provided to the run files action and that are evaluated when the action is parsed, e.g. command line options from UcAdfClient. |
+| deferredPropertyValues | Property values that are not evaluated until the action is ready to run. |
 
 ```
 actions:
   - action: UcAdfSetActionProperties 
-    setStatic: true 
     propertyValues:
+      myProperty: 'foo'
+    propertyValues:
+      bar: "dog"
+    deferredPropertyValues:
       epoch: 'Eval(new Date().getTime())'
 ```
 Usage note: This action may be used to set multiple properties. If one property’s value is evaluated from another property’s value in the same action then the first property’s value is not evaluated as static in the subsequent usage. In the above example, if there were a second property that used the epoch value then that second property value could end up with a different epoch value than the one set as the static value. Use two different actions to handle this scenario.
+
+#### Using UcAdfRunGroovyScript Action to Set an Action Property
+If the code needed to set a property value is too complex for Eval to handle then the property can be set by running Groovy script. The action's information is made available to the script as the 'action' object. That can be used to access the 'actionsRunner' which can then be used to get/set action properties.
+```
+actions:
+  - action: UcAdfRunGroovyScript
+    actionReturnPropertyName: "foo"
+    scriptText: |
+      // Get an actions runner property value.
+      Map concatMap = action.getActionsRunner().getPropertyValue('myMap')
+      
+      // Concatenate the string.
+      concatStr = concatMap.collect { k, v -> "$k=$v" }.join(", ")
+      
+      // Set an actions runner property value.
+      action.getActionsRunner().setPropertyValue('dog') = concatStr
+      
+      // Return a value as the action return property.
+      return concatStr
+```
 
 ## Nested Actions
 Actions may be nested.
@@ -327,7 +369,7 @@ actions:
     actions:
       - action: UcAdfWhen
         actionInfo: false
-        when: 'Eval("MyItem1".equals("${u:myItem}"))'
+        when: '"MyItem1".equals("${u:myItem}")'
         actions:
           - action: UcAdfItemsLoop
             actionInfo: false
@@ -339,6 +381,9 @@ actions:
               - action: UcAdfComment
                 actionInfo: false
                 comment: "My item is ${u:myItem} child ${u:myChildItem}."
+        elseActions:
+          - action: UcAdfComment
+            comment: "This is the else condition."
 ```
 This would output:
 ```

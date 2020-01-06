@@ -4,14 +4,17 @@
 package org.urbancode.ucadf.core.action.ucadf.general
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
+import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
+
+import com.fasterxml.jackson.annotation.JsonProperty
 
 class UcAdfSetActionProperties extends UcAdfAction {
 	// Action properties.
 	/** If true then show debug information. */
 	Boolean debug = false
 	
-	/** If true then set the properties so they will be evaluated once and made available to all actions running under the current actions runner. */
-	Boolean setStatic = false
+	/** The list of deferred property values. These will not be evaluated until the action is run. */
+	Map<String, Object> deferredPropertyValues = new TreeMap<String, Object>()
 	
 	/**
 	 * Runs the action.	
@@ -21,11 +24,7 @@ class UcAdfSetActionProperties extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		// If setting static then replace the actions runner property values with the evaluated values.
-		if (setStatic) {
-			propertyValues.each { k, v ->
-				actionsRunner.setPropertyValue(k, v)
-			}
-		}
+		// Set the deferred properties.		
+		actionsRunner.setPropertyValues(deferredPropertyValues)
 	}
 }

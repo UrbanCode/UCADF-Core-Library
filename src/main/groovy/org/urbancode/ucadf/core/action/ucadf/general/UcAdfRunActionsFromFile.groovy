@@ -8,6 +8,7 @@ import org.urbancode.ucadf.core.actionsrunner.UcAdfActionPackage
 import org.urbancode.ucadf.core.actionsrunner.UcAdfActionPropertyEnum
 import org.urbancode.ucadf.core.actionsrunner.UcAdfActionPropertyFile
 import org.urbancode.ucadf.core.actionsrunner.UcAdfActions
+import org.urbancode.ucadf.core.actionsrunner.UcAdfActionsFileTypeEnum
 import org.urbancode.ucadf.core.actionsrunner.UcAdfActionsRunner
 import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
 import org.yaml.snakeyaml.TypeDescription
@@ -22,7 +23,7 @@ class UcAdfRunActionsFromFile extends UcAdfAction {
 	String fileName
 	
 	/** The type of actions file: JSON, YAML, AUTO (identifies by file extension). */
-	String fileType = UcAdfActions.FILETYPE_AUTO
+	UcAdfActionsFileTypeEnum fileType = UcAdfActionsFileTypeEnum.AUTO
 	
 	/** The additional property values to provide to the actions runner. */
 	Map<String, Object> propertyValues = [:]
@@ -78,12 +79,12 @@ class UcAdfRunActionsFromFile extends UcAdfAction {
 		File actionsFile = new File(fileName)
 		
 		// Determine the file type.
-		String derivedFileType = fileType
-		if (UcAdfActions.FILETYPE_AUTO.equals(fileType)) {
+		UcAdfActionsFileTypeEnum derivedFileType = fileType
+		if (UcAdfActionsFileTypeEnum.AUTO.equals(fileType)) {
 			if (fileName.toLowerCase() ==~ /.*\.(yaml|yml)$/) {
-				derivedFileType = UcAdfActions.FILETYPE_YAML
+				derivedFileType = UcAdfActionsFileTypeEnum.YAML
 			} else if (fileName.toLowerCase() ==~ /.*\.(json)$/) {
-				derivedFileType = UcAdfActions.FILETYPE_JSON
+				derivedFileType = UcAdfActionsFileTypeEnum.JSON
 			} else {
 				throw new UcdInvalidValueException("Unable to automatically determine the type of file by the file extension of file [$fileName].")
 			}
@@ -93,7 +94,7 @@ class UcAdfRunActionsFromFile extends UcAdfAction {
 		UcAdfActions actions
 
 		switch (derivedFileType) {
-			case UcAdfActions.FILETYPE_YAML:
+			case UcAdfActionsFileTypeEnum.YAML:
 				// Initialize the YAML constructor.
 				Constructor constructor = new Constructor(UcAdfActions.class)
 				TypeDescription yamlDescription = new TypeDescription(UcAdfActions.class)
@@ -109,7 +110,7 @@ class UcAdfRunActionsFromFile extends UcAdfAction {
 				}
 				break
 				
-			case UcAdfActions.FILETYPE_JSON:
+			case UcAdfActionsFileTypeEnum.JSON:
 				// Load the JSON file.
 				try {
 					actions = new JsonSlurper().parseText(actionsFile.text)

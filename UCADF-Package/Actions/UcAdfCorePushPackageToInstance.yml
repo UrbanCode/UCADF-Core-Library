@@ -39,7 +39,7 @@ actions:
     
   # If the version was created then add files to the version.
   - action: UcdAddVersionFiles
-    when: 'Eval("${u:versionCreated}" == "true")'
+    when: '"${u:versionCreated}" == "true"'
     component: "UCADF-Core-Package"
     version: "${u:packageVersion}"
     base: "${u:packageDir}"

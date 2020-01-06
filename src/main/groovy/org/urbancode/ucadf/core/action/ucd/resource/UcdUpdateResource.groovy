@@ -42,6 +42,7 @@ class UcdUpdateResource extends UcAdfAction {
 		// Get the resource information.
 		UcdResource ucdResource = actionsRunner.runAction([
 			action: UcdGetResource.getSimpleName(),
+			actionInfo: false,
 			resource: resource,
 			failIfNotFound: true
 		])
