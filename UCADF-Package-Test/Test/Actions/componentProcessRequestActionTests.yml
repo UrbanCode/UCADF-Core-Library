@@ -12,7 +12,7 @@ actions:
   #==============================================================================          
   # Cancel the sleeping process.
   - action: UcdCancelProcesses
-    match: "^Sleep Test$"
+    matchProcess: "^Sleep Test$"
 
   # Create the top level group resource.
   - action: UcdCreateGroupResource
@@ -130,4 +130,4 @@ actions:
  
   # Cancel any currently waiting processes.
   - action: UcdCancelProcesses
-    match: "Application Task Test"
+    matchProcess: "Application Task Test"
