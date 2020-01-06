@@ -853,11 +853,7 @@ class UcAdfActionsRunner {
 		GroovyShell shell = new GroovyShell(binding)
 		
 		// Execute the script.
-		if (scriptText) {
-			returnObject = shell.evaluate(scriptText)
-		} else {
-			throw new UcdInvalidValueException("No Groovy script text to run.")
-		}
+		returnObject = shell.evaluate(scriptText)
 		
 		return returnObject
 	}
