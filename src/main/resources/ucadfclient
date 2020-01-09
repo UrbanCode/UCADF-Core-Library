@@ -18,8 +18,8 @@ then
 	# The path to the the core jar.
 	UCADFJAR="$SCRIPTPATH/UCADF-Core-Library.jar"
 	
-    # Start with a Unix-style path for the log4j properties file.
-	LOG4JPROPS="$SCRIPTPATH/log4j.properties"
+    # Start with a Unix-style path for the log4j configuration file.
+	LOG4JPROPS="$SCRIPTPATH/log4j2.xml"
 
     # If this is a bash shell running on Windows then adjust the paths.
 	if [ "$OS" == "Windows_NT" ]; then
@@ -37,7 +37,7 @@ then
 	
     if [ -f "$UCADFJAR" ];
     then
-		"$JAVACOMMAND" -classpath "$UCADF_CLASSPATH" -Dlog4j.configuration=file:"$LOG4JPROPS" org.urbancode.ucadf.core.client.UcAdfClient $@
+		"$JAVACOMMAND" -classpath "$UCADF_CLASSPATH" -Dlog4j.configurationFile="$LOG4JPROPS" org.urbancode.ucadf.core.client.UcAdfClient $@
 	else
 		echo "$UCADFJAR file not found."
 		exit 1

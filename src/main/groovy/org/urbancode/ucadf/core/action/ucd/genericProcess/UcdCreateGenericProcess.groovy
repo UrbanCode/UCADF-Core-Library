@@ -8,9 +8,12 @@ import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
+import org.urbancode.ucadf.core.action.ucd.resource.UcdGetResource
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.genericProcess.UcdGenericProcess
+import org.urbancode.ucadf.core.model.ucd.resource.UcdResource
 
 import groovy.json.JsonBuilder
 
@@ -19,11 +22,17 @@ class UcdCreateGenericProcess extends UcAdfAction {
 	/** The generic process name. */
 	String name
 	
-	/** (Optional) The description. */
+	/** (Optional) The description. (Optional) */
 	String description = ""
 	
-	/** The working directory. */
+	/** The working directory. (Optional) */
 	String workingDir = UcdGenericProcess.WORKINGDIRECTORY_DEFAULT
+
+	/** The default resource. (Optional) */
+	String defaultResource = ""
+
+	/** The notification scheme. (Optional) */	
+	String notificationScheme = ""
 	
 	/** The flag that indicates fail if the generic process already exists. Default is true. */
 	Boolean failIfExists = true
@@ -35,18 +44,45 @@ class UcdCreateGenericProcess extends UcAdfAction {
 	@Override
 	public Boolean run() {
 		// Validate the action properties.
-		validatePropsExist()
+		validatePropsExistInclude(
+			[
+				"name"
+			]
+		)
 
 		Boolean created = false
 		
 		logInfo("Creating generic process [$name].")
 		
+		// If an defaultResource ID was provided then use it. Otherwise get the defaultResource information to get the ID.
+		String defaultResourceId = defaultResource
+		if (defaultResource) {
+			if (!UcdObject.isUUID(defaultResource)) {
+				UcdResource ucdResource = actionsRunner.runAction([
+					action: UcdGetResource.getSimpleName(),
+					actionInfo: false,
+					resource: defaultResource,
+					failIfNotFound: true
+				])
+				defaultResourceId = ucdResource.getId()
+			}
+		}
+
+		// If an defaultResource ID was provided then use it. Otherwise get the defaultResource information to get the ID.
+		String notificationSchemeId = notificationScheme
+		if (notificationScheme) {
+			if (!UcdObject.isUUID(notificationScheme)) {
+				// TODO: Need to have notification scheme lookup.
+				throw new UcdInvalidValueException("Ability to specify notification scheme name not implemented yet.")
+			}
+		}
+
 		Map requestMap = [
 			name: name,
 			description: description,
-			defaultResourceId: "",
+			defaultResourceId: defaultResourceId,
 			workingDir: workingDir,
-			notificationSchemeId: "",
+			notificationSchemeId: notificationSchemeId,
 			properties: [
 				workingDir: workingDir
 			],

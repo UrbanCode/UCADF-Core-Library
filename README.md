@@ -468,7 +468,7 @@ Program arguments:
 -f UCADF-Package-Test/Test/allActionTests.yml -DUCADF_STORE=C:/Dev/git/UCADF-Store -DucAdfInstance=ucadfdev
 
 VM arguments:
--Dlog4j.configuration=file:log4j.properties
+-Dlog4j.configurationFile=log4j2.xml
 ```
 ***From the Command Line***
 ```

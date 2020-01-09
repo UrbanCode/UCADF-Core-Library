@@ -1,6 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<!-- 
+		Creates the UCADF-Core package files.
+		Run: mvn -U clean deploy
+	-->
 	<name>UCADF-Core-Library</name>
 	<groupId>org.urbancode.ucadf.core</groupId>
 	<artifactId>UCADF-Core-Library</artifactId>
@@ -11,7 +15,6 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<ucAppName>UCADF-Core-Library</ucAppName>
-		<slf4j-version>1.6.2</slf4j-version>
 		<junit-version>5.0.0</junit-version>
 		<jersey-version>2.22.2</jersey-version>
 		<jackson-databind-version>2.10.0</jackson-databind-version>
@@ -200,6 +203,35 @@
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>2.8</version>
 			</plugin>
+			
+			<!-- Copy files to the UCADF package directories. -->            
+			<plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-to-package</id>
+                        <phase>install</phase>
+                        <configuration>
+                            <tasks>
+                            	<!-- Copy the Jar to the package directory. -->
+								<delete dir="${basedir}/UCADF-Package/Library" includeemptydirs="true"/>
+                                <mkdir dir="${basedir}/UCADF-Package/Library"/>
+								<copy todir="${basedir}/UCADF-Package/Library">
+								    <fileset dir="${project.build.directory}">
+								        <include name="UCADF-Core-Library-${project.version}.jar"/>
+								    </fileset>
+								    <fileset dir="${basedir}/src/main/resources">
+								        <include name="*"/>
+								    </fileset>
+								</copy>                                
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 		
 		<!--
@@ -276,17 +308,22 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j-version}</version>
+			<version>1.7.30</version>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${slf4j-version}</version>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-api</artifactId>
+		    <version>2.11.2</version>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${slf4j-version}</version>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-core</artifactId>
+		    <version>2.11.2</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-slf4j-impl</artifactId>
+		    <version>2.11.2</version>
 		</dependency>
 
 		<!--  Command line library used by command line client. -->	    
@@ -342,10 +379,10 @@
 
 		<!--  Java mail dependency. -->		
 	    <dependency>
-		    <groupId>javax.mail</groupId>
-		    <artifactId>mail</artifactId>
-		    <version>1.4.7</version>
-			<exclusions>
+		    <groupId>com.sun.mail</groupId>
+		    <artifactId>javax.mail</artifactId>
+		    <version>1.6.2</version>
+   			<exclusions>
 				<exclusion>
 					<groupId>commons-logging</groupId>
 					<artifactId>commons-logging</artifactId>

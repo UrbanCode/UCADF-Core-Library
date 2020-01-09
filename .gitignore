@@ -6,4 +6,6 @@
 /*.versionsBackup
 /dependency-reduced-pom.xml
 /temp/
+/UCADF-Package/Library/**/*
+/UCADF-Package-Test/Library/**/*
 /UCADF-Store
