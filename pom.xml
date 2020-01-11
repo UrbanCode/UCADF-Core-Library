@@ -64,10 +64,11 @@
 				</configuration>
 			</plugin>
 			
-            <!-- Groovy compiler via Ant plugin. -->
+             <!-- Ant plugin. -->
 			<plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
+             		<!-- Groovy compiler via Ant plugin to compile main. -->
                     <execution>
                         <id>compile</id>
                         <phase>compile</phase>
@@ -87,6 +88,8 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
+                    
+             		<!-- Groovy compiler via Ant plugin to compile test. -->
                     <execution>
                         <id>test-compile</id>
                         <phase>test-compile</phase>
@@ -106,6 +109,8 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
+                    
+					<!-- Copy files to the UCADF package directories. -->            
                 </executions>
             </plugin>
 
@@ -203,69 +208,7 @@
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>2.8</version>
 			</plugin>
-			
-			<!-- Copy files to the UCADF package directories. -->            
-			<plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-to-package</id>
-                        <phase>install</phase>
-                        <configuration>
-                            <tasks>
-                            	<!-- Copy the Jar to the package directory. -->
-								<delete dir="${basedir}/UCADF-Package/Library" includeemptydirs="true"/>
-                                <mkdir dir="${basedir}/UCADF-Package/Library"/>
-								<copy todir="${basedir}/UCADF-Package/Library">
-								    <fileset dir="${project.build.directory}">
-								        <include name="UCADF-Core-Library-${project.version}.jar"/>
-								    </fileset>
-								    <fileset dir="${basedir}/src/main/resources">
-								        <include name="*"/>
-								    </fileset>
-								</copy>                                
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
 		</plugins>
-		
-		<!--
-		Above maven-dependepcy-plugin gives a validation error in m2e. 
-		To fix that, add the plugin management step below. Per: http://stackoverflow.com/a/12109018
-		-->
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.apache.maven.plugins</groupId>
-										<artifactId>maven-dependency-plugin</artifactId>
-										<versionRange>[2.0,)</versionRange>
-										<goals>
-											<goal>copy-dependencies</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<execute />
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 
 	<!-- Exclude Commons Logging in favor of SLF4j. -->

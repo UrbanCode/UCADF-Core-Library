@@ -61,7 +61,7 @@ class UcdDeleteAgent extends UcAdfAction {
 				} else {
 					String responseStr = response.readEntity(String.class)
 					logInfo(responseStr)
-					if (responseStr ==~ /.*bulk manipulation query.*/ && iAttempt < MAXATTEMPTS) {
+					if ((responseStr ==~ /.*bulk manipulation query.*/ || responseStr ==~ /.*another transaction.*/) && iAttempt < MAXATTEMPTS) {
 						logInfo("Attempt $iAttempt failed. Waiting to try again.")
 						Thread.sleep(2000)
 					} else {
