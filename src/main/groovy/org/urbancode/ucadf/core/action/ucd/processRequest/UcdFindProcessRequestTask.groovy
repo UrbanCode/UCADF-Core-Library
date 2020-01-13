@@ -67,7 +67,7 @@ class UcdFindProcessRequestTask extends UcAdfAction {
 		)
 
 		if (!processRequestTask && failIfNotFound) {
-			throw new UcdInvalidValueException("Process [$requestId] task type [$type] task path [$taskPath] with status [$status]..")
+			throw new UcdInvalidValueException("Process [$requestId] task type [$type] task path [$taskPath] with status [$status] not found.")
 		}
 		
 		return processRequestTask

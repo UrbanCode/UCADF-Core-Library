@@ -72,7 +72,8 @@ class UcdWaitForProcessRequestTask extends UcAdfAction {
 				requestId: requestId,
 				type: type,
 				taskPath: taskPath,
-				status: UcdTaskStatusEnum.OPEN
+				status: UcdTaskStatusEnum.OPEN,
+				failIfNotFound: false
 			])
 
             if (ucdProcessRequestTask) {

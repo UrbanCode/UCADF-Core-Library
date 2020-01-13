@@ -47,7 +47,8 @@ class UcdCancelProcessRequestTasks extends UcAdfAction {
 			action: UcdFindProcessRequestTask.getSimpleName(),
 			requestId: requestId,
 			type: type,
-            taskPath: taskPath
+            taskPath: taskPath,
+			failIfNotFound: false
 		])
 
         // If the task is open then fail it.

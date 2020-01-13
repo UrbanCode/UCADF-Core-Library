@@ -13,6 +13,7 @@ actions:
   # Create a team for the tests.
   - action: UcdCreateTeam
     name: "${u:coreTestTeam1}"
+    failIfExists: false
   
   #==============================================================================          
   # Run the tests.
@@ -86,7 +87,6 @@ actions:
     agent: "${u:agents/0/name}"
     teams:
       - team: "${u:coreTestTeam1}"
-      - team: "Public"
     removeOthers: true
     
   # Remove team security from a specified agent.

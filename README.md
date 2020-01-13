@@ -479,6 +479,7 @@ ucadfclient -f UCADF-Package-Test/Test/Actions/allActionTests.yml -DUCADF_STORE=
 | UCD Version | With Patches | Status |
 |:------- |:------- |:------ |
 | 7.0.1.2.1008304 | ucd-7.0.1.2-PH09559-DeletedTypesShowingAsAssignable<br>ucd-7.0.1.2_PH11030_deletedResourceTypesSeemlessCreation | All tests run and passed. |
+| 7.0.4.2.1038002 | None | All tests run and passed. |
 
 # Using Notepad++ to Edit YAML
 The open source Notepad++ application is one option for edition YAML file. One nice feature is that you can comment out a block of YAML lines with Ctrl+K and uncomment a block with Ctrl+Shift+K.

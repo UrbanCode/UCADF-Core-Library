@@ -29,7 +29,8 @@ class UcdSession {
     public final static String UCDVERSION_61 = /6\.1\..*/
     public final static String UCDVERSION_62 = /6\.2\..*/
 	public final static String UCDVERSION_70 = /7\.0\..*/
-
+	public final static String UCDVERSION_704 = /7\.0\.4\.*/
+	
 	// Session properties.	
 	public final static String PROPUCDURL = "ucdUrl"
 	public final static String PROPUCDUSERID = "ucdUserId"
@@ -318,7 +319,57 @@ class UcdSession {
 	 * @return True if the version matches.
 	 */
 	@JsonIgnore
-	public isUcdVersion(final String versionRegex) {
+	public Boolean isUcdVersion(final String versionRegex) {
         return (getUcdVersion() ==~ /$versionRegex/)
+	}
+
+	/**
+	 * Compares the current session version to the specified version.
+	 * @param versionb
+	 * @return -1 if current session version is less than specified, 0 if equal, 1 if greater than.
+	 */
+	public Integer compareVersion(final String versionb) {
+		compareVersion(getUcdVersion(), versionb)
+	}
+	
+	/**
+	 * Compare two version numbers.	
+	 * @param versiona
+	 * @param versionb
+	 * @return
+	 */
+	public Integer compareVersion(final String versiona, final String versionb) {
+		// This can handle the regex formatted number.
+		List<String> versionaSegments = (versiona.split(/\./) as List<String>)*.replaceAll('\\\\', '')
+		List<String> versionbSegments = (versionb.split(/\./) as List<String>)*.replaceAll('\\\\', '')
+		
+		Integer compareReturn = 0	
+	
+		// Determine which version has the least segments.
+		Integer minSegments = Math.min(versionaSegments.size(), versionbSegments.size())
+		
+		for (Integer i = 0; i < minSegments; i++) {
+			if (versionaSegments[i].isNumber() && versionbSegments[i].isNumber()) {
+				Integer versionaNum = Integer.valueOf(versionaSegments[i])
+				Integer versionbNum = Integer.valueOf(versionbSegments[i])
+				compareReturn = versionaNum.compareTo(versionbNum)
+			} else {
+				compareReturn = versionaSegments[i].compareTo(versionbSegments[i])
+			}
+			
+			if (compareReturn != 0) {
+				break
+			}
+		}
+	
+		if (compareReturn == 0)	 {
+			if (versionaSegments.size() < versionbSegments.size()) {
+				compareReturn = -1
+			} else if (versionaSegments.size() > versionbSegments.size()) {
+			compareReturn = 1
+		}
+	}
+	
+	return compareReturn
 	}
 }

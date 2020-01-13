@@ -13,7 +13,8 @@ actions:
   # Run a generic process that acquires a lock.
   - action: UcdRunGenericProcess
     process: "${u:coreTestGenericProcessLockTest}"
-    resource: "${u:coreTestTopResource}/Agent"
+    resources:
+      - "${u:coreTestTopResource}/Agent"
     properties:
       - name: "lockName"
         value: "${u:coreTestLock1}"

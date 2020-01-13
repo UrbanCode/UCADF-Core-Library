@@ -11,7 +11,7 @@ actions:
   # Prepare for tests.
   #==============================================================================          
   # Cancel any currently waiting processes.
-  - action: UcdCancelProcesses
+  - action: UcdCancelGenericProcesses
     
   #==============================================================================          
   # Run the tests.
@@ -19,20 +19,21 @@ actions:
   # Run a generic process.
   - action: UcdRunGenericProcess
     process: "${u:coreTestGenericProcessTaskTest}"
-    resource: "${u:coreTestTopResource}/Agent"
+    resources:
+      - "${u:coreTestTopResource}/Agent"
     waitForProcess: false
-    actionReturnPropertyName: "requestStatus"
+    actionReturnPropertyName: "requestStatuses"
   - action: UcAdfComment
-    comment: "Request status %s"
+    comment: "Request statuses %s"
     values:
-      - ${u:requestStatus}
+      - ${u:requestStatuses}
 
   # Get the generic process request properties. Return as map.
   - action: UcdGetGenericProcessRequestProperties
-    requestId: "${u:requestStatus/id}"
+    requestId: "${u:requestStatuses/0/id}"
     returnAs: MAPBYNAME
       
   # Get the generic process request properties. Return as list.
   - action: UcdGetGenericProcessRequestProperties
-    requestId: "${u:requestStatus/id}"
+    requestId: "${u:requestStatuses/0/id}"
     returnAs: LIST

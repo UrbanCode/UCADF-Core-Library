@@ -11,7 +11,7 @@ actions:
   # Prepare for tests.
   #==============================================================================          
   # Cancel the sleeping process.
-  - action: UcdCancelProcesses
+  - action: UcdCancelApplicationProcesses
     matchProcess: "^Sleep Test$"
 
   # Create the top level group resource.
@@ -129,5 +129,5 @@ actions:
     taskName: "TestTask"
  
   # Cancel any currently waiting processes.
-  - action: UcdCancelProcesses
+  - action: UcdCancelApplicationProcesses
     matchProcess: "Application Task Test"

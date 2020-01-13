@@ -32,7 +32,8 @@ class UcdRemoveTagsFromResource extends UcAdfAction {
 			WebTarget target = ucdSession.getUcdWebTarget().path("/cli/resource/tag")
 				.queryParam("resource", resource)
 				.queryParam("tag", tag)
-				
+			logDebug("target=$target")
+
 			Response response = target.request(MediaType.APPLICATION_JSON).delete()
 			if (response.getStatus() == 204) {
 				logInfo("Tag [$tag] removed from resource [$resource].")
