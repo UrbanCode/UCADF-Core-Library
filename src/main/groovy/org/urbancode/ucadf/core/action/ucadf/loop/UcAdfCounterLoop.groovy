@@ -9,8 +9,8 @@ class UcAdfCounterLoop extends UcAdfLoop {
 	/** The counter loop begin value. */
 	Integer counterBegin
 	
-	/** The counter loop change value (positive or negative number). */
-	Integer counterChange
+	/** (Optional) The counter loop change value (positive or negative number). Default is 1. */
+	Integer counterChange = 1
 	
 	/** The counter loop end value (inclusive). */
 	Integer counterEnd

@@ -11,12 +11,18 @@ actions:
   # Run the tests.
   #==============================================================================          
   # Create an environment.
-  - action: UcdCreateEnvironment
-    application: "${u:coreTestApp1}"
-    name: "${u:coreTestEnv1}"
-    color: "RED"
-    description: "Test environment"
-    failIfExists: false
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdCreateEnvironment
+        application: "${u:coreTestApp1}"
+        name: "${u:coreTestEnv1}"
+        color: "RED"
+        description: "Test environment"
+        failIfExists: false
 
   # Add team security to a specified environment.
   - action: UcdAddEnvironmentToTeams

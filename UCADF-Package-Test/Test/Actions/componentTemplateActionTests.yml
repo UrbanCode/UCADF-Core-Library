@@ -11,11 +11,17 @@ actions:
   # Run the tests.
   #==============================================================================          
   # Create a component template.
-  - action: UcdCreateComponentTemplate
-    name: "${u:coreTestCompTemplate1}"
-    description: "Test component template."
-    componentType: STANDARD
-    failIfExists: false
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdCreateComponentTemplate
+        name: "${u:coreTestCompTemplate1}"
+        description: "Test component template."
+        componentType: STANDARD
+        failIfExists: false
     
   # Add team security to a specified component.
   - action: UcdAddComponentTemplateToTeams

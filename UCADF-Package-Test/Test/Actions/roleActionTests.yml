@@ -11,10 +11,16 @@ actions:
   # Run the tests.
   #==============================================================================          
   # Create a role.
-  - action: UcdCreateRole
-    name: "${u:coreTestRole1}"
-    description: "Test role description."
-    failIfExists: false
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdCreateRole
+        name: "${u:coreTestRole1}"
+        description: "Test role description."
+        failIfExists: false
 
   # Add every permission to the role.
   - action: UcdGetSecurityTypePermissions

@@ -50,11 +50,18 @@ actions:
     snapshot: "${u:coreTestSnapshotDelete}"
 
   # Create a snapshot an environment.
-  - action: UcdCreateSnapshotOfEnvironment
-    application: "${u:coreTestApp1}"
-    environment: "${u:coreTestEnv1}"
-    name: "${u:coreTestSnapshotDelete}"
-    description: "Test snapshot."
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdCreateSnapshotOfEnvironment
+        application: "${u:coreTestApp1}"
+        environment: "${u:coreTestEnv1}"
+        name: "${u:coreTestSnapshotDelete}"
+        description: "Test snapshot."
+        failIfExists: false
  
   # Delete a snapshot.
   - action: UcdDeleteSnapshot
@@ -62,47 +69,84 @@ actions:
     snapshot: "${u:coreTestSnapshotDelete}"
 
   # Create a snapshot with latest.
-  - action: UcdCreateSnapshotWithLatest
-    application: "${u:coreTestApp1}"
-    name: "${u:coreTestSnapshotDelete}"
-    description: "Test snapshot."
-
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdCreateSnapshotWithLatest
+        application: "${u:coreTestApp1}"
+        name: "${u:coreTestSnapshotDelete}"
+        description: "Test snapshot."
+        failIfExists: false
+        
   # Delete a snapshot.
   - action: UcdDeleteSnapshot
     application: "${u:coreTestApp1}"
     snapshot: "${u:coreTestSnapshotDelete}"
 
   # Create a snapshot to delete.
-  - action: UcdCreateSnapshot
-    application: "${u:coreTestApp1}"
-    name: "${u:coreTestSnapshotDelete}"
-    description: "Test snapshot."
-    versions:
-      - "${u:coreTestComp1}" : "1.0.0"
-      - "${u:coreTestComp1}" : "1.1.0"
-    failIfExists: false
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdCreateSnapshot
+        application: "${u:coreTestApp1}"
+        name: "${u:coreTestSnapshotDelete}"
+        description: "Test snapshot."
+        versions:
+          - "${u:coreTestComp1}" : "1.0.0"
+          - "${u:coreTestComp1}" : "1.1.0"
+        failIfExists: false
     
   # Lock snapshot versiosn.
-  - action: UcdLockSnapshotVersions
-    application: "${u:coreTestApp1}"
-    snapshot: "${u:coreTestSnapshotDelete}"
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdLockSnapshotVersions
+        application: "${u:coreTestApp1}"
+        snapshot: "${u:coreTestSnapshotDelete}"
 
   # Set snapshot configuration latest entries to current.
-  - action: UcdSetSnapshotConfiguration
-    application: "${u:coreTestApp1}"
-    snapshot: "${u:coreTestSnapshotDelete}"
-    type: SETLATESTENTRIESTOCURRENT
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdSetSnapshotConfiguration
+        application: "${u:coreTestApp1}"
+        snapshot: "${u:coreTestSnapshotDelete}"
+        type: SETLATESTENTRIESTOCURRENT
     
   # Reset snapshot configuration entries to latest.
-  - action: UcdSetSnapshotConfiguration
-    application: "${u:coreTestApp1}"
-    snapshot: "${u:coreTestSnapshotDelete}"
-    type: RESETALLTOLATEST
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdSetSnapshotConfiguration
+        application: "${u:coreTestApp1}"
+        snapshot: "${u:coreTestSnapshotDelete}"
+        type: RESETALLTOLATEST
      
   # Lock the snapshot configuration.
-  - action: UcdLockSnapshotConfiguration
-    application: "${u:coreTestApp1}"
-    snapshot: "${u:coreTestSnapshotDelete}"
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdLockSnapshotConfiguration
+        application: "${u:coreTestApp1}"
+        snapshot: "${u:coreTestSnapshotDelete}"
     
   # Get the snapshot configuration.
   # TODO: This does not work.
@@ -163,12 +207,18 @@ actions:
               - ${u:snapshotVersion}
               
   # Create a snapshot status.
-  - action: UcdCreateStatus 
-    type: "SNAPSHOT" 
-    name: "${u:coreTestSnapshotStatus1}" 
-    color: "RED" 
-    description: "Snapshot status." 
-    failIfExists: false
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdCreateStatus 
+        type: "SNAPSHOT" 
+        name: "${u:coreTestSnapshotStatus1}" 
+        color: "RED" 
+        description: "Snapshot status." 
+        failIfExists: false
     
    # Add the snapshot statuses.
   - action: UcdAddSnapshotStatuses

@@ -10,12 +10,18 @@ actions:
   #==============================================================================          
   # Run the tests.
   #==============================================================================          
-  # Create a component configuration template.
-  - action: UcdCreateComponentConfigTemplate
-    component: "${u:coreTestCompDelete}"
-    name: "${u:coreTestComp1ConfigTemplateDelete}"
-    data: "Component configuration template data"
-    failIfExists: false
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      # Create a component configuration template.
+      - action: UcdCreateComponentConfigTemplate
+        component: "${u:coreTestCompDelete}"
+        name: "${u:coreTestComp1ConfigTemplateDelete}"
+        data: "Component configuration template data"
+        failIfExists: false
     
   # Get component configuration templates.
   - action: UcdGetComponentConfigTemplates

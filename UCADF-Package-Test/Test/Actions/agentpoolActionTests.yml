@@ -15,11 +15,17 @@ actions:
     actionReturnPropertyName: agents
     
   # Create an agent pool.
-  - action: UcdCreateAgentPool
-    name: "${u:coreTestAgentPool1}"
-    agents:
-      - "${u:agents/0/name}"
-    failIfExists: false
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdCreateAgentPool
+        name: "${u:coreTestAgentPool1}"
+        agents:
+          - "${u:agents/0/name}"
+        failIfExists: false
     
   # Get the list of agent pools.
   - action: UcdGetAgentPools

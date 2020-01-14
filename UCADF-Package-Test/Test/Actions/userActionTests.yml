@@ -10,11 +10,17 @@ actions:
   #==============================================================================          
   # Run the tests.
   #==============================================================================          
-  # Create a user.
-  - action: UcdCreateUser
-    name: "${u:coreTestUser1}"
-    password: "InitialPassword"
-    failIfExists: false
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      # Create a user.
+      - action: UcdCreateUser
+        name: "${u:coreTestUser1}"
+        password: "InitialPassword"
+        failIfExists: false
     
   # Set user password.
   - action: UcdSetUserPassword

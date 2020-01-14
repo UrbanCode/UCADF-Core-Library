@@ -16,11 +16,17 @@ actions:
     version: "${u:coreTestVersionDelete}"
     
   # Create a version to delete.
-  - action: UcdCreateVersion
-    component: "${u:coreTestComp1}"
-    name: "${u:coreTestVersionDelete}"
-    description: "Test version."
-    failIfExists: false
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdCreateVersion
+        component: "${u:coreTestComp1}"
+        name: "${u:coreTestVersionDelete}"
+        description: "Test version."
+        failIfExists: false
       
   # TODO: Need more tests.
   # Add version files.

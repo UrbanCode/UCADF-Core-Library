@@ -55,7 +55,16 @@ class UcdCreateRole extends UcAdfAction {
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
 			logInfo(errMsg)
-			if (!(response.getStatus() == 403 && (errMsg ==~ /.*already exists.*/ && !failIfExists))) {
+			
+			Boolean alreadyExists = false
+			if (response.getStatus() == 403 && errMsg ==~ /.*already exists.*/) {
+				alreadyExists = true
+			} else if (response.getStatus() == 500 && errMsg ==~ /.*after response has been committed.*/) {
+				// UCD 7.0.4 is returning 500 Cannot forward after response has been committed if it already exists.
+				alreadyExists = true
+			}
+			
+			if (!alreadyExists || (alreadyExists && failIfExists)) {
 				throw new UcdInvalidValueException(errMsg)
 			}
 		}
