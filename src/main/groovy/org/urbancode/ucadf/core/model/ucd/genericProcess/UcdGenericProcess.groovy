@@ -39,9 +39,12 @@ class UcdGenericProcess extends UcdSecurityTypeObject {
 	/** The commit. */
 	Long commit
 	
-	/** The default resource. */
+	/** The default resource. (Deprecated at 7.0.4) */
 	String defaultResourceId
-	
+
+	/** The default resources. (Added 7.0.4) */
+	List<String> defaultResourceIds
+		
 	/** The notification scheme. */
 	String notificationSchemeId
 	

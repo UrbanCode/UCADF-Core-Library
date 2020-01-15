@@ -21,6 +21,8 @@ actions:
         name: "${u:coreTestGenericProcess1}"
         description: "Test generic process"
         failIfExists: false
+        # (TBD) Need to add default resources for test.
+        #defaultResources:
 
   # Update a generic process.
   - action: UcdUpdateGenericProcess

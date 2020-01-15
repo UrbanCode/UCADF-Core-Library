@@ -14,7 +14,7 @@ import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.genericProcess.UcdGenericProcess
 import org.urbancode.ucadf.core.model.ucd.resource.UcdResource
-
+import org.urbancode.ucadf.core.model.ucd.system.UcdSession
 import groovy.json.JsonBuilder
 
 class UcdCreateGenericProcess extends UcAdfAction {
@@ -28,8 +28,11 @@ class UcdCreateGenericProcess extends UcAdfAction {
 	/** The working directory. (Optional) */
 	String workingDir = UcdGenericProcess.WORKINGDIRECTORY_DEFAULT
 
-	/** The default resource. (Optional) */
+	/** The default resource. (Optional. Deprecated in 7.0.4) */
 	String defaultResource = ""
+
+	/** The default resources. (Optional. Added in 7.0.4) */
+	List<String> defaultResources = []
 
 	/** The notification scheme. (Optional) */	
 	String notificationScheme = ""
@@ -53,21 +56,31 @@ class UcdCreateGenericProcess extends UcAdfAction {
 		Boolean created = false
 		
 		logInfo("Creating generic process [$name].")
-		
-		// If an defaultResource ID was provided then use it. Otherwise get the defaultResource information to get the ID.
-		String defaultResourceId = defaultResource
-		if (defaultResource) {
-			if (!UcdObject.isUUID(defaultResource)) {
-				UcdResource ucdResource = actionsRunner.runAction([
-					action: UcdGetResource.getSimpleName(),
-					actionInfo: false,
-					resource: defaultResource,
-					failIfNotFound: true
-				])
-				defaultResourceId = ucdResource.getId()
-			}
-		}
 
+		// If a single resource was specified then add it to the list.
+		if (defaultResource) {
+			defaultResources.add(defaultResource)
+		}
+		
+		List<String> defaultResourceIds = []
+				
+		// If defaultResource IDs were provided then use then. Otherwise get the resource information to get the ID.
+		for (defaultResourceItem in defaultResources) {
+			String defaultResourceId = defaultResourceItem
+			if (defaultResource) {
+				if (!UcdObject.isUUID(defaultResource)) {
+					UcdResource ucdResource = actionsRunner.runAction([
+						action: UcdGetResource.getSimpleName(),
+						actionInfo: false,
+						resource: defaultResourceItem,
+						failIfNotFound: true
+					])
+					defaultResourceId = ucdResource.getId()
+				}
+			}
+			defaultResourceIds.add(defaultResourceId)
+		}
+		
 		// If an defaultResource ID was provided then use it. Otherwise get the defaultResource information to get the ID.
 		String notificationSchemeId = notificationScheme
 		if (notificationScheme) {
@@ -80,7 +93,6 @@ class UcdCreateGenericProcess extends UcAdfAction {
 		Map requestMap = [
 			name: name,
 			description: description,
-			defaultResourceId: defaultResourceId,
 			workingDir: workingDir,
 			notificationSchemeId: notificationSchemeId,
 			properties: [
@@ -88,7 +100,16 @@ class UcdCreateGenericProcess extends UcAdfAction {
 			],
 			teamMappings: []
 		]
-		
+
+		if (ucdSession.compareVersion(UcdSession.UCDVERSION_704) >= 0) {
+			requestMap.put('defaultResourceIds', defaultResourceIds)
+		} else {
+			requestMap.put(
+				'defaultResourceId', 
+				(defaultResourceIds.size() > 0 ? defaultResourceIds[0] : "")
+			)
+		}
+
 		JsonBuilder jsonBuilder = new JsonBuilder(requestMap)
 		logDebug("jsonBuilder=$jsonBuilder")
 
