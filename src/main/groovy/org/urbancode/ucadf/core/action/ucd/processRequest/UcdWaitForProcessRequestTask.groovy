@@ -25,6 +25,9 @@ class UcdWaitForProcessRequestTask extends UcAdfAction {
 	
 	/** The task name. */
 	String taskName
+
+	/** (Optional) The desired status. Default is OPEN. */
+	UcdTaskStatusEnum status = UcdTaskStatusEnum.OPEN
 	
 	/** The maximum number of seconds to wait. Default is 300. */
 	Integer maxWaitSecs = 300
@@ -72,12 +75,14 @@ class UcdWaitForProcessRequestTask extends UcAdfAction {
 				requestId: requestId,
 				type: type,
 				taskPath: taskPath,
-				status: UcdTaskStatusEnum.OPEN,
 				failIfNotFound: false
 			])
 
             if (ucdProcessRequestTask) {
-                break
+				logInfo("Found request task with status of [${ucdProcessRequestTask.getStatus()}].")
+				if (ucdProcessRequestTask.getStatus() == status) {
+					break
+				}
             }
             
             if (ucdApplicationProcessRequest.getState() == UcdApplicationProcessRequestResponseStatusEnum.CLOSED) {

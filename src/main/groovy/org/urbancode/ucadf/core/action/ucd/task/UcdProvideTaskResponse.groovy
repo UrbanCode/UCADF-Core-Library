@@ -39,7 +39,7 @@ class UcdProvideTaskResponse extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExistExclude(
 			[
-				'properties'
+				'taskProperties'
 			]
 		)
 

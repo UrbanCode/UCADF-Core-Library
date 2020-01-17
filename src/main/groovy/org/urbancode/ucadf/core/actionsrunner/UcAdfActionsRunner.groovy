@@ -240,120 +240,126 @@ class UcAdfActionsRunner {
 		final ObjectMapper actionsMapper,
 		final Map actionMap) {
 
+		// The object value that will be returned.
+		Object returnObject = new Properties()
+	
 		// Add the action to the stack.
 		String actionName = actionMap.get(UcAdfActionPropertyEnum.ACTION.getPropertyName())
 		actionsStack.push(actionName)
-		
-		// If no value was provided for actionInfo then default it to true.
-		Boolean actionInfo = actionMap.get(UcAdfActionPropertyEnum.ACTIONINFO.getPropertyName())
-		if (actionInfo) {
-			println "Begin [" + actionsStack.join("->") + "]."
-		}
-		
-		// Set the runner property values from the action property values.
-		setPropertyValues(actionMap.get(UcAdfActionPropertyEnum.PROPERTYVALUES.getPropertyName()))
 
-		// Set the runner property values from property files.
-		setPropertyValuesFromFiles(actionMap.get(UcAdfActionPropertyEnum.PROPERTYFILES.getPropertyName()))
-
-		// Override the property values with any command line property values.
-		setPropertyValues(commandLinePropertyValues)
-		
-		// The object value that will be returned.
-		Object returnObject = new Properties()
-
-		// If the action defers variable replacement then save the actions before variable replacement, then reset them afterwards.		
-		List<LinkedHashMap> saveActions
-		if (DEFERRED_PROPERTY_ACTIONS.contains(actionMap[UcAdfActionPropertyEnum.ACTION.getPropertyName()])) {
-			saveActions = actionMap[UcAdfActionPropertyEnum.ACTIONS.getPropertyName()]
-			actionMap[UcAdfActionPropertyEnum.ACTIONS.getPropertyName()] = []
-		}
-
-		// Replace the variables with properties in the action map.
-		replaceVariablesInMap(actionMap)
-
-		// Reset actions for deferred replacement.		
-		if (DEFERRED_PROPERTY_ACTIONS.contains(actionMap[UcAdfActionPropertyEnum.ACTION.getPropertyName()])) {
-			actionMap[UcAdfActionPropertyEnum.ACTIONS.getPropertyName()] = saveActions
-		}
-
-		// Serialize the action map into a runner action object after the property values have been replaced.
-		UcAdfAction action
+		// 	Try/finally used to ensure pop actions stack.	
 		try {
-			// Convert action using JSON deserializer.
-			action = actionsMapper.convertValue(
-				actionMap,
-				UcAdfAction
-			)
-		} catch (Exception e) {
-			throw new UcdInvalidValueException(e.getMessage() + "\n" + actionMap)
-		}
-
-		// If there's a when property value then evaluate it to determine if the action should be run.
-		// Do not evaluate a when condition of the UcAdfWhen action here but rather run the action so that it can perform the elseActions if needed.
-		if (action.getWhen() && !action.getAction().equals(UcAdfWhen.getSimpleName()) && evaluateWhen(action) == false) {
-			log.debug("Skipping action [$actionName}] when [${action.getWhen()}].")
-		} else {
-			// Show the action properties.
-			action.showProperties()
-
-			// Add the UCD session to the stack.
-			sessionsStack.push(ucdSession)
-		
-			// The UCD configuration may have been provided as properties of the individual action.
-			// Start with those values and determine if they need to be supplemented with property values from the runner.
-			initializeUcdSession(action, actionInfo)
-
-			// The action can access the UCD session.
-			action.setUcdSession(ucdSession)
-			
-			// The action can access the actions runner.						
-			action.setActionsRunner(this)
-
-			debugMessage("${action.getAction()} run.")
-
-			// Run the action and return the object.
-			returnObject = action.run()
-			
-			// If the action's run method added outProps values then add those to the actions runner outProps property.
-			// Keep in mind that a UcAdfSetActionProperties action may also add outProps value.
-			if (action.getOutProps().size() > 0) {
-				Properties outProps = getPropertyValue(UcAdfActionPropertyEnum.OUTPROPS.getPropertyName())
-			
-				// Add the action outProps the action runner outProps.
-				action.getOutProps().each { k, v ->
-					outProps.put(k, v)
-				}
-	
-				// Set the outProps property with the current outProps values.
-				setPropertyValue(UcAdfActionPropertyEnum.OUTPROPS.getPropertyName(), outProps)
+			// If no value was provided for actionInfo then default it to true.
+			Boolean actionInfo = actionMap.get(UcAdfActionPropertyEnum.ACTIONINFO.getPropertyName())
+			if (actionInfo) {
+				println "Begin [" + actionsStack.join("->") + "]."
 			}
 			
-			debugMessage("action ${action.getAction()} return ${returnObject}.")
+			// Set the runner property values from the action property values.
+			setPropertyValues(actionMap.get(UcAdfActionPropertyEnum.PROPERTYVALUES.getPropertyName()))
+	
+			// Set the runner property values from property files.
+			setPropertyValuesFromFiles(actionMap.get(UcAdfActionPropertyEnum.PROPERTYFILES.getPropertyName()))
+	
+			// Override the property values with any command line property values.
+			setPropertyValues(commandLinePropertyValues)
 			
-			// Remove the session from the stack.
-			ucdSession = sessionsStack.pop()
-		}
-
-		// Set the return object in the actionReturn property.
-		setPropertyValue(
-			UcAdfActionPropertyEnum.ACTIONRETURN.getPropertyName(),
-			returnObject
-		)
+			// If the action defers variable replacement then save the actions before variable replacement, then reset them afterwards.		
+			List<LinkedHashMap> saveActions
+			if (DEFERRED_PROPERTY_ACTIONS.contains(actionMap[UcAdfActionPropertyEnum.ACTION.getPropertyName()])) {
+				saveActions = actionMap[UcAdfActionPropertyEnum.ACTIONS.getPropertyName()]
+				actionMap[UcAdfActionPropertyEnum.ACTIONS.getPropertyName()] = []
+			}
+	
+			// Replace the variables with properties in the action map.
+			replaceVariablesInMap(actionMap)
+	
+			// Reset actions for deferred replacement.		
+			if (DEFERRED_PROPERTY_ACTIONS.contains(actionMap[UcAdfActionPropertyEnum.ACTION.getPropertyName()])) {
+				actionMap[UcAdfActionPropertyEnum.ACTIONS.getPropertyName()] = saveActions
+			}
+	
+			// Serialize the action map into a runner action object after the property values have been replaced.
+			UcAdfAction action
+			try {
+				// Convert action using JSON deserializer.
+				action = actionsMapper.convertValue(
+					actionMap,
+					UcAdfAction
+				)
+			} catch (Exception e) {
+				throw new UcdInvalidValueException(e.getMessage() + "\n" + actionMap)
+			}
+	
+			// If there's a when property value then evaluate it to determine if the action should be run.
+			// Do not evaluate a when condition of the UcAdfWhen action here but rather run the action so that it can perform the elseActions if needed.
+			if (action.getWhen() && !action.getAction().equals(UcAdfWhen.getSimpleName()) && evaluateWhen(action) == false) {
+				log.debug("Skipping action [$actionName}] when [${action.getWhen()}].")
+			} else {
+				// Show the action properties.
+				action.showProperties()
+	
+				// Add the UCD session to the stack.
+				sessionsStack.push(ucdSession)
 			
-		// Optionally, set the return object in the specified property.
-		if (action.getActionReturnPropertyName()) {
+				// 	Try/finally used to ensure pop sessions stack.	
+				try {
+					// The UCD configuration may have been provided as properties of the individual action.
+					// Start with those values and determine if they need to be supplemented with property values from the runner.
+					initializeUcdSession(action, actionInfo)
+		
+					// The action can access the UCD session.
+					action.setUcdSession(ucdSession)
+					
+					// The action can access the actions runner.						
+					action.setActionsRunner(this)
+		
+					debugMessage("${action.getAction()} run.")
+		
+					// Run the action and return the object.
+					returnObject = action.run()
+					
+					// If the action's run method added outProps values then add those to the actions runner outProps property.
+					// Keep in mind that a UcAdfSetActionProperties action may also add outProps value.
+					if (action.getOutProps().size() > 0) {
+						Properties outProps = getPropertyValue(UcAdfActionPropertyEnum.OUTPROPS.getPropertyName())
+					
+						// Add the action outProps the action runner outProps.
+						action.getOutProps().each { k, v ->
+							outProps.put(k, v)
+						}
+			
+						// Set the outProps property with the current outProps values.
+						setPropertyValue(UcAdfActionPropertyEnum.OUTPROPS.getPropertyName(), outProps)
+					}
+					
+					debugMessage("action ${action.getAction()} return ${returnObject}.")
+				} finally {
+					// Remove the session from the stack.
+					ucdSession = sessionsStack.pop()
+				}
+			}
+	
+			// Set the return object in the actionReturn property.
 			setPropertyValue(
-				action.getActionReturnPropertyName(), 
+				UcAdfActionPropertyEnum.ACTIONRETURN.getPropertyName(),
 				returnObject
 			)
-		}	
-
-		// Action end processing.
-		action.end()
-		
-		// Remove the action from the stack.
-		actionsStack.pop()
+				
+			// Optionally, set the return object in the specified property.
+			if (action.getActionReturnPropertyName()) {
+				setPropertyValue(
+					action.getActionReturnPropertyName(), 
+					returnObject
+				)
+			}	
+	
+			// Action end processing.
+			action.end()
+		} finally {
+			// Remove the action from the stack.
+			actionsStack.pop()
+		}
 
 		return returnObject
 	}

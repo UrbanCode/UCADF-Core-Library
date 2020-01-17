@@ -31,7 +31,8 @@ class UcdFindResources extends UcAdfAction {
 	Boolean failIfNotFound = true
 
 	private List<UcdResource> ucdResources = []
-		
+	private String parentPath
+	
 	/**
 	 * Runs the action.	
 	 * @return The list of resource objects.
@@ -45,6 +46,9 @@ class UcdFindResources extends UcAdfAction {
 		
 		// Process top-level resource differently.		
 		if ("".equals(parent) || "/".equals(parent)) {
+			// Default the parent path to the root.
+			parentPath = "/"
+			
 			List<UcdResource> ucdTopResources = actionsRunner.runAction([
 				action: UcdGetChildResources.getSimpleName(),
 				resource: parent
@@ -54,6 +58,13 @@ class UcdFindResources extends UcAdfAction {
 				findResources(ucdTopResource.getPath(), 1)
 			}
 		} else {
+			// Get the parent resoure to get the full path.
+			UcdResource parentResource = actionsRunner.runAction([
+				action: UcdGetResource.getSimpleName(),
+				resource: parent
+			])
+			parentPath = "${parentResource.getPath()}/"
+			
 			findResources(parent, 0)
 		}
 
@@ -131,10 +142,13 @@ class UcdFindResources extends UcAdfAction {
 		
 		// Recursively traverse the resource tree.
 		for (childUcdResource in ucdResourceTree.getChildren()) {
-			processResourceTree(
-				childUcdResource,
-				new Integer(currentDepth +  1)
-			)
+			// The UCD find resource will also return resources that are prefixed with the same path as that being searched. These must be filtered out.
+			if ("${childUcdResource.getPath()}/".startsWith(parentPath) || parentPath.startsWith("${childUcdResource.getPath()}/")) {
+				processResourceTree(
+					childUcdResource,
+					new Integer(currentDepth +  1)
+				)
+			}
 		}
 	}
 }

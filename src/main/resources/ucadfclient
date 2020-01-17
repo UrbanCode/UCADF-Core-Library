@@ -8,12 +8,8 @@ then
 	JAVACOMMAND="$JAVA_HOME/bin/java"
 	
     SCRIPTNAME=$0
-    SCRIPTPATH=`dirname ${SCRIPTNAME}`
-    
-    if [ "." = "$SCRIPTPATH" ]
-    then
-       SCRIPTPATH=`pwd`
-    fi
+    SCRIPTDIR=`dirname ${SCRIPTNAME}`
+    SCRIPTPATH=`cd $SCRIPTDIR && pwd`
     
 	# The path to the the core jar.
 	UCADFJAR="$SCRIPTPATH/UCADF-Core-Library.jar"

@@ -14,7 +14,6 @@
 	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<ucAppName>UCADF-Core-Library</ucAppName>
 		<junit-version>5.0.0</junit-version>
 		<jersey-version>2.22.2</jersey-version>
 		<jackson-databind-version>2.10.0</jackson-databind-version>
@@ -111,7 +110,38 @@
                     </execution>
                     
 					<!-- Copy files to the UCADF package directories. -->            
-                </executions>
+                    <execution>
+                        <id>copy-to-package</id>
+                        <phase>install</phase>
+                        <configuration>
+                            <tasks>
+                            	<!-- Copy the Jar to the package directory. -->
+								<delete dir="${basedir}/UCADF-Package/Library" includeemptydirs="true"/>
+                                <mkdir dir="${basedir}/UCADF-Package/Library"/>
+								<copy todir="${basedir}/UCADF-Package/Library">
+								    <fileset dir="${project.build.directory}">
+								        <include name="${project.artifactId}.jar"/>
+								    </fileset>
+								    <fileset dir="${basedir}/src/main/resources">
+								        <include name="**/*"/>
+								    </fileset>
+								</copy>
+								
+                            	<!-- Copy the test Jar to the package test directory. -->
+								<delete dir="${basedir}/UCADF-Package-Test/Library" includeemptydirs="true"/>
+                                <mkdir dir="${basedir}/UCADF-Package-Test/Library"/>
+								<copy todir="${basedir}/UCADF-Package-Test/Library">
+								    <fileset dir="${project.build.directory}">
+								        <include name="${project.artifactId}-tests.jar"/>
+								    </fileset>
+								</copy>                                
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+               </executions>
             </plugin>
 
 			<!-- Generate JavaDoc -->
