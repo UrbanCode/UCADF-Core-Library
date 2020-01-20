@@ -35,13 +35,14 @@ class UcdDeleteApplicationProcess extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 		
-		logInfo("Deleting application [$application] process [$process].")
+		logVerbose("Deleting application [$application] process [$process].")
 
 		if (UcdObject.isUUID(process)) {
 			deleteApplicationProcess(process)
 		} else {
 			UcdApplicationProcess ucdApplicationProcess = actionsRunner.runAction([
 				action: UcdGetApplicationProcess.getSimpleName(),
+				actionInfo: actionInfo,
 				application: application,
 				process: process,
 				failIfNotFound: failIfNotFound
@@ -63,11 +64,11 @@ class UcdDeleteApplicationProcess extends UcAdfAction {
 		
 		Response response = target.request(MediaType.APPLICATION_JSON).delete()
 		if (response.getStatus() == 204) {
-			logInfo("Application [$application] process [$process] deleted.")
+			logVerbose("Application [$application] process [$process] deleted.")
 			deleted = true
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (response.getStatus() != 404 || failIfNotFound) {
 				throw new UcdInvalidValueException(errMsg)
 			}

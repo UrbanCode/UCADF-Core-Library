@@ -12,7 +12,7 @@ actions:
   #==============================================================================          
   # Get a value to use for a unique tag name.
   - action: UcAdfSetActionProperties
-    deferredPropertyValues:
+    propertyValues:
       epoch: 'Eval(new Date().getTime())'
     
   - action: UcAdfSetActionProperties

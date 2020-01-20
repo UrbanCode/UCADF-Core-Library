@@ -18,8 +18,13 @@ class UcdCopyApplicationProcesses extends UcAdfAction {
 	/** The to application name or ID. */
 	String toApplication
 	
+	/** (Optional) The list of processes to copy. Default is all. */
 	List<String> processes = []
-	List<UcdApplicationProcessReplacement> replaceList = []
+	
+	/** (Optional) The list of application process replacement expressions. If not specified then the default list is used. Which is fromname->toname and value: "***"->value: "" **/
+	List<UcdApplicationProcessReplacement> replaceList
+	
+	/** If true then replace the existing process. Default is true. TODO: Is this needed? */
 	Boolean replaceProcess = true
 	
 	/**
@@ -29,10 +34,10 @@ class UcdCopyApplicationProcesses extends UcAdfAction {
 	@Override
 	public List<UcdApplicationProcess> run() {
 		// Validate the action properties.
-		validatePropsExist()
+		validatePropsExistExclude([ 'replaceList' ])
 
 		// Initialize a default replace list if none provided.
-		if (replaceList.size() == 0) {
+		if (!replaceList) {
 			replaceList = UcdApplicationProcessReplacement.getDefaultReplaceList(fromApplication, toApplication)
 		}
 		

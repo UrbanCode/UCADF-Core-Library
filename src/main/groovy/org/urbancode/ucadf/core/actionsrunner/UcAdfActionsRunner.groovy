@@ -5,6 +5,7 @@ import java.util.jar.JarFile
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
+import org.urbancode.ucadf.core.action.ucadf.general.UcAdfSetActionProperties
 import org.urbancode.ucadf.core.action.ucadf.general.UcAdfWhen
 import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.system.UcdSession
@@ -57,7 +58,10 @@ class UcAdfActionsRunner {
 
 	// Pattern to match a property value in replacement text.	
 	private Pattern propertyValuePattern = Pattern.compile("[^\\/\"']+|\"([^\"]*)\"|'([^']*)'")
-  
+
+	// The list of final property names.
+	private List<String> finalPropertyNames = []
+	  
 	// The stack of actions being run.
 	Stack<String> actionsStack = []
 
@@ -256,8 +260,12 @@ class UcAdfActionsRunner {
 			}
 			
 			// Set the runner property values from the action property values.
-			setPropertyValues(actionMap.get(UcAdfActionPropertyEnum.PROPERTYVALUES.getPropertyName()))
-	
+			// Since UcAdfSetActionProperties has propertyValues and a potential when condition, we skip setting those properties here and let
+			// the action set them if when evaluates to true. 
+			if (!actionMap[UcAdfActionPropertyEnum.ACTION.getPropertyName()].equals(UcAdfSetActionProperties.getSimpleName())) {
+				setPropertyValues(actionMap.get(UcAdfActionPropertyEnum.PROPERTYVALUES.getPropertyName()))
+			}
+
 			// Set the runner property values from property files.
 			setPropertyValuesFromFiles(actionMap.get(UcAdfActionPropertyEnum.PROPERTYFILES.getPropertyName()))
 	
@@ -600,17 +608,22 @@ class UcAdfActionsRunner {
 			debug = Boolean.valueOf(propertyValue)
 		}
 
-		// If the existing property value is a Map and the property value being provided is a Map then merge them.
-		if (propertyValue instanceof Map && propertyValues.containsKey(propertyName) && propertyValues.get(propertyName) instanceof Map) {
-			debugMessage("Setting property name [$propertyName] value [$propertyValue] (Map).")
-			
-			// Merge the maps.
-			propertyValues.put(propertyName, propertyValues.get(propertyName) + propertyValue)
+		if (propertyValues.containsKey(propertyName) && finalPropertyNames.contains(propertyName)) {
+			debugMessage("Skipping setting final property name [$propertyName] that has already been set.")
+			throw new UcdInvalidValueException("Attempt to set a new value for final property [$propertyName].")
 		} else {
-			debugMessage("Setting property name [$propertyName] value [$propertyValue].")
-
-			// Set the property value.				
-			propertyValues.put(propertyName, propertyValue)
+			// If the existing property value is a Map and the property value being provided is a Map then merge them.
+			if (propertyValue instanceof Map && propertyValues.containsKey(propertyName) && propertyValues.get(propertyName) instanceof Map) {
+				debugMessage("Setting property name [$propertyName] value [$propertyValue] (Map).")
+				
+				// Merge the maps.
+				propertyValues.put(propertyName, propertyValues.get(propertyName) + propertyValue)
+			} else {
+				debugMessage("Setting property name [$propertyName] value [$propertyValue].")
+	
+				// Set the property value.				
+				propertyValues.put(propertyName, propertyValue)
+			}
 		}
 	}
 

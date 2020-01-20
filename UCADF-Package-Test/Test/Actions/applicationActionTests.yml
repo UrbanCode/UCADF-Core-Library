@@ -20,7 +20,7 @@ actions:
   #==============================================================================          
   # Generate a unique application tag name.
   - action: UcAdfSetActionProperties
-    deferredPropertyValues:
+    propertyValues:
       epoch: 'Eval(new Date().getTime())'
   - action: UcAdfSetActionProperties
     propertyValues:

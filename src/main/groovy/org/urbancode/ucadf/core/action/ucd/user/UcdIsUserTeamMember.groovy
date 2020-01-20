@@ -40,6 +40,7 @@ class UcdIsUserTeamMember extends UcAdfAction {
 		// See if the specified user is a member of any group associated with the specified team role.
 		ucdTeam = actionsRunner.runAction([
 			action: UcdGetTeam.getSimpleName(),
+			actionInfo: false,
 			team: team,
 			failIfNotFound: true
 		])
@@ -56,6 +57,7 @@ class UcdIsUserTeamMember extends UcAdfAction {
 			if (roleMapping.getGroup() && (roleMapping.getRole().getName().equals(role) || roleMapping.getRole().getId().equals(role))) {
 				List<UcdUser> ucdUsers = actionsRunner.runAction([
 					action: UcdGetGroupMembers.getSimpleName(),
+					actionInfo: false,
 					group: roleMapping.getGroup().getName()
 				])
 

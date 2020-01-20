@@ -322,19 +322,25 @@ Set action properties to be used by the actions runner.
 | Property | Description |
 |:-------- |:----------- |
 | propertyValues | Property values provided to the run files action and that are evaluated when the action is parsed, e.g. command line options from UcAdfClient. |
-| deferredPropertyValues | Property values that are not evaluated until the action is ready to run. |
 
 ```
 actions:
   - action: UcAdfSetActionProperties 
     propertyValues:
       myProperty: 'foo'
-    propertyValues:
       bar: "dog"
-    deferredPropertyValues:
       epoch: 'Eval(new Date().getTime())'
 ```
 Usage note: This action may be used to set multiple properties. If one property’s value is evaluated from another property’s value in the same action then the first property’s value is not evaluated as static in the subsequent usage. In the above example, if there were a second property that used the epoch value then that second property value could end up with a different epoch value than the one set as the static value. Use two different actions to handle this scenario.
+
+```
+actions:
+  - action: UcAdfSetActionProperties 
+    setFinal: true
+    propertyValues:
+      epoch: 'Eval(new Date().getTime())'
+```
+If you want a value to be set once and never overriden then use the setFinal option.
 
 #### Using UcAdfRunGroovyScript Action to Set an Action Property
 If the code needed to set a property value is too complex for Eval to handle then the property can be set by running Groovy script. The action's information is made available to the script as the 'action' object. That can be used to access the 'actionsRunner' which can then be used to get/set action properties.

@@ -12,10 +12,9 @@ class UcAdfSetActionProperties extends UcAdfAction {
 	// Action properties.
 	/** If true then show debug information. */
 	Boolean debug = false
-	
-	/** The list of deferred property values. These will not be evaluated until the action is run. */
-	Map<String, Object> deferredPropertyValues = new TreeMap<String, Object>()
-	
+
+	Boolean setFinal = false
+		
 	/**
 	 * Runs the action.	
 	 */
@@ -24,7 +23,15 @@ class UcAdfSetActionProperties extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		// Set the deferred properties.		
-		actionsRunner.setPropertyValues(deferredPropertyValues)
+		// Set the property values.		
+		actionsRunner.setPropertyValues(propertyValues)
+
+		if (setFinal) {
+			propertyValues.keySet().each { propertyName ->
+				if (!actionsRunner.finalPropertyNames.contains(propertyName)) {
+					actionsRunner.finalPropertyNames.add(propertyName)
+				}
+			}		
+		}
 	}
 }
