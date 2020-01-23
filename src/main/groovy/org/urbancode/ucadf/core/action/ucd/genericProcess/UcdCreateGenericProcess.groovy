@@ -55,7 +55,7 @@ class UcdCreateGenericProcess extends UcAdfAction {
 
 		Boolean created = false
 		
-		logInfo("Creating generic process [$name].")
+		logVerbose("Creating generic process [$name].")
 
 		// If a single resource was specified then add it to the list.
 		if (defaultResource) {
@@ -119,11 +119,11 @@ class UcdCreateGenericProcess extends UcAdfAction {
 
         Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
         if (response.getStatus() == 200) {
-			logInfo("Generic process [$name] created.")
+			logVerbose("Generic process [$name] created.")
 			created = true
         } else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (response.getStatus() != 400 || failIfExists) {
 				throw new UcdInvalidValueException(errMsg)
 			}

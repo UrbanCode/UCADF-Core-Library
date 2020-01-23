@@ -71,7 +71,7 @@ class UcdUpdateResource extends UcAdfAction {
 		
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() == 200) {
-			logInfo("Resource [$resource] updated.")
+			logVerbose("Resource [$resource] updated.")
 		} else {
 			throw new UcdInvalidValueException(response)
 		}

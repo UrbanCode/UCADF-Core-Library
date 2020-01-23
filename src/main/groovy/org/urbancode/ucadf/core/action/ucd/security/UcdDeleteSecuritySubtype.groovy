@@ -33,7 +33,7 @@ class UcdDeleteSecuritySubtype extends UcAdfAction {
 		Boolean deleted = false
 		
 		if (commit) {
-			logInfo("Deleting security subtype [$subtype].")
+			logVerbose("Deleting security subtype [$subtype].")
 			
 			WebTarget target = ucdSession.getUcdWebTarget().path("/security/resourceRole/{subtype}")
 				.resolveTemplate("subtype", subtype)
@@ -41,18 +41,18 @@ class UcdDeleteSecuritySubtype extends UcAdfAction {
 			
 			Response response = target.request(MediaType.WILDCARD).delete()
 			if (response.getStatus() == 200) {
-				logInfo("Security subtype [$subtype] deleted.")
+				logVerbose("Security subtype [$subtype] deleted.")
 				deleted = true
 			} else {
 				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-				logInfo(errMsg)
+				logVerbose(errMsg)
 				// Some versions return 500.
 				if ((response.getStatus() != 404 && response.getStatus() != 500) || failIfNotFound) {
 					throw new UcdInvalidValueException(errMsg)
 				}
 			}
 		} else {
-			logInfo("Would delete security subtype [$subtype].")
+			logVerbose("Would delete security subtype [$subtype].")
 		}
 		
 		return deleted

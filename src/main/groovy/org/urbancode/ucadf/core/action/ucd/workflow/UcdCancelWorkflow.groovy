@@ -24,7 +24,7 @@ class UcdCancelWorkflow extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-        logInfo("Cancelling workflow [$workflow].")
+        logVerbose("Cancelling workflow [$workflow].")
 		
         WebTarget target = ucdSession.getUcdWebTarget().path("/rest/workflow/{workflowId}/cancel")
 			.resolveTemplate("workflowId", workflow)
@@ -32,7 +32,7 @@ class UcdCancelWorkflow extends UcAdfAction {
 		
         Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(""))
         if (response.getStatus() == 200) {
-            logInfo("Workflow [$workflow] cancelled.")
+            logVerbose("Workflow [$workflow] cancelled.")
         } else {
             throw new UcdInvalidValueException(response)
         }

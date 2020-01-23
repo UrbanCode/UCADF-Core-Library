@@ -51,7 +51,7 @@ class UcdSetSnapshotConfiguration extends UcAdfAction {
 	
 	// Reset the snapshot configuration to latest.
 	private resetAllToLatest() {
-		logInfo("Resetting application [$application] snapshot [$snapshot] configuration to latest.")
+		logVerbose("Resetting application [$application] snapshot [$snapshot] configuration to latest.")
 
 		// If a snapshot ID was provided then use it. Otherwise get the snapshot information to get the ID.
 		String snapshotId = snapshot
@@ -72,7 +72,7 @@ class UcdSetSnapshotConfiguration extends UcAdfAction {
 
 		Response response = target.request(MediaType.APPLICATION_JSON).delete()
 		if (response.getStatus() == 204) {
-			logInfo("Application [$application] snapshot [$snapshot] configuration reset to latest.")
+			logVerbose("Application [$application] snapshot [$snapshot] configuration reset to latest.")
 		} else {
 			throw new UcdInvalidValueException(response)
 		}
@@ -80,7 +80,7 @@ class UcdSetSnapshotConfiguration extends UcAdfAction {
 
 	// Set the snapshot entries to current.
 	private setLatestEntriesToCurrent() {
-		logInfo("Setting application [$application] snapshot [$snapshot] configuration latest entries to current.")
+		logVerbose("Setting application [$application] snapshot [$snapshot] configuration latest entries to current.")
 
 		// If a snapshot ID was provided then use it. Otherwise get the snapshot information to get the ID.
 		String snapshotId = snapshot
@@ -101,7 +101,7 @@ class UcdSetSnapshotConfiguration extends UcAdfAction {
 
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(""))
 		if (response.getStatus() == 204) {
-			logInfo("Application [$application] snapshot [$snapshot] configuration latest entries locked to current.")
+			logVerbose("Application [$application] snapshot [$snapshot] configuration latest entries locked to current.")
 		} else {
 			throw new UcdInvalidValueException(response)
 		}

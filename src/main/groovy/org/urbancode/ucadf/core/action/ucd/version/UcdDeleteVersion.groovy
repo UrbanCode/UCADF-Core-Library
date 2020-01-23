@@ -53,7 +53,7 @@ class UcdDeleteVersion extends UcAdfAction {
 				versionId = ucdVersion.getId()
 			} else {
 				String errMsg = "Version [$version] not found."
-				logInfo(errMsg)
+				logVerbose(errMsg)
 				if (failIfNotFound) {
 					throw new UcdInvalidValueException(errMsg)
 				}
@@ -68,17 +68,17 @@ class UcdDeleteVersion extends UcAdfAction {
 				
 				Response response = target.request(MediaType.APPLICATION_JSON).delete()
 				if (response.getStatus() == 200) {
-					logInfo("Component [$component] Version [$version] deleted.")
+					logVerbose("Component [$component] Version [$version] deleted.")
 					deleted = true
 				} else {
 					String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-					logInfo(errMsg)
+					logVerbose(errMsg)
 					if (response.getStatus() != 404 || failIfNotFound) {
 						throw new UcdInvalidValueException(errMsg)
 					}
 				}
 			} else {
-				logInfo("Would delete component [$component] version [$version]")
+				logVerbose("Would delete component [$component] version [$version]")
 			}
 		}
 		

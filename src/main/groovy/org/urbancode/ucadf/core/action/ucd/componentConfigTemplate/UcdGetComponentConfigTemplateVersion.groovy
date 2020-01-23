@@ -38,7 +38,7 @@ class UcdGetComponentConfigTemplateVersion extends UcAdfAction {
 
 		UcdComponentConfigTemplateVersion configFileTemplateVersion
 		
-		logInfo("Getting component [$component] configuration template [$configTemplate] version [$version].")
+		logVerbose("Getting component [$component] configuration template [$configTemplate] version [$version].")
 
 		// If an component ID was provided then use it. Otherwise get the component information to get the ID.
 		String componentId = component
@@ -63,7 +63,7 @@ class UcdGetComponentConfigTemplateVersion extends UcAdfAction {
 			configFileTemplateVersion = response.readEntity(new GenericType<UcdComponentConfigTemplateVersion>(){})
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (response.getStatus() != 404 || failIfNotFound) {
 				throw new UcdInvalidValueException(errMsg)
 			}

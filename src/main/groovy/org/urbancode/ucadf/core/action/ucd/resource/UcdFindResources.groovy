@@ -42,7 +42,7 @@ class UcdFindResources extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 		
-		logInfo("Finding resources in [$parent] resource tree.")
+		logVerbose("Finding resources in [$parent] resource tree.")
 		
 		// Process top-level resource differently.		
 		if ("".equals(parent) || "/".equals(parent)) {
@@ -68,7 +68,7 @@ class UcdFindResources extends UcAdfAction {
 			findResources(parent, 0)
 		}
 
-		logInfo("Found ${ucdResources.size()} resources.")
+		logVerbose("Found ${ucdResources.size()} resources.")
 
 		return ucdResources
 	}

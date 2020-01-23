@@ -41,7 +41,7 @@ class UcdCopyApplicationProcesses extends UcAdfAction {
 			replaceList = UcdApplicationProcessReplacement.getDefaultReplaceList(fromApplication, toApplication)
 		}
 		
-		logInfo("Copying application processes from [$fromApplication] to [$toApplication]."		)
+		logVerbose("Copying application processes from [$fromApplication] to [$toApplication]."		)
 		List<UcdApplicationProcess> fromProcesses = actionsRunner.runAction([
 			action: UcdGetApplicationProcesses.getSimpleName(),
 			application: fromApplication

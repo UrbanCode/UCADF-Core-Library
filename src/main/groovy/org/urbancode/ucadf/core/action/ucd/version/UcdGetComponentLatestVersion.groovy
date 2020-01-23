@@ -36,10 +36,10 @@ class UcdGetComponentLatestVersion extends UcAdfAction {
 		Response response = target.request().get()
 		if (response.getStatus() == 200) {
 			ucdVersion = response.readEntity(UcdVersion.class)
-			logInfo("Component [$component] latest version [${ucdVersion.getName()}].")
+			logVerbose("Component [$component] latest version [${ucdVersion.getName()}].")
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (response.getStatus() == 204 || response.getStatus() == 404) {
 				if (failIfNotFound) {
 					throw new UcdInvalidValueException(errMsg)

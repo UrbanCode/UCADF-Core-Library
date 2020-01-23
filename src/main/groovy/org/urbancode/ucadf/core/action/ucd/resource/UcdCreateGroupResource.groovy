@@ -38,7 +38,7 @@ class UcdCreateGroupResource extends UcAdfAction {
 
 		String resourcePath = "${parent}/${name}"
 
-		logInfo("Creating group resource [$resourcePath].")
+		logVerbose("Creating group resource [$resourcePath].")
 
 		created = actionsRunner.runAction([
 			action: UcdCreateResource.getSimpleName(),

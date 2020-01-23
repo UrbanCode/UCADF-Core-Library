@@ -35,10 +35,11 @@ class UcdDeleteSnapshot extends UcAdfAction {
 
 		Boolean deleted = false
 		
-		logInfo("Deleting application [$application] snapshot [$snapshot].")
+		logVerbose("Deleting application [$application] snapshot [$snapshot].")
 
 		UcdSnapshot ucdSnapshot = actionsRunner.runAction([
 			action: UcdGetSnapshot.getSimpleName(),
+			actionInfo: false,
 			application: application,
 			snapshot: snapshot,
 			failIfNotFound: failIfNotFound
@@ -52,11 +53,11 @@ class UcdDeleteSnapshot extends UcAdfAction {
 			
 			Response response = target.request(MediaType.APPLICATION_JSON).delete()
 			if (response.getStatus() == 204) {
-				logInfo("Application [$application] snapshot [$snapshot] deleted.")
+				logVerbose("Application [$application] snapshot [$snapshot] deleted.")
 				deleted = true
 			} else {
 				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-				logInfo(errMsg)
+				logVerbose(errMsg)
 				if (response.getStatus() != 404 || failIfNotFound) {
 					throw new UcdInvalidValueException(errMsg)
 				}

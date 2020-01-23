@@ -40,7 +40,7 @@ class UcdGetResource extends UcAdfAction {
 			if (failIfNotFound) {
 				throw new UcdInvalidValueException(errMsg)
 			} else {
-				logInfo("Resource [$resource] not found.")
+				logVerbose("Resource [$resource] not found.")
 			}
 		} else {
             throw new UcdInvalidValueException(response)

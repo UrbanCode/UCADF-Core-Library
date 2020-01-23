@@ -50,7 +50,7 @@ class UcdGetAgentResources extends UcAdfAction {
 		if (response.getStatus() == 200) {
 			ucdResources = response.readEntity(new GenericType<List<UcdResource>>(){})
 		} else {
-			logInfo(response.readEntity(String.class))
+			logVerbose(response.readEntity(String.class))
 			throw new Exception("Status: ${response.getStatus()} Unable to get agent resources. $target")
 		}
 		

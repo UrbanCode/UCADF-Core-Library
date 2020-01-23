@@ -40,7 +40,7 @@ class UcdSetApplicationProcessRequestProperties extends UcAdfAction {
 			String value = ucdProperty.getValue()
 			Boolean secure = ucdProperty.getSecure()
 			
-			logInfo("Setting application process request [$requestId] property [$name] " + (secure ? "." : "value [$value]."))
+			logVerbose("Setting application process request [$requestId] property [$name] " + (secure ? "." : "value [$value]."))
 			
 			data.add([
 				name: name,

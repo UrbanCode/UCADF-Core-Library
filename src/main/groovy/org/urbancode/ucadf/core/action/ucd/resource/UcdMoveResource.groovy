@@ -30,7 +30,7 @@ class UcdMoveResource extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Move resource [$resourceFrom] to [resourceTo].")
+		logVerbose("Move resource [$resourceFrom] to [resourceTo].")
 
 		// Get the resource information.
 		String resourceFromId = resourceFrom
@@ -69,7 +69,7 @@ class UcdMoveResource extends UcAdfAction {
 
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() == 200) {
-			logInfo("resource [$resourceFrom] moved to [$resourceTo].")
+			logVerbose("resource [$resourceFrom] moved to [$resourceTo].")
 		} else {
 			throw new UcdInvalidValueException(response)
 		}

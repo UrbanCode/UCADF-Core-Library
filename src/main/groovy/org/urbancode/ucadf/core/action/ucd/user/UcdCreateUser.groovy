@@ -46,7 +46,7 @@ class UcdCreateUser extends UcAdfAction {
 
 		Boolean created = false
 		
-		logInfo("Creating user [$name].")
+		logVerbose("Creating user [$name].")
 		
 		WebTarget target = ucdSession.getUcdWebTarget().path("/security/user")
 		logDebug("target=$target")
@@ -64,11 +64,11 @@ class UcdCreateUser extends UcAdfAction {
 		
 		Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() == 200) {
-			logInfo("User [$name] created.")
+			logVerbose("User [$name] created.")
 			created = true
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			
 			Boolean alreadyExists = false
 			if (response.getStatus() == 403 && errMsg ==~ /.*already exists.*/) {

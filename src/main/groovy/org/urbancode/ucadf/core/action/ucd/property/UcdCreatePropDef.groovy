@@ -31,7 +31,7 @@ class UcdCreatePropDef extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-        logInfo("Add property definition [${ucdPropDef.getName()}].")
+        logVerbose("Add property definition [${ucdPropDef.getName()}].")
 
         Map requestMap = [
 			name: ucdPropDef.getName(), 
@@ -54,7 +54,7 @@ class UcdCreatePropDef extends UcAdfAction {
         
         Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
         if (response.getStatus() == 200) {
-            logInfo("Added property defintion.")
+            logVerbose("Added property defintion.")
         } else {
             logError(response.readEntity(String.class))
             throw new UcdInvalidValueException("Status: ${response.getStatus()} Unable to add property definition. $target")

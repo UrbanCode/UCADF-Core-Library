@@ -22,9 +22,9 @@ class UcAdfSleep extends UcAdfAction {
 		validatePropsExist()
 
 		if (comment) {
-			logInfo(comment)
+			logVerbose(comment)
 		} else {
-			logInfo("Sleeping for [$seconds] seconds.")
+			logVerbose("Sleeping for [$seconds] seconds.")
 		}
 		
 		Thread.sleep(seconds * 1000)

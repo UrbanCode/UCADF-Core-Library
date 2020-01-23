@@ -74,7 +74,7 @@ class UcdCreateAuthToken extends UcAdfAction {
 			if (failIfExists) {
 				throw new UcdInvalidValueException("Tokens already exist for user [$user].")
 			} else {
-				logInfo("Tokens already exist for user [$user].")
+				logVerbose("Tokens already exist for user [$user].")
 			}
         } else {
 			// If no expire date is provided then it will be set to the current date + 20 years
@@ -94,7 +94,7 @@ class UcdCreateAuthToken extends UcAdfAction {
 			String derivedDescription = description
 			derivedDescription += (description ? " " : "") + "Created:" + zDateFormat.format(new Date())
 			
-			logInfo("Creating authentication token for user [$user] expireDate [$zExpireDate] description [$derivedDescription]")
+			logVerbose("Creating authentication token for user [$user] expireDate [$zExpireDate] description [$derivedDescription]")
 			
 			WebTarget target = ucdSession.getUcdWebTarget().path("/security/authtoken")
 			logDebug("target=$target")
@@ -115,7 +115,7 @@ class UcdCreateAuthToken extends UcAdfAction {
 				Properties responseProps = response.readEntity(Properties.class)
 				tokenReturn.setToken(responseProps.get("token"))
 			
-				logInfo("User [$user] authentication token created.")
+				logVerbose("User [$user] authentication token created.")
 			} else {
 				throw new UcdInvalidValueException(response)
 			}

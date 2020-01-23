@@ -29,7 +29,7 @@ class UcdGetComponentApplications extends UcAdfAction {
 
 		List<UcdApplication> ucdApplications = []
 		
-		logInfo("Getting component [$component] applications.")
+		logVerbose("Getting component [$component] applications.")
 
 		// If an component ID was provided then use it. Otherwise get the component information to get the ID.
 		String componentId = component

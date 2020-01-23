@@ -24,7 +24,7 @@ class UcdGetApplicationProperties extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Getting application [$application] properties.")
+		logVerbose("Getting application [$application] properties.")
 
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/application/getProperties")
 			.queryParam("application", application)

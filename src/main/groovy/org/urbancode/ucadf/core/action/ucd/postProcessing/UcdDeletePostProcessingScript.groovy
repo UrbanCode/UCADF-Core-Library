@@ -36,9 +36,9 @@ class UcdDeletePostProcessingScript extends UcAdfAction {
 		Boolean deleted = false
 		
 		if (!commit) {
-			logInfo("Would delete script [$script].")
+			logVerbose("Would delete script [$script].")
 		} else {
-			logInfo("Deleting script [$script].")
+			logVerbose("Deleting script [$script].")
 		
 			if (UcdObject.isUUID(script)) {
 				deletePostProcessingScript(script)
@@ -66,11 +66,11 @@ class UcdDeletePostProcessingScript extends UcAdfAction {
 
 		Response response = target.request().delete()
 		if (response.getStatus() == 204) {
-			logInfo("Post-processing script [$scriptId] deleted.")
+			logVerbose("Post-processing script [$scriptId] deleted.")
 			deleted = true
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			// Returns a 400 error with a 'Cannot change the ghosted date once set' for the deleted scriptes.
 			if ((response.getStatus() != 400 && response.getStatus() != 404) || failIfNotFound) {
 				throw new UcdInvalidValueException(errMsg)

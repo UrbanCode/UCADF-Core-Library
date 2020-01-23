@@ -33,7 +33,7 @@ class UcdSetUserPassword extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Setting user [$user] password.")
+		logVerbose("Setting user [$user] password.")
 
 		// If an user ID was provided then use it. Otherwise get the user information to get the ID.
 		String userId = user
@@ -59,7 +59,7 @@ class UcdSetUserPassword extends UcAdfAction {
 
 		Response response = target.request(MediaType.WILDCARD).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() == 200) {
-			logInfo("User [$user} password set.")
+			logVerbose("User [$user} password set.")
 		} else {
 			throw new UcdInvalidValueException(response)
 		}

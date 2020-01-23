@@ -30,9 +30,9 @@ class UcdDeleteResource extends UcAdfAction {
 		validatePropsExist()
 		
 		if (!commit) {
-			logInfo("Would delete resource [$resource] from ucdUrl [${ucdSession.getUcdUrl()}].")
+			logVerbose("Would delete resource [$resource] from ucdUrl [${ucdSession.getUcdUrl()}].")
 		} else {
-			logInfo("Deleting Resource [$resource].")
+			logVerbose("Deleting Resource [$resource].")
 
 			// Had to add logic to handle concurrency issue discovered in UCD 6.2.7.0.
 			final Integer MAXATTEMPTS = 5
@@ -42,11 +42,11 @@ class UcdDeleteResource extends UcAdfAction {
 					
 				Response response = target.request(MediaType.APPLICATION_JSON).delete()
 				if (response.getStatus() == 204) {
-					logInfo("Resource deleted.")
+					logVerbose("Resource deleted.")
 					break
 				} else {
 					String responseStr = response.readEntity(String.class)
-					logInfo(responseStr)
+					logVerbose(responseStr)
 					if (response.getStatus() == 404) {
 						if (failIfNotFound) {
 							throw new UcdInvalidValueException(response)
@@ -54,7 +54,7 @@ class UcdDeleteResource extends UcAdfAction {
 						break
 					} else {
 						if (responseStr ==~ /.*bulk manipulation query.*/ && iAttempt < MAXATTEMPTS) {
-							logInfo("Attempt $iAttempt failed. Waiting to try again.")
+							logVerbose("Attempt $iAttempt failed. Waiting to try again.")
 							Thread.sleep(2000)
 						} else {
 							throw new UcdInvalidValueException(response)

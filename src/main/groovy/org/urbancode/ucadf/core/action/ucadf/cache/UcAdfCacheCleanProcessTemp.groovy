@@ -36,7 +36,7 @@ class UcAdfCacheCleanProcessTemp extends UcAdfAction {
 		
 		// Clean out any unused cache component versions.
 		if (component) {
-			logInfo("Cleaning cache component versions from component [$component].")
+			logVerbose("Cleaning cache component versions from component [$component].")
 
 			// Get the component versions.
 			List<UcdVersion> ucdVersions = actionsRunner.runAction([
@@ -77,7 +77,7 @@ class UcAdfCacheCleanProcessTemp extends UcAdfAction {
 						])
 					}
 				} catch(Exception e) {
-					logInfo(e.getMessage())
+					logVerbose(e.getMessage())
 				}
 			}
 		}		
@@ -85,7 +85,7 @@ class UcAdfCacheCleanProcessTemp extends UcAdfAction {
 	
 	// Clean up a directory that has subdirectories associated with non-running process names.
 	private cleanProcessTempDir() {
-		logInfo("Cleaning temporary process directories from [$cacheDirName].")
+		logVerbose("Cleaning temporary process directories from [$cacheDirName].")
 		
 		File parentDir = new File(cacheDirName.trim())
 		
@@ -107,11 +107,11 @@ class UcAdfCacheCleanProcessTemp extends UcAdfAction {
 					requestId: requestId
 				])
 				if (!isProcessRequestRunning) {
-					logInfo("Deleting directory [${dir.getPath()}].")
+					logVerbose("Deleting directory [${dir.getPath()}].")
 					dir.deleteDir()
 				}
 			} catch(Exception e) {
-				logInfo(e.getMessage())
+				logVerbose(e.getMessage())
 			}
 		}
 	}

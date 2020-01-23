@@ -43,7 +43,7 @@ class UcdCreateResourceFromTemplate extends UcAdfAction {
 
 		String resourcePath = "${parent}/${name}"
 		
-		logInfo("Creating resource [$resourcePath] from template [$template.")
+		logVerbose("Creating resource [$resourcePath] from template [$template.")
 
 		// Make sure the parent resource exists.
 		UcdResource ucdParentResource = actionsRunner.runAction([
@@ -66,10 +66,10 @@ class UcdCreateResourceFromTemplate extends UcAdfAction {
 		
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() == 200) {
-			logInfo("Resource [$name] added to [$parent] from template [$template].")
+			logVerbose("Resource [$name] added to [$parent] from template [$template].")
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (!(response.getStatus() == 400 && !failIfExists)) {
 				throw new UcdInvalidValueException(errMsg)
 			}

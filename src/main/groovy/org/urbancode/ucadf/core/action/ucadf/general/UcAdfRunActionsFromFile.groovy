@@ -65,7 +65,7 @@ class UcAdfRunActionsFromFile extends UcAdfAction {
 					if (new File(findActionFileName).exists()) {
 						fileName = findActionFileName
 						foundFile = true
-						logInfo("Found action file [$fileName].")
+						logVerbose("Found action file [$fileName].")
 						break
 					}
 				}
@@ -129,13 +129,13 @@ class UcAdfRunActionsFromFile extends UcAdfAction {
 		
 		// Add the actions runner properties from those provided to this run files action.
 		if (propertyValues.size() > 0) {
-			logInfo("Setting action runner properties from the run file propertyValues.")
+			logVerbose("Setting action runner properties from the run file propertyValues.")
 			actionsRunner.setPropertyValues(propertyValues)
 		}
 
 		// Add the actions runner proprerties from those provided to this run files action.
 		if (propertyFiles.size() > 0) {
-			logInfo("Setting action runner properties from the run file propertyFiles.")
+			logVerbose("Setting action runner properties from the run file propertyFiles.")
 			actionsRunner.setPropertyValuesFromFiles(propertyFiles)
 		}
 		

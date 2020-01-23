@@ -41,7 +41,7 @@ class UcdCreateComponentResource extends UcAdfAction {
 		
 		String resourcePath = "${parent}/${name}"
 		
-		logInfo("Creating component resource [$resourcePath].")
+		logVerbose("Creating component resource [$resourcePath].")
 
 		// Look up the role ID and use it instead of the name because of an UrbanCode that
 		// sometimes incorrectly corrects the resource with the wrong role ID.

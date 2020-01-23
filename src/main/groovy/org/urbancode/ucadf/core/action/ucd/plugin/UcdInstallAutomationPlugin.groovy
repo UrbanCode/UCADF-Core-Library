@@ -25,7 +25,7 @@ class UcdInstallAutomationPlugin extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 		
-		logInfo("Installing plugin from file [$fileName] into [${ucdSession.getUcdUrl()}]")
+		logVerbose("Installing plugin from file [$fileName] into [${ucdSession.getUcdUrl()}]")
 
 		File fileObj = new File(fileName)
 		
@@ -44,7 +44,7 @@ class UcdInstallAutomationPlugin extends UcAdfAction {
 		}
 		
 		if (response.getStatus() == 200) {
-			logInfo("Plugin from file [$fileName] installed successfully.")
+			logVerbose("Plugin from file [$fileName] installed successfully.")
 		} else {
             throw new UcdInvalidValueException(response)
 		}

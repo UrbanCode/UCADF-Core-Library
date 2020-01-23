@@ -32,7 +32,7 @@ class UcdDeleteComponent extends UcAdfAction {
 
 		Boolean deleted = false
 				
-		logInfo("Deleting component [$component] commit [$commit].")
+		logVerbose("Deleting component [$component] commit [$commit].")
 
 		if (commit) {
 			WebTarget target = ucdSession.getUcdWebTarget().path("/rest/deploy/component/{component}")
@@ -41,17 +41,17 @@ class UcdDeleteComponent extends UcAdfAction {
 			
 			Response response = target.request(MediaType.APPLICATION_JSON).delete()
 			if (response.getStatus() == 204) {
-				logInfo("Component [$component] deleted.")
+				logVerbose("Component [$component] deleted.")
 				deleted = true
 			} else {
 				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-				logInfo(errMsg)
+				logVerbose(errMsg)
 				if (response.getStatus() != 404 || failIfNotFound) {
 					throw new UcdInvalidValueException(errMsg)
 				}
 			}
 		} else {
-			logInfo("Would delete component [$component].")
+			logVerbose("Would delete component [$component].")
 		}
 		
 		return deleted

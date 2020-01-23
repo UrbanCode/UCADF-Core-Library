@@ -27,7 +27,7 @@ class UcdGetEnvironments extends UcAdfAction {
 
 		List<UcdEnvironment> ucdEnvironments = []
 		
-		logInfo("Getting application [$application] environments.")
+		logVerbose("Getting application [$application] environments.")
 		
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/application/environmentsInApplication")
 			.queryParam("application", application)

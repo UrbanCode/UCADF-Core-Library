@@ -25,7 +25,7 @@ class UcdCancelApplicationProcesses extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-        logInfo("Cancelling all running application processes matching application [$matchApplication] process [$matchProcess].")
+        logVerbose("Cancelling all running application processes matching application [$matchApplication] process [$matchProcess].")
 
 		List<UcdWorkflowProcessRequest> ucdWorkflowProcessRequests = actionsRunner.runAction([
 			action: UcdGetWorkflowActivity.getSimpleName(),
@@ -47,10 +47,10 @@ class UcdCancelApplicationProcesses extends UcAdfAction {
 					workflow: appWorkflowRequest.getTraceId()
 				])
 		
-				logInfo("Cancelled application process [${appWorkflowRequest.getApplicationProcess().getName()}] [${appWorkflowRequest.getApplicationProcess().getId()}].")
+				logVerbose("Cancelled application process [${appWorkflowRequest.getApplicationProcess().getName()}] [${appWorkflowRequest.getApplicationProcess().getId()}].")
             }
         }
 		
-        logInfo("All running application processes matching application [$matchApplication] process [$matchProcess] cancelled.")
+        logVerbose("All running application processes matching application [$matchApplication] process [$matchProcess] cancelled.")
 	}
 }

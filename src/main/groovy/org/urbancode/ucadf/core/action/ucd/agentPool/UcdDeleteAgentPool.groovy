@@ -32,10 +32,10 @@ class UcdDeleteAgentPool extends UcAdfAction {
 
 		Boolean deleted = false
 				
-		logInfo("Delete agent pool [$pool]")
+		logVerbose("Delete agent pool [$pool]")
 		
 		if (!commit) {
-			logInfo("Would delete agent pool [$pool].")
+			logVerbose("Would delete agent pool [$pool].")
 		} else {
 			WebTarget target = ucdSession.getUcdWebTarget().path("/cli/agentPool/deleteAgentPool")
 				.queryParam("pool", pool)
@@ -43,11 +43,11 @@ class UcdDeleteAgentPool extends UcAdfAction {
 			
 			Response response = target.request(MediaType.APPLICATION_JSON).delete()
 			if (response.getStatus() == 204) {
-				logInfo("Agent pool [$pool] deleted.")
+				logVerbose("Agent pool [$pool] deleted.")
 				deleted = true
 			} else {
 				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-				logInfo(errMsg)
+				logVerbose(errMsg)
 				if (response.getStatus() != 404 || failIfNotFound) {
 					throw new UcdInvalidValueException(errMsg)
 				}

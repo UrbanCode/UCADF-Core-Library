@@ -27,7 +27,7 @@ class UcdLockSnapshotVersions extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 		
-		logInfo("Locking application [$application] snapshot [$snapshot] versions.")
+		logVerbose("Locking application [$application] snapshot [$snapshot] versions.")
 		
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/snapshot/lockSnapshotVersions")
 			.queryParam("snapshot", snapshot)
@@ -36,7 +36,7 @@ class UcdLockSnapshotVersions extends UcAdfAction {
 
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(""))
 		if (response.getStatus() == 204) {
-			logInfo("Application [$application] snapshot [$snapshot] versions locked.")
+			logVerbose("Application [$application] snapshot [$snapshot] versions locked.")
 		} else {
 			throw new UcdInvalidValueException(response)
 		}

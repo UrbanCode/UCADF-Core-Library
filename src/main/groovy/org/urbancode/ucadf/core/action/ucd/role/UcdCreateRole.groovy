@@ -35,7 +35,7 @@ class UcdCreateRole extends UcAdfAction {
 
 		Boolean created = false
 				
-		logInfo("Creating role [$name].")
+		logVerbose("Creating role [$name].")
 		
 		WebTarget target = ucdSession.getUcdWebTarget().path("/security/role")
 		logDebug("target=$target")
@@ -50,11 +50,11 @@ class UcdCreateRole extends UcAdfAction {
 
 		Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() == 200) {
-			logInfo("Role [$name] created.")
+			logVerbose("Role [$name] created.")
 			created = true
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			
 			Boolean alreadyExists = false
 			if (response.getStatus() == 403 && errMsg ==~ /.*already exists.*/) {

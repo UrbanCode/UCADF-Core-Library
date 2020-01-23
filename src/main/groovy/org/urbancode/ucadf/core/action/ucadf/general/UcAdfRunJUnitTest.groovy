@@ -48,7 +48,7 @@ class UcAdfRunJUnitTest extends UcAdfAction {
 		SummaryGeneratingListener listener = new SummaryGeneratingListener()
 		launcher.registerTestExecutionListeners(listener)
 		
-		logInfo("Launching JUnit request.")
+		logVerbose("Launching JUnit request.")
 		launcher.execute(
 			request, 
 			listener
@@ -58,7 +58,7 @@ class UcAdfRunJUnitTest extends UcAdfAction {
 		TestExecutionSummary summary = listener.getSummary()
 		
 		Integer exitCode = summary.getTestsFailedCount() > 0 ? 1 : 0		
-		logInfo("JUnit completed exitCode=$exitCode.")
+		logVerbose("JUnit completed exitCode=$exitCode.")
 
 		if (exitCode) {		
 			println "\n===== JUnit Test Failures ====="

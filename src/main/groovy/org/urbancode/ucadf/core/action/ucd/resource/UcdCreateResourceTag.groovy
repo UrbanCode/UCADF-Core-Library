@@ -50,10 +50,10 @@ class UcdCreateResourceTag extends UcAdfAction {
 			if (failIfExists) {
 				throw new UcdInvalidValueException("Resource tag [$name] already exists.")
 			} else {
-				logInfo("Resource tag [$name] already exists.")
+				logVerbose("Resource tag [$name] already exists.")
 			}
 		} else {
-			logInfo("Create resource tag [$name].")
+			logVerbose("Create resource tag [$name].")
 		
 			UcdResource ucdResource = actionsRunner.runAction([
 				action: UcdGetResource.getSimpleName(),
@@ -79,7 +79,7 @@ class UcdCreateResourceTag extends UcAdfAction {
 	
 			Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 			if (response.getStatus() == 204) {
-	            logInfo("Resource tag [$name] created.")
+	            logVerbose("Resource tag [$name] created.")
 			} else {
 				throw new UcdInvalidValueException(response)
 			}

@@ -32,7 +32,7 @@ class UcdGetStatuses extends UcAdfAction {
 
 		List<UcdStatus> ucdStatuses
 
-		logInfo("Getting type [$type] statuses.")
+		logVerbose("Getting type [$type] statuses.")
 				
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/status/getStatuses")
 			.queryParam("type", type)

@@ -75,4 +75,13 @@ abstract class UcdObject implements Serializable {
 	public static Boolean isUUID(final String value) {
 		return (value ==~ /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/)
 	}
+
+	/**
+	 * Determine if a sting will be interpreted as a GUID due to a UCD bug.
+	 * @param value The value to examine.
+	 * @return True if the value is is incorrectly interpreted as a UUID.
+	 */
+	public static Boolean isIncorrectlyInterpretedAsUUID(final String value) {
+		return (value ==~ /^[0-9a-fA-F]+-[0-9a-fA-F]+-[0-9a-fA-F]+-[0-9a-fA-F]+-[0-9a-fA-F]+$/)
+	}
 }

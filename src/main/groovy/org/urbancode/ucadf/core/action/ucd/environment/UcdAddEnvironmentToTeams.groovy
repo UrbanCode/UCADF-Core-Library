@@ -71,7 +71,7 @@ class UcdAddEnvironmentToTeams extends UcAdfAction {
 		final String team,
 		final String subtype) {
 				
-		logInfo("Adding application [$application] environment [$environment] to team [$team] type [$subtype].")
+		logVerbose("Adding application [$application] environment [$environment] to team [$team] type [$subtype].")
 
 		// Add the environment to the team.
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/environment/teams")
@@ -115,7 +115,7 @@ class UcdAddEnvironmentToTeams extends UcAdfAction {
 			}
 			
 			if (removeTeam) {
-				logInfo("Removing team [${team.getTeamName()}] role [${team.getSubtypeName()}].")
+				logVerbose("Removing team [${team.getTeamName()}] role [${team.getSubtypeName()}].")
 				
 				WebTarget removeTargetWithParams = ucdSession.getUcdWebTarget().path("/cli/environment/teams")
 					.queryParam("application", application)

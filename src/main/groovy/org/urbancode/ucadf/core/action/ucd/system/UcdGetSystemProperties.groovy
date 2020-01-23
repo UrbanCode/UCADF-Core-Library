@@ -23,7 +23,7 @@ class UcdGetSystemProperties extends UcAdfAction {
 
 		List<UcdProperty> ucdSystemProperties
 
-		logInfo("Getting system properties.")
+		logVerbose("Getting system properties.")
 				
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/systemConfiguration/getProperties")
 		logDebug("target=$target")

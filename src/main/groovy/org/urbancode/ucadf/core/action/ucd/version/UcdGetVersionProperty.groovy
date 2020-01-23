@@ -44,7 +44,7 @@ class UcdGetVersionProperty extends UcAdfAction {
 
 		Object returnProperty = ""
 
-		logInfo("Getting component [$component] version [$version] property [$property].")
+		logVerbose("Getting component [$component] version [$version] property [$property].")
 
 		Map<String, UcdProperty> propertiesMap = actionsRunner.runAction([
 			action: UcdGetVersionProperties.getSimpleName(),

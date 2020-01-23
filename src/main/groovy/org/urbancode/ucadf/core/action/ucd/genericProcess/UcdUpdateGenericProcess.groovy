@@ -99,7 +99,7 @@ class UcdUpdateGenericProcess extends UcAdfAction {
 		
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() == 200) {
-			logInfo("Generic process [$process] updated.")
+			logVerbose("Generic process [$process] updated.")
 		} else {
 			throw new UcdInvalidValueException(response)
 		}

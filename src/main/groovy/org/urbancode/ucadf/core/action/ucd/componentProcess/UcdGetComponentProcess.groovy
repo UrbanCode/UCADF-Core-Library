@@ -34,7 +34,7 @@ class UcdGetComponentProcess extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Getting component [$component] process [$process].")
+		logVerbose("Getting component [$component] process [$process].")
 	
 		UcdComponentProcess ucdComponentProcess 
 
@@ -88,7 +88,7 @@ class UcdGetComponentProcess extends UcAdfAction {
 			ucdComponentProcess = response.readEntity(UcdComponentProcess.class)
 		} else {
 			String errMsg = "${response.getStatus()} Component [$component] process [$process] not found."
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (response.getStatus() == 204 || response.getStatus() == 404 || response.getStatus() == 403) {
 				// 403 added for UCD 16.2. 204 added for UCD 17.1.
 				if (failIfNotFound) {
@@ -119,7 +119,7 @@ class UcdGetComponentProcess extends UcAdfAction {
 			ucdComponentProcess = response.readEntity(UcdComponentProcess.class)
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (response.getStatus() == 404 || response.getStatus() == 403) {
 				if (failIfNotFound) {
 					throw new UcdInvalidValueException(errMsg)

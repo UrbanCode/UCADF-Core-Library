@@ -78,7 +78,7 @@ class UcdUpdateApplicationProcessPropDefHttpSelect extends UcAdfAction {
 			]
 		)
 		
-		logInfo("Set application [$application] process [$process] property definition [$name].")
+		logVerbose("Set application [$application] process [$process] property definition [$name].")
 
 		// Get the application process full information.		
 		UcdApplicationProcess ucdApplicationProcess = actionsRunner.runAction([
@@ -96,9 +96,9 @@ class UcdUpdateApplicationProcessPropDefHttpSelect extends UcAdfAction {
 
 		// If the property definition exists then start with that, otherwise initialize a new property definition object.
 		if (ucdPropDef)	{
-			logInfo("Updating application [$application] process [$process] property definition [$name].")
+			logVerbose("Updating application [$application] process [$process] property definition [$name].")
 		} else {
-			logInfo("Adding application [$application] process [$process] property definition [$name].")
+			logVerbose("Adding application [$application] process [$process] property definition [$name].")
 			
 			ucdPropDef = new UcdPropDefHttpSelect()
 		}

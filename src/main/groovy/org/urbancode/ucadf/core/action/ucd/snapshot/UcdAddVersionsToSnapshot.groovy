@@ -33,13 +33,13 @@ class UcdAddVersionsToSnapshot extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Adding versions to application [$application] snapshot [$snapshot].")
+		logVerbose("Adding versions to application [$application] snapshot [$snapshot].")
 
 		for (ucdVersion in versions) {
 			String component = ucdVersion.getComponent()
 			String version = ucdVersion.getName()
 			
-			logInfo("Add component [$component] version [$version] to application [$application] snapshot [$snapshot]")
+			logVerbose("Add component [$component] version [$version] to application [$application] snapshot [$snapshot]")
 			WebTarget target = ucdSession.getUcdWebTarget().path("/cli/snapshot/addVersionToSnapshot")
 				.queryParam("snapshot", snapshot)
 				.queryParam("application", application)
@@ -49,7 +49,7 @@ class UcdAddVersionsToSnapshot extends UcAdfAction {
 			
 			Response response = target.request(MediaType.WILDCARD).accept(MediaType.APPLICATION_JSON).put(Entity.text(""))
 			if (response.getStatus() == 204) {
-				logInfo("Component [$component] version [$version] added to snapshot [$snapshot].")
+				logVerbose("Component [$component] version [$version] added to snapshot [$snapshot].")
 			} else {
 				throw new UcdInvalidValueException(response)
 			}

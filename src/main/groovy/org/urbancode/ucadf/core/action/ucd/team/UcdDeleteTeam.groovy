@@ -32,9 +32,9 @@ class UcdDeleteTeam extends UcAdfAction {
 		Boolean deleted = false
 				
 		if (!commit) {
-			logInfo("Would delete team [$team].")
+			logVerbose("Would delete team [$team].")
 		} else {
-			logInfo("Deleting team [$team].")
+			logVerbose("Deleting team [$team].")
 			
 			WebTarget target = ucdSession.getUcdWebTarget().path("/security/team/{teamName}")
 				.resolveTemplate("teamName", team)
@@ -42,11 +42,11 @@ class UcdDeleteTeam extends UcAdfAction {
 			
 			Response response = target.request(MediaType.WILDCARD).delete()
 			if (response.getStatus() == 200) {
-				logInfo("Team [$team] deleted.")
+				logVerbose("Team [$team] deleted.")
 				deleted = true
 	        } else if (response.getStatus() == 404 || response.getStatus() == 500) {
 				// Some older versions return a 500.
-				logInfo(response.readEntity(String.class))
+				logVerbose(response.readEntity(String.class))
 				if (failIfNotFound) {
 					throw new UcdInvalidValueException("Team not found to delete.")
 				}

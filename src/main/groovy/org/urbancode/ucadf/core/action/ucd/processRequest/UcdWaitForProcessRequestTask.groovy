@@ -55,7 +55,7 @@ class UcdWaitForProcessRequestTask extends UcAdfAction {
 			taskPath = ".*/.*/.*$processName/.*$taskName"
 		}
 		
-		logInfo("Waiting for application request [$requestId] process [$processName] task [$taskName] to be available.")
+		logVerbose("Waiting for application request [$requestId] process [$processName] task [$taskName] to be available.")
 			
         UcdComponentProcessRequestTask ucdProcessRequestTask
         
@@ -80,7 +80,7 @@ class UcdWaitForProcessRequestTask extends UcAdfAction {
 			])
 
             if (ucdProcessRequestTask) {
-				logInfo("Found request task with status of [${ucdProcessRequestTask.getStatus()}].")
+				logVerbose("Found request task with status of [${ucdProcessRequestTask.getStatus()}].")
 				if (ucdProcessRequestTask.getStatus() == status) {
 					break
 				}
@@ -94,7 +94,7 @@ class UcdWaitForProcessRequestTask extends UcAdfAction {
                 throw new UcdInvalidValueException("Timed out waiting for process task.")
             }
             
-            logInfo("Waiting a maximum of [$remainingSecs] more seconds for process task [$taskPath]. Next check in [$waitIntervalSecs] seconds.")
+            logVerbose("Waiting a maximum of [$remainingSecs] more seconds for process task [$taskPath]. Next check in [$waitIntervalSecs] seconds.")
             Thread.sleep(waitIntervalSecs * 1000)
             remainingSecs -= waitIntervalSecs
         }

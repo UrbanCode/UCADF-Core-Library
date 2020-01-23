@@ -36,7 +36,7 @@ class UcdCreateSecuritySubtype extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 		
-		logInfo("Creating security type [$type] subtype [$name].")
+		logVerbose("Creating security type [$type] subtype [$name].")
 
 		// Validate subtypes are allowed for the security type.
 		if (!type.getSubtypeAllowed()) {
@@ -59,11 +59,11 @@ class UcdCreateSecuritySubtype extends UcAdfAction {
 		
 		Response response = target.request().post(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() == 200) {
-			logInfo("Security type [$type] subtype [$name] created.")
+			logVerbose("Security type [$type] subtype [$name] created.")
 			created = true
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			
 			Boolean alreadyExists = false
 			if (response.getStatus() == 403 && errMsg ==~ /.*already exists.*/) {

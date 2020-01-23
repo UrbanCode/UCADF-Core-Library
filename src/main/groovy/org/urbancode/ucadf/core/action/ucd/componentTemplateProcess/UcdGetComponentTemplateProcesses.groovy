@@ -30,7 +30,7 @@ class UcdGetComponentTemplateProcesses extends UcAdfAction {
 
 		List<UcdComponentProcess> ucdComponentProcesses = []
 		
-		logInfo("Getting component template [$componentTemplate] processes.")
+		logVerbose("Getting component template [$componentTemplate] processes.")
 
 		// If an component template ID was provided then use it. Otherwise get the component information to get the ID.
 		String componentTemplateId = componentTemplate

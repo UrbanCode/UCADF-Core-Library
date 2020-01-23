@@ -26,7 +26,7 @@ class UcdGetSnapshotsInApplication extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Getting application [$application] snapshots.")
+		logVerbose("Getting application [$application] snapshots.")
 	
 		List<UcdSnapshot> snapshots
 		

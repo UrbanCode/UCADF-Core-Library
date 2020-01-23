@@ -37,10 +37,11 @@ class UcdDeleteApplication extends UcAdfAction {
 
 		Boolean deleted = false
 				
-		logInfo("Delete application [$application] commit [$commit].")
+		logVerbose("Delete application [$application] commit [$commit].")
 
 		UcdApplication ucdApplication = actionsRunner.runAction([
 			action: UcdGetApplication.getSimpleName(),
+			actionInfo: false,
 			application: application,
 			failIfNotFound: failIfNotFound
 		])
@@ -51,12 +52,15 @@ class UcdDeleteApplication extends UcAdfAction {
 				if (deleteSnapshots) {
 					List<UcdSnapshot> ucdSnapshots = actionsRunner.runAction([
 						action: UcdGetSnapshotsInApplication.getSimpleName(),
+						actionInfo: false,
 						application: application
 					])
 					
 					for (ucdSnapshot in ucdSnapshots) {
 						actionsRunner.runAction([
 							action: UcdDeleteSnapshot.getSimpleName(),
+							actionInfo: false,
+							actionVerbose: actionVerbose,
 							application: application,
 							snapshot: ucdSnapshot.getName()
 						])
@@ -70,13 +74,13 @@ class UcdDeleteApplication extends UcAdfAction {
 				
 				Response response = target.request(MediaType.APPLICATION_JSON).delete()
 				if (response.getStatus() == 204) {
-					logInfo("Application [$application] deleted.")
+					logVerbose("Application [$application] deleted.")
 					deleted = true
 				} else {
 					throw new UcdInvalidValueException(response)
 				}
 			} else {
-				logInfo("Would delete application [$application].")
+				logVerbose("Would delete application [$application].")
 			}
 		}
 		

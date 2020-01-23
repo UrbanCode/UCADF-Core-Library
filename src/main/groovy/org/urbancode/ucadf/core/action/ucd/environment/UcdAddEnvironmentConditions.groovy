@@ -40,7 +40,7 @@ class UcdAddEnvironmentConditions extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 		
-		logInfo("Adding conditions to application [$application] environment[$environment].")
+		logVerbose("Adding conditions to application [$application] environment[$environment].")
 
 		// Get the environment information.
 		UcdEnvironment ucdEnvironment = actionsRunner.runAction([
@@ -58,7 +58,7 @@ class UcdAddEnvironmentConditions extends UcAdfAction {
 		]
 
 		JsonBuilder jsonBuilder = new JsonBuilder(requestMap)
-		logInfo("Add conditions request:\n$jsonBuilder")
+		logVerbose("Add conditions request:\n$jsonBuilder")
 		
 		WebTarget target = ucdSession.getUcdWebTarget().path("/rest/deploy/application/{applicationId}/environmentConditions")
 			.resolveTemplate("applicationId", ucdEnvironment.getApplication().getId())
@@ -66,7 +66,7 @@ class UcdAddEnvironmentConditions extends UcAdfAction {
 
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() == 204) {
-			logInfo("Conditions added to environment.")
+			logVerbose("Conditions added to environment.")
 		} else {
             throw new UcdInvalidValueException(response)
 		}

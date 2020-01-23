@@ -131,7 +131,7 @@ class UcdSendMail extends UcAdfAction {
 			])
 
 			if (!ucdUser) {
-				logInfo("Unable to find information about user [$user].")
+				logVerbose("Unable to find information about user [$user].")
 			} else {
 				addUserAddress(ucdUser)
 			}
@@ -160,7 +160,7 @@ class UcdSendMail extends UcAdfAction {
 			if (ucdUser.getEmail()) {
 				addAddress(ucdUser.getEmail())
 			} else {
-				logInfo("Unable to find information about user [${ucdUser.getName()}].")
+				logVerbose("Unable to find information about user [${ucdUser.getName()}].")
 			}
 		}
 	}

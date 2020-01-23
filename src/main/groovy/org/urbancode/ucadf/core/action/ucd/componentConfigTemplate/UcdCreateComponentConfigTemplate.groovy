@@ -41,7 +41,7 @@ class UcdCreateComponentConfigTemplate extends UcAdfAction {
 
 		Boolean created = false
 		
-		logInfo("Creating component [$component] configuration template [$name].")
+		logVerbose("Creating component [$component] configuration template [$name].")
 
 		// If an component ID was provided then use it. Otherwise get the component information to get the ID.
 		String componentId = component
@@ -69,11 +69,11 @@ class UcdCreateComponentConfigTemplate extends UcAdfAction {
 
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() == 200) {
-			logInfo("Component [$component] configuration template [$name] created.")
+			logVerbose("Component [$component] configuration template [$name] created.")
 			created = true
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			
 			Boolean alreadyExists = false
 			if (response.getStatus() == 405) {

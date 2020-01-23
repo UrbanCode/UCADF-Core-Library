@@ -42,7 +42,7 @@ class UcdGetResourceProperty extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Getting resource [$resource] property [$property].")
+		logVerbose("Getting resource [$resource] property [$property].")
 
 		Object returnProperty
 		
@@ -59,7 +59,7 @@ class UcdGetResourceProperty extends UcAdfAction {
 				returnProperty = response.readEntity(String.class)
 			} else {
 				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-				logInfo(errMsg)
+				logVerbose(errMsg)
 				if (response.getStatus() != 404 || failIfNotFound) {
 					throw new UcdInvalidValueException(errMsg)
 				}

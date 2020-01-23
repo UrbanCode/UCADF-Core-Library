@@ -43,7 +43,7 @@ class UcdAddResourceInventory extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 		
-		logInfo("Creating inventory entry on resource [$resource] for component [$component] version [$version] for application process request [$requestId].")
+		logVerbose("Creating inventory entry on resource [$resource] for component [$component] version [$version] for application process request [$requestId].")
 
 		UcdResource ucdResource = actionsRunner.runAction([
 			action: UcdGetResource.getSimpleName(),

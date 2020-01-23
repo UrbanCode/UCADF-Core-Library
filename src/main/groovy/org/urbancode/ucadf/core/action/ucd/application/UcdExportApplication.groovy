@@ -36,7 +36,7 @@ class UcdExportApplication extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("\n=== Exporting application [$application] from [${ucdSession.getUcdUrl()}] ===")
+		logVerbose("\n=== Exporting application [$application] from [${ucdSession.getUcdUrl()}] ===")
 
 		// Initialize the temporary working directories.
 		String actionsFileName = ""
@@ -95,7 +95,7 @@ class UcdExportApplication extends UcAdfAction {
 
 		// Write the supplemental actions file.
 		if (fileName) {
-			logInfo("Saving application [$application] export actions to file [$actionsFileName].")
+			logVerbose("Saving application [$application] export actions to file [$actionsFileName].")
 			ObjectMapper mapper = new ObjectMapper()
 			actionsFile.write(
 				mapper.writer().withDefaultPrettyPrinter().writeValueAsString(
@@ -120,7 +120,7 @@ class UcdExportApplication extends UcAdfAction {
 
 		// Write the exported application to a file.
 		if (fileName) {
-			logInfo("Saving application [$application] export to file [$fileName].")
+			logVerbose("Saving application [$application] export to file [$fileName].")
 			exportFile.write(ucdApplicationImport.toJsonString())
 		}
 		
@@ -128,7 +128,7 @@ class UcdExportApplication extends UcAdfAction {
 
 		// Write the keystore names and UCD version to the application properties file.		
 		if (propertiesFileName) {
-			logInfo("Saving application [$application] export properties to file [$propertiesFileName].")
+			logVerbose("Saving application [$application] export properties to file [$propertiesFileName].")
 			actionsRunner.runAction([
 				action: UcAdfUpdatePropertiesFile.getSimpleName(),
 				fileName: propertiesFileName,

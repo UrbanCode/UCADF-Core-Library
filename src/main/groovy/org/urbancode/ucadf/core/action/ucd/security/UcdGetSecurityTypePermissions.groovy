@@ -44,7 +44,7 @@ class UcdGetSecurityTypePermissions extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Getting security type permissions [$returnAs].")
+		logVerbose("Getting security type permissions [$returnAs].")
 
 		// If the maps haven't been loaded already then load them.	
 		if (!securityTypePermissionsMapByName) {

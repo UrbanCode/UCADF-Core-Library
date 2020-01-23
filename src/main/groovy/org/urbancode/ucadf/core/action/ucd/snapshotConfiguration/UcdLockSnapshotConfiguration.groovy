@@ -27,7 +27,7 @@ class UcdLockSnapshotConfiguration extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 		
-		logInfo("Locking application [$application] snapshot [$snapshot] configuration.")
+		logVerbose("Locking application [$application] snapshot [$snapshot] configuration.")
 		
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/snapshot/lockSnapshotConfiguration")
 			.queryParam("snapshot", snapshot)
@@ -36,7 +36,7 @@ class UcdLockSnapshotConfiguration extends UcAdfAction {
 
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(""))
 		if (response.getStatus() == 204) {
-			logInfo("Application [$application] snapshot [$snapshot] configuration locked.")
+			logVerbose("Application [$application] snapshot [$snapshot] configuration locked.")
 		} else {
 			throw new UcdInvalidValueException(response)
 		}

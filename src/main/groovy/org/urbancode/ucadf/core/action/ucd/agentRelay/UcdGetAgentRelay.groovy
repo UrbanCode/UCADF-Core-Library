@@ -51,14 +51,14 @@ class UcdGetAgentRelay extends UcAdfAction {
 				ucdAgentRelay = response.readEntity(UcdAgentRelay.class)
 			} else {
 				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-				logInfo(errMsg)
+				logVerbose(errMsg)
 				if (response.getStatus() != 404 || failIfNotFound) {
 					throw new UcdInvalidValueException(errMsg)
 				}
 			}
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (response.getStatus() != 404 || failIfNotFound) {
 				throw new UcdInvalidValueException(errMsg)
 			}

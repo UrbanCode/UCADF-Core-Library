@@ -36,7 +36,7 @@ class UcdGetStatus extends UcAdfAction {
 
 		UcdStatus ucdStatus
 
-		logInfo("Getting type [$type] status [$status].")
+		logVerbose("Getting type [$type] status [$status].")
 				
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/status/getStatus")
 			.queryParam("type", type)
@@ -53,7 +53,7 @@ class UcdGetStatus extends UcAdfAction {
 			}
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (response.getStatus() != 400 || failIfNotFound) {
 				throw new UcdInvalidValueException(errMsg)
 			}

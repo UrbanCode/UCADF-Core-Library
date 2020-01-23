@@ -29,7 +29,7 @@ class UcdCopyTeamMembers extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Copying team [$fromTeam] role [$fromRole] to team [$toTeam] role [$toRole].")
+		logVerbose("Copying team [$fromTeam] role [$fromRole] to team [$toTeam] role [$toRole].")
 		
 		UcdTeam ucdFromTeamInfo = actionsRunner.runAction([
 			action: UcdGetTeam.getSimpleName(),

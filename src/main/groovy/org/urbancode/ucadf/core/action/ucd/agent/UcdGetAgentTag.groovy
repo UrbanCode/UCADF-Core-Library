@@ -36,7 +36,7 @@ class UcdGetAgentTag extends UcAdfAction {
 			ucdTag = response.readEntity(UcdTag.class)
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (response.getStatus() != 400 || failIfNotFound) {
 				throw new UcdInvalidValueException(errMsg)
 			}

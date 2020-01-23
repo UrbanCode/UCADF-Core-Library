@@ -48,7 +48,7 @@ class UcAdfCacheGetComponentVersion extends UcAdfAction {
 
 		if (downloaded) {
 			// Delete the temporary directory.
-			logInfo("Deleting temporary directory [${tempDir.getPath()}].")
+			logVerbose("Deleting temporary directory [${tempDir.getPath()}].")
 			tempDir.deleteDir()
 		}
 	}

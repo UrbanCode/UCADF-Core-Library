@@ -74,7 +74,7 @@ class UcdCreateLdapAuthenticationRealm extends UcAdfAction {
 
 		Boolean created = false
 		        
-        logInfo("Create an authentication realm.")
+        logVerbose("Create an authentication realm.")
         WebTarget target = ucdSession.getUcdWebTarget().path("/security/authenticationRealm")
         logDebug("target=$target")
 
@@ -120,15 +120,15 @@ class UcdCreateLdapAuthenticationRealm extends UcAdfAction {
         }
         
         JsonBuilder jsonBuilder = new JsonBuilder(requestMap)
-        logInfo(jsonBuilder.toString())
+        logVerbose(jsonBuilder.toString())
         
         Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.json(jsonBuilder.toString()))
         if (response.getStatus() == 200) {
-            logInfo("Created authentication realm [$name].")
+            logVerbose("Created authentication realm [$name].")
 			created = true
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			
 			Boolean alreadyExists = false
 			if (response.getStatus() == 403 && errMsg ==~ /.*already exists.*/) {

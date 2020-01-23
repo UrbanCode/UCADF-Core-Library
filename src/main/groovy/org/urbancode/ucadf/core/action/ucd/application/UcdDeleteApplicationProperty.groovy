@@ -37,9 +37,9 @@ class UcdDeleteApplicationProperty extends UcAdfAction {
 		Boolean deleted = false
 		
 		if (!commit) {
-			logInfo("Would delete application [$application] property [$property].")
+			logVerbose("Would delete application [$application] property [$property].")
 		} else {
-			logInfo("Deleting application [$application] property [$property].")
+			logVerbose("Deleting application [$application] property [$property].")
 	
 			// If an application ID was provided then use it. Otherwise get the application information to get the ID.
 			String applicationId = application
@@ -67,7 +67,7 @@ class UcdDeleteApplicationProperty extends UcAdfAction {
 	
 			Response response = target.request().header("Version", ucdPropSheet.getVersion()).delete()
 			if (response.getStatus() == 200) {
-				logInfo("Application [$application] property [$property] deleted.")
+				logVerbose("Application [$application] property [$property] deleted.")
 				deleted = true
 			} else {
 	            throw new UcdInvalidValueException(response)

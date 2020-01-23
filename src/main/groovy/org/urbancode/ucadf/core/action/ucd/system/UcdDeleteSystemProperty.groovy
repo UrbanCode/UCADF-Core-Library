@@ -35,9 +35,9 @@ class UcdDeleteSystemProperty extends UcAdfAction {
 		Boolean deleted = false
 		
 		if (!commit) {
-			logInfo("Would delete system property [$property].")
+			logVerbose("Would delete system property [$property].")
 		} else {
-			logInfo("Deleting system property [$property].")
+			logVerbose("Deleting system property [$property].")
 
 			if (property) {		
 				// Get the propSheet so we can get the current version number from it.
@@ -52,13 +52,13 @@ class UcdDeleteSystemProperty extends UcAdfAction {
 
 				Response response = target.request().header("version", ucdPropSheet.getVersion()).delete()
 				if (response.getStatus() == 200) {
-					logInfo("System property [$property] deleted.")
+					logVerbose("System property [$property] deleted.")
 					deleted = true
 				} else {
 		            throw new UcdInvalidValueException(response)
 				}
 			} else {
-				logInfo("Can't delete property with name [$property]")
+				logVerbose("Can't delete property with name [$property]")
 			}
 		}
 		

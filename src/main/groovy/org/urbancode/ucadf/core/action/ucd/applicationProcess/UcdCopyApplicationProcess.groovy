@@ -52,7 +52,7 @@ class UcdCopyApplicationProcess extends UcAdfAction {
 			process: fromProcess
 		])
 
-		logInfo("Copying application process [${fromProcess.getName()}] from application [$fromApplication] to [$toApplication] replace process [$replaceProcess].")
+		logVerbose("Copying application process [${fromProcess.getName()}] from application [$fromApplication] to [$toApplication] replace process [$replaceProcess].")
 		
 		logDebug("Original process.rootActivity\n" + new JsonBuilder(fromProcess.getRootActivity()).toPrettyString())
 		logDebug("Original process.propDefs\n" + new JsonBuilder(fromProcess.getPropDefs()).toPrettyString())

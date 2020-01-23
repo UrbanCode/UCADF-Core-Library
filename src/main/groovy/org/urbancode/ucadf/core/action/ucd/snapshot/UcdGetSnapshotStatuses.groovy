@@ -44,7 +44,7 @@ class UcdGetSnapshotStatuses extends UcAdfAction {
 
 		List<UcdStatus> ucdStatuses = []
 
-		logInfo("Getting application [$snapshot] snapshot [$snapshot] statuses.")
+		logVerbose("Getting application [$snapshot] snapshot [$snapshot] statuses.")
 
 		// If a snapshot ID was provided then use it. Otherwise get the snapshot information to get the ID.
 		String snapshotId = snapshot

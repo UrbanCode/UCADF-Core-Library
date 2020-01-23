@@ -25,7 +25,7 @@ class UcdGetTagsOnComponent extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Getting tags on component [$component].")
+		logVerbose("Getting tags on component [$component].")
 	
 		List<UcdTag> ucdTags = []
 		
@@ -38,7 +38,7 @@ class UcdGetTagsOnComponent extends UcAdfAction {
 			ucdTags = response.readEntity(new GenericType<List<UcdTag>>(){})
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (response.getStatus() != 404) {
 				throw new UcdInvalidValueException(errMsg)
 			}

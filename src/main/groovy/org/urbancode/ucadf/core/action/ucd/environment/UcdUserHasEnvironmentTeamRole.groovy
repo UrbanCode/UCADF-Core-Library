@@ -35,7 +35,7 @@ class UcdUserHasEnvironmentTeamRole extends UcAdfAction {
 		
 		Boolean hasRole = false
 
-		logInfo("Determine if user [$user] has role [$role] for application [$application] environment [$environment].")
+		logVerbose("Determine if user [$user] has role [$role] for application [$application] environment [$environment].")
 		
 		// Get the environment information.
 		UcdEnvironment ucdEnvironment = actionsRunner.runAction([
@@ -69,7 +69,7 @@ class UcdUserHasEnvironmentTeamRole extends UcAdfAction {
 			}
 		}
 
-		logInfo("Has role [$hasRole].")
+		logVerbose("Has role [$hasRole].")
 				
 		return hasRole
 	}

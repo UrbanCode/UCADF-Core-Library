@@ -35,7 +35,7 @@ class UcdRemoveResourceInventory extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 		
-		logInfo("Delete resource [$resource] inventory for component [$component] version [$version].")
+		logVerbose("Delete resource [$resource] inventory for component [$component] version [$version].")
 
 		WebTarget target = ucdSession.getUcdWebTarget().path("/rest/inventory/resourceInventoryForComponent/")
 			.queryParam("resource", resource)
@@ -46,7 +46,7 @@ class UcdRemoveResourceInventory extends UcAdfAction {
 		
 		Response response = target.request(MediaType.APPLICATION_JSON).delete()
 		if (response.getStatus() == 204) {
-			logInfo("Resource inventory deleted.")
+			logVerbose("Resource inventory deleted.")
 		} else if (response.getStatus() != 404 || failIfNotFound) {
 			throw new UcdInvalidValueException(response)
 		}

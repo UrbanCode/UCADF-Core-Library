@@ -30,7 +30,7 @@ class UcdRenameResource extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Rename resource [$resource] to [$name].")
+		logVerbose("Rename resource [$resource] to [$name].")
 
 		String resourceId = resource
 		if (!UcdObject.isUUID(resource)) {
@@ -55,7 +55,7 @@ class UcdRenameResource extends UcAdfAction {
 
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() == 200) {
-			logInfo("Resource [$resource] renamed to [$name].")
+			logVerbose("Resource [$resource] renamed to [$name].")
 		} else {
 			throw new UcdInvalidValueException(response)
 		}

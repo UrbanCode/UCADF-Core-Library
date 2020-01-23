@@ -30,7 +30,7 @@ class UcdGetComponentProperties extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Getting component [$component] properties exclude inherited [$excludeInherited].")
+		logVerbose("Getting component [$component] properties exclude inherited [$excludeInherited].")
 
 		List<UcdProperty> ucdProperties = []
 		

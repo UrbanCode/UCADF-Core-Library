@@ -43,7 +43,7 @@ class UcdCreateVersion extends UcAdfAction {
 		
 		// Get the existing version information.
 		UcdVersion ucdVersion = actionsRunner.runAction([
-			action: UcdGetVersion.class.getSimpleName(),
+			action: UcdGetVersion.getSimpleName(),
 			actionInfo: false,
 			component: component,
 			version: name,
@@ -52,12 +52,12 @@ class UcdCreateVersion extends UcAdfAction {
 
 		// If the version doesn't exist then create it.
 		if (ucdVersion) {
-			logInfo("Component [$component] version [$name] already exists.")
+			logVerbose("Component [$component] version [$name] already exists.")
 			if (failIfExists) {
 				throw new UcdInvalidValueException("Component [$component] version [$name] already exists.")
 			}
 		} else {
-			logInfo("Creating version component [$component] version [$name].")
+			logVerbose("Creating version component [$component] version [$name].")
 	
 			WebTarget target = ucdSession.getUcdWebTarget().path("/cli/version/createVersion")
 				.queryParam("component", component)
@@ -74,7 +74,7 @@ class UcdCreateVersion extends UcAdfAction {
 				throw new UcdInvalidValueException(response)
 			}
 			
-			logInfo("Component [$component] version [$name] id [${ucdVersion.getId()}] created.")
+			logVerbose("Component [$component] version [$name] id [${ucdVersion.getId()}] created.")
 			
 			return created
 		}

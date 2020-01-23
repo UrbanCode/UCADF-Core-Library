@@ -34,7 +34,7 @@ class UcdGetSecuritySubtypes extends UcAdfAction {
 
 		List<UcdSecuritySubtype> ucdSecuritySubtypes = []
 
-		logInfo("Getting security subtypes type [$type] match [$match].")
+		logVerbose("Getting security subtypes type [$type] match [$match].")
 
 		if (type) {
 			// Get type roles for a specific type name.

@@ -23,7 +23,7 @@ class UcdCancelGenericProcesses extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-        logInfo("Cancelling all generic processes matching [$matchProcess].")
+        logVerbose("Cancelling all generic processes matching [$matchProcess].")
 
 		List<UcdWorkflowProcessRequest> ucdWorkflowProcessRequests = actionsRunner.runAction([
 			action: UcdGetWorkflowActivity.getSimpleName(),
@@ -45,10 +45,10 @@ class UcdCancelGenericProcesses extends UcAdfAction {
 					workflow: genericWorkflowRequest.getWorkflowTraceId()
 				])
 		
-				logInfo("Cancelled generic process [${genericWorkflowRequest.getProcess().getName()}].")
+				logVerbose("Cancelled generic process [${genericWorkflowRequest.getProcess().getName()}].")
             }
         }
 		
-        logInfo("All running generic processes matching [$matchProcess] cancelled.")
+        logVerbose("All running generic processes matching [$matchProcess] cancelled.")
 	}
 }

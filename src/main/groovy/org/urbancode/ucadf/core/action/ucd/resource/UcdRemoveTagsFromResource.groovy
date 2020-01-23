@@ -27,7 +27,7 @@ class UcdRemoveTagsFromResource extends UcAdfAction {
 		validatePropsExist()
 
 		for (tag in tags) {
-			logInfo("Remove tag [$tag] from resource [$resource].")
+			logVerbose("Remove tag [$tag] from resource [$resource].")
 			
 			WebTarget target = ucdSession.getUcdWebTarget().path("/cli/resource/tag")
 				.queryParam("resource", resource)
@@ -36,7 +36,7 @@ class UcdRemoveTagsFromResource extends UcAdfAction {
 
 			Response response = target.request(MediaType.APPLICATION_JSON).delete()
 			if (response.getStatus() == 204) {
-				logInfo("Tag [$tag] removed from resource [$resource].")
+				logVerbose("Tag [$tag] removed from resource [$resource].")
 			} else {
 				throw new UcdInvalidValueException(response)
 			}

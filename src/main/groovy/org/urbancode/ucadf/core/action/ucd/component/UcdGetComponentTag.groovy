@@ -27,7 +27,7 @@ class UcdGetComponentTag extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Getting component tag [$tag].")
+		logVerbose("Getting component tag [$tag].")
 	
 		UcdTag ucdTag
 		
@@ -40,7 +40,7 @@ class UcdGetComponentTag extends UcAdfAction {
 			ucdTag = response.readEntity(UcdTag.class)
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (response.getStatus() != 400 || failIfNotFound) {
 				throw new UcdInvalidValueException(errMsg)
 			}

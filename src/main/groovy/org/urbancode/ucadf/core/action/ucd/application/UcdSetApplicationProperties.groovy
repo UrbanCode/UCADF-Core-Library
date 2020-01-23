@@ -40,7 +40,7 @@ class UcdSetApplicationProperties extends UcAdfAction {
 			String value = ucdProperty.getValue()
 			Boolean secure = ucdProperty.getSecure()
 			
-			logInfo("Setting application [$application] property [$name]" + (secure ? "." : " value [$value]."))
+			logVerbose("Setting application [$application] property [$name]" + (secure ? "." : " value [$value]."))
 	
 			WebTarget target = ucdSession.getUcdWebTarget().path("/cli/application/propValue")
 			logDebug("target=$target")
@@ -60,7 +60,7 @@ class UcdSetApplicationProperties extends UcAdfAction {
 				throw new UcdInvalidValueException(response)
 			}
 			
-			logInfo("Application [$application] property [$name] set.")
+			logVerbose("Application [$application] property [$name] set.")
 		}
 	}
 }

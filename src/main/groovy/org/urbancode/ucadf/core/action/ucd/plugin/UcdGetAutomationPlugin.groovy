@@ -37,7 +37,7 @@ class UcdGetAutomationPlugin extends UcAdfAction {
 			ucdReturnPlugin = target.request().get(UcdAutomationPlugin)
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (response.getStatus() != 404 || failIfNotFound) {
 				throw new UcdInvalidValueException(errMsg)
 			}

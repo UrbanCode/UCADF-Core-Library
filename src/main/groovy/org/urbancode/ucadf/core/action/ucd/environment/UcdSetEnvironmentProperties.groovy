@@ -38,7 +38,7 @@ class UcdSetEnvironmentProperties extends UcAdfAction {
 		
 		// Process each property.
 		for (ucdProperty in ucdProperties) {
-			logInfo("Setting application [$application] environment [$environment] property name [${ucdProperty.getName()}] secure [${ucdProperty.getSecure()}]" + (ucdProperty.getSecure() ? "." : " value [${ucdProperty.getValue()}]."))
+			logVerbose("Setting application [$application] environment [$environment] property name [${ucdProperty.getName()}] secure [${ucdProperty.getSecure()}]" + (ucdProperty.getSecure() ? "." : " value [${ucdProperty.getValue()}]."))
 	
 			WebTarget target = ucdSession.getUcdWebTarget().path("/cli/environment/propValue")
 			logDebug("target=$target")
@@ -56,7 +56,7 @@ class UcdSetEnvironmentProperties extends UcAdfAction {
 	
 			Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 			if (response.getStatus() == 200) {
-				logInfo("Property [${ucdProperty.getName()}] set.")
+				logVerbose("Property [${ucdProperty.getName()}] set.")
 			} else {
 	            throw new UcdInvalidValueException(response)
 			}

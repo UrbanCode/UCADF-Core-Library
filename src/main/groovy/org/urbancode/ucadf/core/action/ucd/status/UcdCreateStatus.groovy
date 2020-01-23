@@ -44,7 +44,7 @@ class UcdCreateStatus extends UcAdfAction {
 
 		Boolean created = false
 				
-		logInfo("Creating status type [$type] name [$name].")
+		logVerbose("Creating status type [$type] name [$name].")
 
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/status/createStatus")
 			.queryParam("type", type)
@@ -56,11 +56,11 @@ class UcdCreateStatus extends UcAdfAction {
 		
 		Response response = target.request().post(Entity.json())
 		if (response.getStatus() == 200) {
-			logInfo("Status type [$name] name [$name] created.")
+			logVerbose("Status type [$name] name [$name] created.")
 			created = true
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (!(response.getStatus() == 400 && (errMsg ==~ /.*already exists.*/ && !failIfExists))) {
 				throw new UcdInvalidValueException(errMsg)
 			}

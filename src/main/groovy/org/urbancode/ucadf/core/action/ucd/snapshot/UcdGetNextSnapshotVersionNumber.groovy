@@ -34,7 +34,7 @@ class UcdGetNextSnapshotVersionNumber extends UcAdfAction {
 		String nextSnapshotVersionNumber = versionPattern
 		
 		if (versionPattern ==~ /.*\*$/) {
-			logInfo("Getting next snapshot version for application [$application] version [$versionPattern].")
+			logVerbose("Getting next snapshot version for application [$application] version [$versionPattern].")
 			
 			List<UcdSnapshot> snapshots = []
 			
@@ -71,7 +71,7 @@ class UcdGetNextSnapshotVersionNumber extends UcAdfAction {
 				versions: versions
 			])
 
-			logInfo("Next snapshot version [$nextSnapshotVersionNumber].")
+			logVerbose("Next snapshot version [$nextSnapshotVersionNumber].")
 		}
 		
 		return nextSnapshotVersionNumber

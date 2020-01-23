@@ -33,7 +33,7 @@ class UcdDeleteAuthToken extends UcAdfAction {
 		Boolean deleted = false
 				
 		if (commit) {
-			logInfo("Deleting authentication token [$authToken].")
+			logVerbose("Deleting authentication token [$authToken].")
 			
 			WebTarget target = ucdSession.getUcdWebTarget().path("/security/authtoken/{tokenId}")
 				.resolveTemplate("tokenId", authToken)
@@ -41,18 +41,18 @@ class UcdDeleteAuthToken extends UcAdfAction {
 			
 			Response response = target.request(MediaType.APPLICATION_JSON).delete()
 			if (response.getStatus() == 200) {
-				logInfo("Auth token [$authToken] deleted.")
+				logVerbose("Auth token [$authToken] deleted.")
 				deleted = true
 			} else {
 				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-				logInfo(errMsg)
+				logVerbose(errMsg)
 				// Some versions return 500.
 				if ((response.getStatus() != 404 && response.getStatus() != 500) || failIfNotFound) {
 					throw new UcdInvalidValueException(errMsg)
 				}
 			}
 		} else {
-			logInfo("Would delete authentication token [$authToken] token.")
+			logVerbose("Would delete authentication token [$authToken] token.")
 		}
 		
 		return deleted

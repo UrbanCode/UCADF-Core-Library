@@ -30,7 +30,7 @@ class UcdGetEnvironmentInventoryByComponent extends UcAdfAction {
 		
 		List<UcdEnvironmentComponentInventory> ucdInventory
 
-		logInfo("Get environment inventory by component for application [$application] environment [$environment].")
+		logVerbose("Get environment inventory by component for application [$application] environment [$environment].")
 
 		// Get the environment information in order to get the environment ID.		
 		UcdEnvironment ucdEnvironment = actionsRunner.runAction([

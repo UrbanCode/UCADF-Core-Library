@@ -36,7 +36,7 @@ class UcdAddEnvironmentBaseResources extends UcAdfAction {
 	
 	// Add a base resource to an environment.
 	public addEnvironmentBaseResource(final String resource) {
-		logInfo("Adding application [$application] environment[$environment] base resource [$resource].")
+		logVerbose("Adding application [$application] environment[$environment] base resource [$resource].")
 
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/environment/addBaseResource")
 			.queryParam("application", application)
@@ -49,6 +49,6 @@ class UcdAddEnvironmentBaseResources extends UcAdfAction {
             throw new UcdInvalidValueException(response)
 		}
 
-		logInfo("Base resource added to environment.")
+		logVerbose("Base resource added to environment.")
 	}
 }

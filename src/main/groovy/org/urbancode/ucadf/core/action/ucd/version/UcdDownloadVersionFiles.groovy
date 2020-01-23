@@ -38,9 +38,6 @@ class UcdDownloadVersionFiles extends UcAdfAction {
 	/** The flag that indicates to delete the download file (Zip) after extracting. Default is true. */
 	Boolean deleteZipIfExtracted = true
 
-	/** The flag that indicates to show verbose download information. Default is true. */
-	Boolean verbose = true
-	
 	/** The flag that indicates fail if the version is not found. Default is true. */
 	Boolean failIfNotFound = true
 	
@@ -56,12 +53,12 @@ class UcdDownloadVersionFiles extends UcAdfAction {
 		File artifactsFile = new File(fileName)
 
 		if (skipIfZipExists && artifactsFile.exists()) {
-			logInfo("Skipping downloading artifacts file [${artifactsFile.getPath()}] that already exists for component [$component] version [$version].")
+			logVerbose("Skipping downloading artifacts file [${artifactsFile.getPath()}] that already exists for component [$component] version [$version].")
 		} else if (extractDirName && skipIfExtractDirExists && new File(extractDirName).exists()) {
-			logInfo("Skipping downloading artifacts and extracting directory [${artifactsFile.getPath()}] that already exists for component [$component] version [$version].")
+			logVerbose("Skipping downloading artifacts and extracting directory [${artifactsFile.getPath()}] that already exists for component [$component] version [$version].")
 		} else {
 			// Download the component version artifacts file.
-			logInfo("Downloading artifacts file [${artifactsFile.getPath()}] for component [$component] version [$version].")
+			logVerbose("Downloading artifacts file [${artifactsFile.getPath()}] for component [$component] version [$version].")
 	
 			// Create the artifacts file target directory.
 			artifactsFile.getParentFile()?.mkdirs()
@@ -95,7 +92,7 @@ class UcdDownloadVersionFiles extends UcAdfAction {
 				failIfNotFound: true
 			])
 	
-			logInfo("Starting download of component [$component] version [$version].")
+			logVerbose("Starting download of component [$component] version [$version].")
 			
 			WebTarget target = ucdSession.getUcdWebTarget().path("/rest/deploy/version/{versionId}/downloadArtifacts")
 				.resolveTemplate("versionId", ucdVersion.getId())
@@ -127,7 +124,7 @@ class UcdDownloadVersionFiles extends UcAdfAction {
 				}
 			}
 			
-			logInfo("Downloaded artifacts file [${artifactsFile.getAbsolutePath()}] size is [${artifactsFile.length()}] bytes.")
+			logVerbose("Downloaded artifacts file [${artifactsFile.getAbsolutePath()}] size is [${artifactsFile.length()}] bytes.")
 	
 			downloaded = true
 			
@@ -139,7 +136,7 @@ class UcdDownloadVersionFiles extends UcAdfAction {
 					extractDirName: extractDirName,
 					skipIfExtractDirExists: skipIfExtractDirExists,
 					deleteFileIfExtracted: deleteZipIfExtracted,
-					verbose: verbose
+					actionVerbose: actionVerbose
 				])
 			}
 		}

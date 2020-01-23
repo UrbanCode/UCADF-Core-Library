@@ -68,7 +68,7 @@ class UcdGetLdapManager extends UcAdfAction {
 			)
 
 			// Save the LDAP manager object as a runner property value.
-			logInfo("LDAP manager property is [$ldapManagerPropertyName].")
+			logVerbose("LDAP manager property is [$ldapManagerPropertyName].")
 			actionsRunner.setPropertyValue(
 				ldapManagerPropertyName,
 				ldapManager

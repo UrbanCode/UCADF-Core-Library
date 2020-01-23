@@ -22,10 +22,10 @@ class UcAdfUpdatePropertiesFile extends UcAdfAction {
 		
 		File propsFile = new File(fileName)
 		if (propsFile.exists()) {
-			logInfo("Reading properties from file [$fileName].")
+			logVerbose("Reading properties from file [$fileName].")
 			lines = propsFile.readLines()
 		} else {
-			logInfo("Creating new properties file [$fileName].")
+			logVerbose("Creating new properties file [$fileName].")
 			propsFile.getParentFile()?.mkdirs()
 		}
 
@@ -51,7 +51,7 @@ class UcAdfUpdatePropertiesFile extends UcAdfAction {
 			}
 		}		
 		
-		logInfo("Writing properties file [$fileName].")
+		logVerbose("Writing properties file [$fileName].")
 		propsFile.withWriter { out ->
 		  lines.each { out.println it }
 		}	

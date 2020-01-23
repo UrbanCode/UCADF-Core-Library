@@ -84,7 +84,7 @@ class UcdImportApplication extends UcAdfAction {
 		)
 		
 		String application = ucdApplicationImport.getName()
-		logInfo("Processing import for [$application] appUpgradeType [$appUpgradeType] compUpgradeType [$compUpgradeType] compTempUpgradeType [$compTempUpgradeType] genProcessUpgradeType [$genProcessUpgradeType] removeCrypt [$removeCrypt] compMatch [$compMatch] compTempMatch [$compTempMatch] genProcessMatch [$genProcessMatch]")
+		logVerbose("Processing import for [$application] appUpgradeType [$appUpgradeType] compUpgradeType [$compUpgradeType] compTempUpgradeType [$compTempUpgradeType] genProcessUpgradeType [$genProcessUpgradeType] removeCrypt [$removeCrypt] compMatch [$compMatch] compTempMatch [$compTempMatch] genProcessMatch [$genProcessMatch]")
 
 		// Validate the application upgrade options.
 		UcdApplication ucdApplication = actionsRunner.runAction([
@@ -128,7 +128,7 @@ class UcdImportApplication extends UcAdfAction {
             // In UCD 6.2 this option is broken so we use the UcdImportRule.USE_EXISTING_IF_EXISTS option but validate the template exists first.
             if (ucdComponentImport.getComponentTemplate() && ucdComponentImport.getComponentTemplate().getName()) {
                 String componentTemplate = ucdComponentImport.getComponentTemplate().getName()
-                logInfo("Component [${ucdComponentImport.getName()}] uses template [$componentTemplate}.")
+                logVerbose("Component [${ucdComponentImport.getName()}] uses template [$componentTemplate}.")
 
 				UcdComponentTemplate ucdComponentTemplate = actionsRunner.runAction([
 					action: UcdGetComponentTemplate.getSimpleName(),
@@ -172,10 +172,10 @@ class UcdImportApplication extends UcAdfAction {
 			// Fix HTTP-type property definition problem that very between UCD versions.
 			ucdApplicationImport.fixProcessHttpPropDefs(ucdSession)
 
-			logInfo("$importAction Application [$application] into [" + ucdSession.getUcdUrl() + "]")
+			logVerbose("$importAction Application [$application] into [" + ucdSession.getUcdUrl() + "]")
 			String jsonStr = ucdApplicationImport.toJsonString(removeCrypt)
 			
-			logInfo("jsonStr=\n$jsonStr")
+			logVerbose("jsonStr=\n$jsonStr")
 			
 			// Will always use UcdImportRule.FAIL_IF_DOESNT_EXIST for options here so that this import only affects the application,
 			// not the components, templates, or processes.

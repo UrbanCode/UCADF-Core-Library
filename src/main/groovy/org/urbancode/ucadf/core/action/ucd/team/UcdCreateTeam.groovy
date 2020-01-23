@@ -32,7 +32,7 @@ class UcdCreateTeam extends UcAdfAction {
 		
 		Boolean created = false
 		
-		logInfo("Creating team [$name].")
+		logVerbose("Creating team [$name].")
 		
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/team/create")
 			.queryParam("team", name)
@@ -41,11 +41,11 @@ class UcdCreateTeam extends UcAdfAction {
 		
 		Response response = target.request(MediaType.WILDCARD).accept(MediaType.APPLICATION_JSON).put(Entity.text(""))
 		if (response.getStatus() == 200) {
-			logInfo("Team created.")
+			logVerbose("Team created.")
 			created = true
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (!(response.getStatus() == 400 && (errMsg ==~ /.*already exists.*/ && !failIfExists))) {
 				throw new UcdInvalidValueException(errMsg)
 			}

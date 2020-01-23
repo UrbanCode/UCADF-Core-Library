@@ -72,7 +72,8 @@ class UcdGetSecurityTeamMappings extends UcAdfAction {
 			if (subtype) {
 				UcdSecuritySubtype ucdSecuritySubtype = actionsRunner.runAction([
 					action: UcdGetSecuritySubtype.getSimpleName(),
-					actionInfo: true,
+					actionInfo: false,
+					actionVerbose: true,
 					subtype: subtype,
 					failIfNotFound: true
 				])

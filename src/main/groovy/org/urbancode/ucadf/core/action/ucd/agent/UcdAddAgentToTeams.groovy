@@ -40,7 +40,7 @@ class UcdAddAgentToTeams extends UcAdfAction {
 			String team = teamSecurity.getTeam()
 			String subtype = teamSecurity.getSubtype()
 					
-			logInfo("Add agent [$agent] to team [$team] subtype [$subtype].")
+			logVerbose("Add agent [$agent] to team [$team] subtype [$subtype].")
 
 			// Get the subtype ID.
 			String subtypeId = subtype
@@ -63,7 +63,7 @@ class UcdAddAgentToTeams extends UcAdfAction {
 			
 			Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(""))
 			if (response.getStatus() == 204) {
-				logInfo("Agent [$agent] added to team [$team]subtype [$subtype].")
+				logVerbose("Agent [$agent] added to team [$team]subtype [$subtype].")
 			} else {
 	            throw new UcdInvalidValueException(response)
 			}
@@ -96,7 +96,7 @@ class UcdAddAgentToTeams extends UcAdfAction {
 			}
 			
 			if (removeTeam) {
-				logInfo("Removing team [${team.getTeamName()}] type [${team.getSubtypeName()}] from agent [$agent].")
+				logVerbose("Removing team [${team.getTeamName()}] type [${team.getSubtypeName()}] from agent [$agent].")
 
 				WebTarget removeTargetWithParams = ucdSession.getUcdWebTarget().path("/cli/agentCLI/teams")
 					.queryParam("agent", agent)

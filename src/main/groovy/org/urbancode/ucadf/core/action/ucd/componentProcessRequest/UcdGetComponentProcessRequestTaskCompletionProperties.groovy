@@ -62,7 +62,7 @@ class UcdGetComponentProcessRequestTaskCompletionProperties extends UcAdfAction 
 			// Get the task completed information
 			completedBy = task.getCompletedBy()
 			completedOn = task.getCompletedOn()
-            logInfo("Completed by [$completedBy] on [$completedOn].")
+            logVerbose("Completed by [$completedBy] on [$completedOn].")
 			UcdUser completedByUser = getUserInfoByDisplayName(completedBy)
 			if (!completedByUser) {
 				throw new UcdInvalidValueException("Unable to determine user name from user display name [$completedBy]")

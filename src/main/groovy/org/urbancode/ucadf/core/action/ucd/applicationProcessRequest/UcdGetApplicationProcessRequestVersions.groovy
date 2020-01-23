@@ -49,7 +49,7 @@ class UcdGetApplicationProcessRequestVersions extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Getting application process request [$requestId] versions as [$returnAs].")
+		logVerbose("Getting application process request [$requestId] versions as [$returnAs].")
 		
 		// Initialize the request versions list.		
 		List<Map<String, String>> requestVersionsListMap = []
@@ -129,7 +129,7 @@ class UcdGetApplicationProcessRequestVersions extends UcAdfAction {
 			}
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (response.getStatus() == 400 || response.status == 404) {
 				if (failIfNotFound) {
 					throw new UcdInvalidValueException(errMsg)

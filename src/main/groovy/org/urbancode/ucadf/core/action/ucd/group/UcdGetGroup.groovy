@@ -38,7 +38,7 @@ class UcdGetGroup extends UcAdfAction {
 			ucdGroup = response.readEntity(UcdGroup.class)
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if ((response.getStatus() != 400 && response.getStatus() != 404 && response.getStatus() != 500) || failIfNotFound) {
 				throw new UcdInvalidValueException(errMsg)
 			}

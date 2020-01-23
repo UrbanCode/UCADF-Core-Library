@@ -21,7 +21,7 @@ class UcdGetComponentTemplateProperties extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Getting component template [$componentTemplate] properties.")
+		logVerbose("Getting component template [$componentTemplate] properties.")
 
 		List<UcdProperty> ucdProperties = []
 		

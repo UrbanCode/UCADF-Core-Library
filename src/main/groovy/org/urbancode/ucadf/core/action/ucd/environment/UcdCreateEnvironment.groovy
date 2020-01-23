@@ -58,7 +58,7 @@ class UcdCreateEnvironment extends UcAdfAction {
 			}
 		}
 		
-        logInfo("Creating application [$application] environment [$name].")
+        logVerbose("Creating application [$application] environment [$name].")
 
         WebTarget target = ucdSession.getUcdWebTarget().path("/cli/environment/createEnvironment")
             .queryParam("application", application)
@@ -71,7 +71,7 @@ class UcdCreateEnvironment extends UcAdfAction {
         Response response = target.request(MediaType.WILDCARD).put(Entity.json(""))
         // UCD 6.2 returns 200 and UCD 6.1 returns 201. Returns 200 if the environment already exists.
         if (response.getStatus() == 200 || response.getStatus() == 201) {
-            logInfo("Application [$application] environment [$name] created.")
+            logVerbose("Application [$application] environment [$name] created.")
 			created = true
         } else {
             throw new UcdInvalidValueException(response)

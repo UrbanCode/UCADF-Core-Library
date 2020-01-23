@@ -30,7 +30,7 @@ class UcdExportGenericProcess extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("\n=== Exporting generic process [$process] from [${ucdSession.getUcdUrl()}] ===")
+		logVerbose("\n=== Exporting generic process [$process] from [${ucdSession.getUcdUrl()}] ===")
 
 		// If an generic process ID was provided then use it. Otherwise get the generic process information to get the ID.
 		String processId = process
@@ -59,7 +59,7 @@ class UcdExportGenericProcess extends UcAdfAction {
 		
 		// Optionally save to file.
 		if (fileName) {
-			logInfo("Saving export to file [$fileName].")
+			logVerbose("Saving export to file [$fileName].")
 			
 			File exportFile = new File(fileName)
 			

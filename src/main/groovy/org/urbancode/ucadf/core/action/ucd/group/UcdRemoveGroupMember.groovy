@@ -29,7 +29,7 @@ class UcdRemoveGroupMember extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Remove user [$user] from group [$group].")
+		logVerbose("Remove user [$user] from group [$group].")
 		
 		// If an group ID was provided then use it. Otherwise get the group information to get the ID.
 		String groupId = group
@@ -60,7 +60,7 @@ class UcdRemoveGroupMember extends UcAdfAction {
 		
 		Response response = target.request(MediaType.APPLICATION_JSON).delete()
 		if (response.getStatus() == 200) {
-			logInfo("User [$user] removed group [$group].")
+			logVerbose("User [$user] removed group [$group].")
 		} else {
 			throw new UcdInvalidValueException(response)
 		}

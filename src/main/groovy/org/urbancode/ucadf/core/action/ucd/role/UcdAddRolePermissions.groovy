@@ -71,7 +71,7 @@ class UcdAddRolePermissions extends UcAdfAction {
 				continue
 			}
 			
-			logInfo("Adding role [$role] subtype [$subtype] permission [$permission].")
+			logVerbose("Adding role [$role] subtype [$subtype] permission [$permission].")
 			
 			WebTarget target = ucdSession.getUcdWebTarget().path("/security/role/{role}/actionMappings")
 				.resolveTemplate("role", role)
@@ -103,7 +103,7 @@ class UcdAddRolePermissions extends UcAdfAction {
 		
 		// Remove extra role permissions.
 		if (removeOthers) {
-			logInfo("Removing extra role permissions.")
+			logVerbose("Removing extra role permissions.")
 			for (persistedPermission in ucdRolePermissionMap.getSubtypePermissions(type, subtype)) {
 				if (!permissions.find { it == persistedPermission }) {
 					// Remove the permission.

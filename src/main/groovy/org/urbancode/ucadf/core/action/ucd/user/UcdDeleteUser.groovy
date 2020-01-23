@@ -34,7 +34,7 @@ class UcdDeleteUser extends UcAdfAction {
 		Boolean deleted = false
 				
 		if (!commit) {
-			logInfo("Would delete user [$user]")
+			logVerbose("Would delete user [$user]")
 		} else {
 			// Don't leave any abandoned auth tokens.
 			actionsRunner.runAction([
@@ -49,11 +49,11 @@ class UcdDeleteUser extends UcAdfAction {
 			
 			Response response = target.request(MediaType.WILDCARD).delete()
 			if (response.getStatus() == 200) {
-				logInfo("User [$user] deleted.")
+				logVerbose("User [$user] deleted.")
 				deleted = true
 			} else {
 				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-				logInfo(errMsg)
+				logVerbose(errMsg)
 				// Some older versions return 500.
 				if ((response.getStatus() != 404 && response.getStatus() != 500) || failIfNotFound) {
 					throw new UcdInvalidValueException(errMsg)

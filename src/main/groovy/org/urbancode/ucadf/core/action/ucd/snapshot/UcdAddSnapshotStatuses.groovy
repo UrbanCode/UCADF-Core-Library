@@ -38,7 +38,7 @@ class UcdAddSnapshotStatuses extends UcAdfAction {
 	}
 	
 	public addSnapshotStatus(final String status) {
-		logInfo("Adding application [$application] snapshot [$snapshot] status [$status].")
+		logVerbose("Adding application [$application] snapshot [$snapshot] status [$status].")
 
 		String snapshotId = snapshot
 		if (!UcdObject.isUUID(application)) {
@@ -59,7 +59,7 @@ class UcdAddSnapshotStatuses extends UcAdfAction {
 		
 		Response response = target.request(MediaType.WILDCARD).accept(MediaType.APPLICATION_JSON).put(Entity.text(""))
 		if (response.getStatus() == 204) {
-			logInfo("Application [$application] snapshot [$snapshot] status [$status] added.")
+			logVerbose("Application [$application] snapshot [$snapshot] status [$status] added.")
 		} else {
 			throw new UcdInvalidValueException(response)
 		}

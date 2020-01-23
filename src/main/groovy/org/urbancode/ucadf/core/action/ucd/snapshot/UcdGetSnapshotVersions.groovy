@@ -41,7 +41,7 @@ class UcdGetSnapshotVersions extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Getting application [$snapshot] snapshot [$snapshot] versions.")
+		logVerbose("Getting application [$snapshot] snapshot [$snapshot] versions.")
 
 		List<UcdSnapshotVersions> ucdSnapshotVersions = []
 		

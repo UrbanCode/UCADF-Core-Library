@@ -40,7 +40,7 @@ class UcdCancelProcessRequestTasks extends UcAdfAction {
 			taskPath = ".*/.*/.*$processName/.*$taskName"
 		}
 		
-		logInfo("Cancel application request [$requestId] process [$processName] task [$taskName].")
+		logVerbose("Cancel application request [$requestId] process [$processName] task [$taskName].")
 
         // Get the process tasks information.
 		UcdProcessRequestTask ucdProcessRequestTask = actionsRunner.runAction([
@@ -53,7 +53,7 @@ class UcdCancelProcessRequestTasks extends UcAdfAction {
 
         // If the task is open then fail it.
         if (ucdProcessRequestTask && UcdTaskStatusEnum.OPEN == ucdProcessRequestTask.getStatus()) {
-            logInfo("Rejecting task [$taskName] [${ucdProcessRequestTask.getId()}].")
+            logVerbose("Rejecting task [$taskName] [${ucdProcessRequestTask.getId()}].")
 
 			actionsRunner.runAction([
 				action: UcdProvideTaskResponse.getSimpleName(),

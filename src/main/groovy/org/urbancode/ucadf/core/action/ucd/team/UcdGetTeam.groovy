@@ -38,7 +38,7 @@ class UcdGetTeam extends UcAdfAction {
 			ucdTeam = response.readEntity(UcdTeam.class)
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if ((response.getStatus() != 403 && response.getStatus() != 404 && response.getStatus() != 500) || failIfNotFound) {
 				throw new UcdInvalidValueException(errMsg)
 			}

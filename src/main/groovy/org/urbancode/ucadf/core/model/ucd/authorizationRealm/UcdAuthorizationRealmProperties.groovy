@@ -23,28 +23,28 @@ class UcdAuthorizationRealmProperties extends UcdObject {
 	@JsonProperty("context-factory")
 	String contextFactory
 	
-	@JsonProperty("group-name")
-	String groupName
-	@JsonProperty("group-base")
-	String groupBase
-	@JsonProperty("group-attribute")
-	String groupAttribute
-	@JsonProperty("group-mapper")
-	String groupMapper
-	@JsonProperty("group-search")
-	String groupSearch
-	@JsonProperty("group-search-subtree")
-	Boolean groupSearchSubtree
-	
 	@JsonProperty("user-base")
 	String userBase
 	@JsonProperty("user-pattern")
 	String userPattern
+	@JsonProperty("user-search")
+	String userSearch
 	@JsonProperty("user-search-subtree")
 	Boolean userSearchSubtree
-	@JsonProperty("user-search")
-	Boolean userSearch
-
+	
+	@JsonProperty("group-base")
+	String groupBase
+	@JsonProperty("group-search")
+	String groupSearch
+	@JsonProperty("group-name")
+	String groupName
+	@JsonProperty("group-search-subtree")
+	Boolean groupSearchSubtree
+	@JsonProperty("group-attribute")
+	String groupAttribute
+	@JsonProperty("group-mapper")
+	String groupMapper
+	
 	// Constructors.	
 	UcdAuthorizationRealmProperties() {
 	}

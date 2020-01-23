@@ -36,7 +36,7 @@ class UcAdfGenerateSecurityReport extends UcAdfAction {
 		}
 		
 		// Generate the security report.
-		logInfo("Generating Team Security Report.")
+		logVerbose("Generating Team Security Report.")
 		List<UcdTeam> ucdTeams = actionsRunner.runAction([
 			action: UcdGetTeams.getSimpleName()
 		])

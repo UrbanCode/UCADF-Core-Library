@@ -58,7 +58,7 @@ class UcdRemoveEnvironmentBaseResources extends UcAdfAction {
 	
 	// Remove a base resource from an environment.
 	public Response removeEnvironmentBaseResource(String resource) {
-		logInfo("Removing base resource [$resource] from application [$application] environment [$environment].")
+		logVerbose("Removing base resource [$resource] from application [$application] environment [$environment].")
 			
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/environment/removeBaseResource")
 			.queryParam("application", application)
@@ -68,9 +68,9 @@ class UcdRemoveEnvironmentBaseResources extends UcAdfAction {
 		
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(""))
 		if (response.getStatus() == 204) {
-			logInfo("Base resource [$resource] removed from application [$application] environment [$environment].")
+			logVerbose("Base resource [$resource] removed from application [$application] environment [$environment].")
 		} else if (response.getStatus() == 404) {
-			logInfo("Base resource [$resource] not not found in application [$application] environment [$environment].")
+			logVerbose("Base resource [$resource] not not found in application [$application] environment [$environment].")
 		} else {
             throw new UcdInvalidValueException(response)
 		}

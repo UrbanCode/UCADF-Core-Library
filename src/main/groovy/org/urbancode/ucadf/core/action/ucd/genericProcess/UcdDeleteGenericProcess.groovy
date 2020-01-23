@@ -33,7 +33,7 @@ class UcdDeleteGenericProcess extends UcAdfAction {
 
 		Boolean deleted = false
 				
-		logInfo("Deleting generic process [$process] commit [$commit].")
+		logVerbose("Deleting generic process [$process] commit [$commit].")
 
 		if (commit) {
 			UcdGenericProcess ucdGenericProcess = actionsRunner.runAction([
@@ -49,14 +49,14 @@ class UcdDeleteGenericProcess extends UcAdfAction {
 				
 				Response response = target.request(MediaType.APPLICATION_JSON).delete()
 				if (response.getStatus() == 204) {
-					logInfo("Generic [$process] deleted.")
+					logVerbose("Generic [$process] deleted.")
 					deleted = true
 				} else {
 					throw new UcdInvalidValueException(response)
 				}
 			}
 		} else {
-			logInfo("Would delete generic process [$process].")
+			logVerbose("Would delete generic process [$process].")
 		}
 		
 		return deleted
