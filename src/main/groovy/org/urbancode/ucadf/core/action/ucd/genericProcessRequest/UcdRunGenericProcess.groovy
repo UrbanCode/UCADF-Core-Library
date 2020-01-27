@@ -5,6 +5,7 @@ package org.urbancode.ucadf.core.action.ucd.genericProcessRequest
 
 import javax.ws.rs.client.Entity
 import javax.ws.rs.client.WebTarget
+import javax.ws.rs.core.GenericType
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
@@ -15,6 +16,7 @@ import org.urbancode.ucadf.core.model.ucd.genericProcess.UcdGenericProcess
 import org.urbancode.ucadf.core.model.ucd.genericProcessRequest.UcdGenericProcessRequest
 import org.urbancode.ucadf.core.model.ucd.processRequest.UcdProcessRequestResponseResultEnum
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
+import org.urbancode.ucadf.core.model.ucd.system.UcdSession
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
@@ -25,8 +27,8 @@ class UcdRunGenericProcess extends UcAdfAction {
 	/** The generic process name or ID. */
 	String process
 	
-	/** (Optional) The resource path or ID. */
-	String resource = ""
+	/** (Optional) The list of resource paths or IDs. */
+	List<String> resources = []
 	
 	/** (Optional) The list of generic process request properties. */
 	@JsonProperty("properties")
@@ -46,16 +48,16 @@ class UcdRunGenericProcess extends UcAdfAction {
 
 	/**
 	 * Runs the action.	
-	 * @return The generic process request object.
+	 * @return The list of generic process request objects.
 	 */
 	@Override
-	public UcdGenericProcessRequest run() {
+	public List<UcdGenericProcessRequest> run() {
 		// Validate the action properties.
 		validatePropsExist()
 		
-		UcdGenericProcessRequest ucdGenericProcessRequest
+		List<UcdGenericProcessRequest> ucdGenericProcessRequests = []
 		
-		logInfo("Running generic process [$process]")
+		logVerbose("Running generic process [$process].")
 
 		// Get the generic process information.
 		UcdGenericProcess ucdGenericProcess = actionsRunner.runAction([
@@ -66,33 +68,86 @@ class UcdRunGenericProcess extends UcAdfAction {
 		])
 
 		// Build a custom post body that includes only the required fields.
-		String requestId
-
 		Map processPropertiesMap = [:]
+		
 		for (ucdProperty in ucdProperties) {
 			processPropertiesMap.put(ucdProperty.getName(), ucdProperty.getValue())
 		}
 
-		// Construct the request.
-		Map requestMap = [
-			processId: ucdGenericProcess.getId(),
-			resource: resource ?: ucdGenericProcess.getDefaultResourceId(),
-			properties: processPropertiesMap
-		]
-
-		JsonBuilder jsonBuilder = new JsonBuilder(requestMap)
-
 		WebTarget target = ucdSession.getUcdWebTarget().path("/rest/process/request")
 		logDebug("target=$target")
 		
-		Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.json(jsonBuilder.toString()))
-		if (response.getStatus() == 200) {
-			ucdGenericProcessRequest = response.readEntity(UcdGenericProcessRequest.class)
-			requestId = ucdGenericProcessRequest.getId()
-			logInfo("Generic process request ID [$requestId].")
+		// If no resource or resources were specified then add the default.
+		if (resources.size() == 0) {
+			resources.add(ucdGenericProcess.getDefaultResourceId())
+		}
+	
+		// Construct the request.
+		Map requestMap
+
+		if (ucdSession.compareVersion(UcdSession.UCDVERSION_704) >= 0) {
+			requestMap = [
+				processId: ucdGenericProcess.getId(),
+				resources: resources,
+				properties: processPropertiesMap
+			]
 			
-			if (waitForProcess && maxWaitSecs > 0) {
-				logInfo("Waiting up to $maxWaitSecs seconds for generic process [$requestId] to complete.")
+			JsonBuilder jsonBuilder = new JsonBuilder(requestMap)
+	
+			Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.json(jsonBuilder.toString()))
+			if (response.getStatus() == 200) {
+				ucdGenericProcessRequests = response.readEntity(new GenericType<List<UcdGenericProcessRequest>>(){})
+			} else {
+				String errMsg = response.readEntity(String.class)
+				logVerbose(errMsg)
+				if (throwException) {
+					throw new UcdInvalidValueException("${response.getStatus()} $errMsg")
+				}
+				
+				UcdGenericProcessRequest ucdGenericProcessRequest = new UcdGenericProcessRequest()
+				ucdGenericProcessRequest.setResult(UcdProcessRequestResponseResultEnum.FAILEDTOSTART)
+				ucdGenericProcessRequests.add(ucdGenericProcessRequest)
+			}
+		} else {
+			// Run a generic process for each resource.
+			for (resource in resources) {
+				requestMap = [
+					processId: ucdGenericProcess.getId(),
+					resource: resource ?: ucdGenericProcess.getDefaultResourceId(),
+					properties: processPropertiesMap
+				]
+				
+				JsonBuilder jsonBuilder = new JsonBuilder(requestMap)
+
+				UcdGenericProcessRequest ucdGenericProcessRequest
+				
+				Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.json(jsonBuilder.toString()))
+				if (response.getStatus() == 200) {
+					ucdGenericProcessRequest = response.readEntity(UcdGenericProcessRequest.class)
+					ucdGenericProcessRequests.add(ucdGenericProcessRequest)
+				} else {
+					String errMsg = response.readEntity(String.class)
+					logVerbose(errMsg)
+					if (throwException) {
+						throw new UcdInvalidValueException("${response.getStatus()} $errMsg")
+					}
+				
+					ucdGenericProcessRequest.setResult(UcdProcessRequestResponseResultEnum.FAILEDTOSTART)
+					ucdGenericProcessRequests.add(ucdGenericProcessRequest)
+				}
+			}
+		}
+		
+		if (waitForProcess && maxWaitSecs > 0) {
+			// Wait for each process to finish.
+			for (UcdGenericProcessRequest ucdGenericProcessRequest in ucdGenericProcessRequests) {
+				if (ucdGenericProcessRequest.getResult() == UcdProcessRequestResponseResultEnum.FAILEDTOSTART) {
+					continue
+				}
+				
+				String requestId = ucdGenericProcessRequest.getId()
+				
+				logVerbose("Waiting up to $maxWaitSecs seconds for generic process [$requestId] to complete.")
 		
 				Integer remainingSecs = maxWaitSecs
 				while (true) {
@@ -121,17 +176,8 @@ class UcdRunGenericProcess extends UcAdfAction {
 					Thread.sleep(waitIntervalSecs * 1000)
 				}
 			}
-		} else {
-			String errMsg = response.readEntity(String.class)
-			logInfo(errMsg)
-			if (throwException) {
-				throw new UcdInvalidValueException(errMsg)
-			}
-			
-			ucdGenericProcessRequest = new UcdGenericProcessRequest()
-			ucdGenericProcessRequest.setResult(UcdProcessRequestResponseResultEnum.FAILEDTOSTART)
 		}
 		
-		return ucdGenericProcessRequest
+		return ucdGenericProcessRequests
 	}
 }

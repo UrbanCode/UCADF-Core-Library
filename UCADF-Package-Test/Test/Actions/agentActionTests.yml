@@ -13,17 +13,16 @@ actions:
   # Create a team for the tests.
   - action: UcdCreateTeam
     name: "${u:coreTestTeam1}"
+    failIfExists: false
   
   #==============================================================================          
   # Run the tests.
   #==============================================================================          
   # Get a value to use for a unique tag name.
   - action: UcAdfSetActionProperties
-    setStatic: true
     propertyValues:
       epoch: 'Eval(new Date().getTime())'
   - action: UcAdfSetActionProperties
-    setStatic: true
     propertyValues:
      agentTag: "${u:coreTestAgentTagPrefix}-${u:epoch}"
       
@@ -45,11 +44,18 @@ actions:
     agent: "${u:agents/0/name}"
 
   # Create an agent tag.
-  - action: UcdCreateAgentTag
-    name: "${u:agentTag}"
-    color: RED
-    description: "Test agent tag."
-
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdCreateAgentTag
+        name: "${u:agentTag}"
+        color: RED
+        description: "Test agent tag."
+        failIfExists: false
+        
   # Get information about an agent tag.
   - action: UcdGetAgentTag
     tag: "${u:agentTag}"
@@ -88,7 +94,6 @@ actions:
     agent: "${u:agents/0/name}"
     teams:
       - team: "${u:coreTestTeam1}"
-      - team: "Public"
     removeOthers: true
     
   # Remove team security from a specified agent.

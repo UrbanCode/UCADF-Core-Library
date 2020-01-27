@@ -39,7 +39,7 @@ class UcdSetUserTeamPreferences extends UcAdfAction {
 			throw new UcdInvalidValueException("This action requires a value for ucdUserId and ucdUserPw, not ucdAuthToken.")
 		}
 		
-		logInfo("Set user team preferences type [$defaultTeamMappingType] teamNames [$teamNames].")
+		logVerbose("Set user team preferences type [$defaultTeamMappingType] teamNames [$teamNames].")
 		
 		WebTarget target
 		
@@ -79,13 +79,13 @@ class UcdSetUserTeamPreferences extends UcAdfAction {
 				
 				String teamId = userTeam.getId()
 		
-				logInfo("Found team [$teamName] ID [$teamId].")
+				logVerbose("Found team [$teamName] ID [$teamId].")
 				teamIds.add(teamId)
 			}
 			requestMap.put("defaultTeamMappings", teamIds)
 		}
 		
-		logInfo("jsonBuilder=$jsonBuilder")
+		logVerbose("jsonBuilder=$jsonBuilder")
 		
 		target = ucdSession.getUcdWebTarget().path("/rest/security/userPreferences")
 		logDebug("target=$target")

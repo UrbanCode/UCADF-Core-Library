@@ -5,6 +5,8 @@ import java.util.jar.JarFile
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
+import org.urbancode.ucadf.core.action.ucadf.general.UcAdfSetActionProperties
+import org.urbancode.ucadf.core.action.ucadf.general.UcAdfWhen
 import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.system.UcdSession
 import org.yaml.snakeyaml.TypeDescription
@@ -56,10 +58,10 @@ class UcAdfActionsRunner {
 
 	// Pattern to match a property value in replacement text.	
 	private Pattern propertyValuePattern = Pattern.compile("[^\\/\"']+|\"([^\"]*)\"|'([^']*)'")
-  
-	// The properties to return for a plugin invocation. These properties are accrued as set by all actions run in a single plugin step.
-	Properties outProps = new Properties()
 
+	// The list of final property names.
+	private List<String> finalPropertyNames = []
+	  
 	// The stack of actions being run.
 	Stack<String> actionsStack = []
 
@@ -183,9 +185,10 @@ class UcAdfActionsRunner {
 		// Initialize the ACTIONPACKAGES runner property.
 		initializeActionPackagesProperty()
 
-		// Initialize the outProps runner property so that the properties can be set/used by each action.
-		setPropertyValue(UcAdfActionPropertyEnum.OUTPROPS.getPropertyName(), outProps)
-
+		// Initialize the outProps runner property for the actions run.
+		propertyValues.remove(UcAdfActionPropertyEnum.OUTPROPS.getPropertyName())
+		setPropertyValue(UcAdfActionPropertyEnum.OUTPROPS.getPropertyName(), new Properties())
+		
 		// Set the runner property values from the actions property values.
 		setPropertyValues(actions.getPropertyValues())
 		
@@ -232,7 +235,7 @@ class UcAdfActionsRunner {
 				actionMap
 			)
 		}
-
+		
 		return returnObject
 	}
 
@@ -242,116 +245,163 @@ class UcAdfActionsRunner {
 		final ObjectMapper actionsMapper,
 		final Map actionMap) {
 
+		// The object value that will be returned.
+		Object returnObject = new Properties()
+	
 		// Add the action to the stack.
 		String actionName = actionMap.get(UcAdfActionPropertyEnum.ACTION.getPropertyName())
 		actionsStack.push(actionName)
-		
-		// If no value was provided for actionInfo then default it to true.
-		Boolean actionInfo = actionMap.get(UcAdfActionPropertyEnum.ACTIONINFO.getPropertyName())
-		if (actionInfo) {
-			println "Begin [" + actionsStack.join("->") + "]."
-		}
-		
-		// Set the runner property values from the action property values.
-		setPropertyValues(actionMap.get(UcAdfActionPropertyEnum.PROPERTYVALUES.getPropertyName()))
 
-		// Set the runner property values from property files.
-		setPropertyValuesFromFiles(actionMap.get(UcAdfActionPropertyEnum.PROPERTYFILES.getPropertyName()))
-
-		// Override the property values with any command line property values.
-		setPropertyValues(commandLinePropertyValues)
-		
-		// The object value that will be returned.
-		Object returnObject = new Properties()
-
-		// If the action defers variable replacement then save the actions before variable replacement, then reset them afterwards.		
-		List<LinkedHashMap> saveActions
-		if (DEFERRED_PROPERTY_ACTIONS.contains(actionMap[UcAdfActionPropertyEnum.ACTION.getPropertyName()])) {
-			saveActions = actionMap[UcAdfActionPropertyEnum.ACTIONS.getPropertyName()]
-			actionMap[UcAdfActionPropertyEnum.ACTIONS.getPropertyName()] = []
-		}
-
-		// Replace the variables with properties in the action map.
-		replaceVariablesInMap(actionMap)
-
-		// Reset actions for deferred replacement.		
-		if (DEFERRED_PROPERTY_ACTIONS.contains(actionMap[UcAdfActionPropertyEnum.ACTION.getPropertyName()])) {
-			actionMap[UcAdfActionPropertyEnum.ACTIONS.getPropertyName()] = saveActions
-		}
-
-		// Serialize the action map into a runner action object after the property values have been replaced.
-		UcAdfAction action
+		// 	Try/finally used to ensure pop actions stack.	
 		try {
-			// Convert action using JSON deserializer.
-			action = actionsMapper.convertValue(
-				actionMap,
-				UcAdfAction
-			)
-		} catch (Exception e) {
-			throw new UcdInvalidValueException(e.getMessage() + "\n" + actionMap)
-		}
-
-		// If there's a when property value then evaluate it to determine if the action should be run.
-		if (action.getWhen().toString().equals(false.toString())) {
-			log.debug("Skipping action [$actionName}] when [${action.getWhen()}].")
-		} else {
-			// Show the action properties.
-			action.showProperties()
-
-			// Add the UCD session to the stack.
-			sessionsStack.push(ucdSession)
-		
-			// The UCD configuration may have been provided as properties of the individual action.
-			// Start with those values and determine if they need to be supplemented with property values from the runner.
-			initializeUcdSession(action)
-
-			// The action can access the UCD session.
-			action.setUcdSession(ucdSession)
-			
-			// The action can access the actions runner.						
-			action.setActionsRunner(this)
-
-			debugMessage("${action.getAction()} run.")
-
-			// Run the action and return the object.
-			returnObject = action.run()
-			
-			// Add the action outProps the action runner outProps.
-			action.getOutProps().each { k, v ->
-				outProps.put(k, v)
+			// If no value was provided for actionInfo then default it to true.
+			Boolean actionInfo = actionMap.get(UcAdfActionPropertyEnum.ACTIONINFO.getPropertyName())
+			if (actionInfo) {
+				println "Begin [" + actionsStack.join("->") + "]."
 			}
 			
-			debugMessage("action ${action.getAction()} return ${returnObject}.")
-			
-			// Remove the session from the stack.
-			ucdSession = sessionsStack.pop()
-		}
+			// Set the runner property values from the action property values.
+			// Since UcAdfSetActionProperties has propertyValues and a potential when condition, we skip setting those properties here and let
+			// the action set them if when evaluates to true. 
+			if (!actionMap[UcAdfActionPropertyEnum.ACTION.getPropertyName()].equals(UcAdfSetActionProperties.getSimpleName())) {
+				setPropertyValues(actionMap.get(UcAdfActionPropertyEnum.PROPERTYVALUES.getPropertyName()))
+			}
 
-		// Set the return object in the actionReturn property.
-		setPropertyValue(
-			UcAdfActionPropertyEnum.ACTIONRETURN.getPropertyName(),
-			returnObject
-		)
+			// Set the runner property values from property files.
+			setPropertyValuesFromFiles(actionMap.get(UcAdfActionPropertyEnum.PROPERTYFILES.getPropertyName()))
+	
+			// Override the property values with any command line property values.
+			setPropertyValues(commandLinePropertyValues)
 			
-		// Optionally, set the return object in the specified property.
-		if (action.getActionReturnPropertyName()) {
+			// If the action defers variable replacement then save the actions before variable replacement, then reset them afterwards.		
+			List<LinkedHashMap> saveActions
+			if (DEFERRED_PROPERTY_ACTIONS.contains(actionMap[UcAdfActionPropertyEnum.ACTION.getPropertyName()])) {
+				saveActions = actionMap[UcAdfActionPropertyEnum.ACTIONS.getPropertyName()]
+				actionMap[UcAdfActionPropertyEnum.ACTIONS.getPropertyName()] = []
+			}
+	
+			// Replace the variables with properties in the action map.
+			replaceVariablesInMap(actionMap)
+	
+			// Reset actions for deferred replacement.		
+			if (DEFERRED_PROPERTY_ACTIONS.contains(actionMap[UcAdfActionPropertyEnum.ACTION.getPropertyName()])) {
+				actionMap[UcAdfActionPropertyEnum.ACTIONS.getPropertyName()] = saveActions
+			}
+	
+			// Serialize the action map into a runner action object after the property values have been replaced.
+			UcAdfAction action
+			try {
+				// Convert action using JSON deserializer.
+				action = actionsMapper.convertValue(
+					actionMap,
+					UcAdfAction
+				)
+			} catch (Exception e) {
+				throw new UcdInvalidValueException(e.getMessage() + "\n" + actionMap)
+			}
+	
+			// If there's a when property value then evaluate it to determine if the action should be run.
+			// Do not evaluate a when condition of the UcAdfWhen action here but rather run the action so that it can perform the elseActions if needed.
+			if (action.getWhen() && !action.getAction().equals(UcAdfWhen.getSimpleName()) && evaluateWhen(action) == false) {
+				log.debug("Skipping action [$actionName}] when [${action.getWhen()}].")
+			} else {
+				// Show the action properties.
+				action.showProperties()
+	
+				// Add the UCD session to the stack.
+				sessionsStack.push(ucdSession)
+			
+				// 	Try/finally used to ensure pop sessions stack.	
+				try {
+					// The UCD configuration may have been provided as properties of the individual action.
+					// Start with those values and determine if they need to be supplemented with property values from the runner.
+					initializeUcdSession(action, actionInfo)
+		
+					// The action can access the UCD session.
+					action.setUcdSession(ucdSession)
+					
+					// The action can access the actions runner.						
+					action.setActionsRunner(this)
+		
+					debugMessage("${action.getAction()} run.")
+		
+					// Run the action and return the object.
+					returnObject = action.run()
+					
+					// If the action's run method added outProps values then add those to the actions runner outProps property.
+					// Keep in mind that a UcAdfSetActionProperties action may also add outProps value.
+					if (action.getOutProps().size() > 0) {
+						Properties outProps = getPropertyValue(UcAdfActionPropertyEnum.OUTPROPS.getPropertyName())
+					
+						// Add the action outProps the action runner outProps.
+						action.getOutProps().each { k, v ->
+							outProps.put(k, v)
+						}
+			
+						// Set the outProps property with the current outProps values.
+						setPropertyValue(UcAdfActionPropertyEnum.OUTPROPS.getPropertyName(), outProps)
+					}
+					
+					debugMessage("action ${action.getAction()} return ${returnObject}.")
+				} finally {
+					// Remove the session from the stack.
+					ucdSession = sessionsStack.pop()
+				}
+			}
+	
+			// Set the return object in the actionReturn property.
 			setPropertyValue(
-				action.getActionReturnPropertyName(), 
+				UcAdfActionPropertyEnum.ACTIONRETURN.getPropertyName(),
 				returnObject
 			)
-		}	
+				
+			// Optionally, set the return object in the specified property.
+			if (action.getActionReturnPropertyName()) {
+				setPropertyValue(
+					action.getActionReturnPropertyName(), 
+					returnObject
+				)
+			}	
+	
+			// Action end processing.
+			action.end()
+		} finally {
+			// Remove the action from the stack.
+			actionsStack.pop()
+		}
 
-		// Action end processing.
-		action.end()
-		
-		// Remove the action from the stack.
-		actionsStack.pop()
-		
 		return returnObject
 	}
 
+	// Evaluate a when.
+	public Object evaluateWhen(UcAdfAction action) {
+		Binding binding = new Binding()
+		binding.setVariable("action", action)
+
+		// Run the when Groovy script to analyze the when condition.		
+		Object returnObject = runGroovyScript(
+			binding,
+			action.getWhen()
+		)
+
+		Boolean returnEvaluate
+		
+		if (returnObject == false || "false".equals(returnObject) || "".equals(returnObject)) {
+			returnEvaluate = false
+		} else {
+			returnEvaluate = true
+		}
+		
+		debugMessage("evaluateWhen returnObject=[$returnObject] (${returnObject.getClass().getSimpleName()})")
+		
+		return returnEvaluate
+	}
+	
 	// Gets a UCD session using the provided connection information and/or the current actions runner property values.
-	public initializeUcdSession(final UcAdfAction action) {
+	public initializeUcdSession(
+		final UcAdfAction action,
+		final Boolean actionInfo = true) {
+		
 		// Values from the action properties.
 		String ucdUrl = action.getUcdUrl()
 		String ucdUserId = action.getUcdUserId()
@@ -455,7 +505,7 @@ class UcAdfActionsRunner {
 			}
 		}
 		
-		if (ucdSession && (saveUcdSession != ucdSession)) {
+		if (actionInfo && ucdSession && (saveUcdSession != ucdSession)) {
 			log.info "Actions runner current session ucdUrl=[${ucdSession.getUcdUrl()}] ucdUser=[${ucdSession.getUcdUserId()}]."
 		}
 	}	
@@ -479,12 +529,12 @@ class UcAdfActionsRunner {
 			File propertiesFile = new File(propertyFileName)
 			
 			// Determine the file type.
-			String derivedFileType = propertyFileDef.getFileType()
-			if (UcAdfActions.FILETYPE_AUTO.equals(derivedFileType)) {
+			UcAdfActionsFileTypeEnum derivedFileType = propertyFileDef.getFileType()
+			if (UcAdfActionsFileTypeEnum.AUTO.equals(derivedFileType)) {
 				if (propertyFileName.toLowerCase() ==~ /.*\.(yaml|yml)$/) {
-					derivedFileType = UcAdfActions.FILETYPE_YAML
+					derivedFileType = UcAdfActionsFileTypeEnum.YAML
 				} else if (propertyFileName.toLowerCase() ==~ /.*\.(properties)$/) {
-					derivedFileType = UcAdfActions.FILETYPE_PROPERTIES
+					derivedFileType = UcAdfActionsFileTypeEnum.PROPERTIES
 				} else {
 					throw new UcdInvalidValueException("Unable to automatically determine the type of file by the file extension of file [$propertyFileName].")
 				}
@@ -504,7 +554,7 @@ class UcAdfActionsRunner {
 			Properties props = new Properties()
 			try {
 				switch (derivedFileType) {
-					case UcAdfActions.FILETYPE_YAML:
+					case UcAdfActionsFileTypeEnum.YAML:
 						// Initialize the YAML constructor.
 						Constructor constructor = new Constructor(UcAdfActions.class)
 						TypeDescription yamlDescription = new TypeDescription(UcAdfActions.class)
@@ -524,7 +574,7 @@ class UcAdfActionsRunner {
 						}
 						break
 						
-					case UcAdfActions.FILETYPE_PROPERTIES:
+					case UcAdfActionsFileTypeEnum.PROPERTIES:
 						// Load the PROPERTIES file.
 						try {
 							FileInputStream propsInputStream = new FileInputStream(propertiesFile)
@@ -558,10 +608,24 @@ class UcAdfActionsRunner {
 		if (UcAdfActionPropertyEnum.ACTIONDEBUG.getPropertyName().equals(propertyName)) {
 			debug = Boolean.valueOf(propertyValue)
 		}
-		
-		debugMessage("Setting property name [$propertyName] value [$propertyValue].")
-			
-		propertyValues.put(propertyName, propertyValue)
+
+		if (propertyValues.containsKey(propertyName) && finalPropertyNames.contains(propertyName)) {
+			debugMessage("Skipping setting final property name [$propertyName] that has already been set.")
+			throw new UcdInvalidValueException("Attempt to set a new value for final property [$propertyName].")
+		} else {
+			// If the existing property value is a Map and the property value being provided is a Map then merge them.
+			if (propertyValue instanceof Map && propertyValues.containsKey(propertyName) && propertyValues.get(propertyName) instanceof Map) {
+				debugMessage("Setting property name [$propertyName] value [$propertyValue] (Map).")
+				
+				// Merge the maps.
+				propertyValues.put(propertyName, propertyValues.get(propertyName) + propertyValue)
+			} else {
+				debugMessage("Setting property name [$propertyName] value [$propertyValue].")
+	
+				// Set the property value.				
+				propertyValues.put(propertyName, propertyValue)
+			}
+		}
 	}
 
 	// Set property values from a map collection.
@@ -597,20 +661,7 @@ class UcAdfActionsRunner {
 		Object returnObject = propertyValues
 
 		// Each property name is delimited by a / unless enclosed in single or double quotes.		
-		List<String> keys = new ArrayList<String>()
-		Matcher regexMatcher = propertyValuePattern.matcher(propertyName)
-		while (regexMatcher.find()) {
-			if (regexMatcher.group(1) != null) {
-				// Add double-quoted string without the quotes
-				keys.add(regexMatcher.group(1))
-			} else if (regexMatcher.group(2) != null) {
-				// Add single-quoted string without the quotes
-				keys.add(regexMatcher.group(2))
-			} else {
-				// Add unquoted word
-				keys.add(regexMatcher.group())
-			}
-		}
+		List<String> keys = getSplitPropertyName(propertyName)
 		
 		for (key in keys) {
 			if (!key) {
@@ -642,6 +693,27 @@ class UcAdfActionsRunner {
 		debugMessage("Getting property name [$propertyName] value [$returnObject] ${returnObject.getClass()}.")
 		
 		return ((returnObject != null) ? returnObject : "")
+	}
+
+	// Split a property name into segments.
+	public List<String> getSplitPropertyName(final String propertyName) {
+		// Each property name is delimited by a / unless enclosed in single or double quotes.
+		List<String> keys = new ArrayList<String>()
+		Matcher regexMatcher = propertyValuePattern.matcher(propertyName)
+		while (regexMatcher.find()) {
+			if (regexMatcher.group(1) != null) {
+				// Add double-quoted string without the quotes
+				keys.add(regexMatcher.group(1))
+			} else if (regexMatcher.group(2) != null) {
+				// Add single-quoted string without the quotes
+				keys.add(regexMatcher.group(2))
+			} else {
+				// Add unquoted word
+				keys.add(regexMatcher.group())
+			}
+		}
+		
+		return keys
 	}
 
 	// Determine if a property value exists.
@@ -684,93 +756,154 @@ class UcAdfActionsRunner {
 		return object
 	}
 
-	// Replace environment propertys $(x) or ${x}with actual values.
+	// Replace environment properties $(x) or ${x}with actual values.
     public Object replaceVariablesInText(final String text) {
     	debugMessage("Properties replace text before [$text].")
 
-		// Initialize the text to be replaced.
-		String returnText = text
+		Object returnObject
 		
-		// Replace nested property values first.
-		Boolean replaceNested = true
-		while (replaceNested) {
-			Matcher nestedPropertiesMatches = nestedPropertiesPattern.matcher(returnText)
-
-			replaceNested = false
-			while (nestedPropertiesMatches.find()) {
-				// First group in match is u or u?, second group in match is the property name.
-				String uValue = nestedPropertiesMatches.group(1)
-				String propName = nestedPropertiesMatches.group(2)
-
-				// Get the property value for the nested property.				
-				String propertyValueText = replaceVariablesInText('${' + uValue + ':' + propName + '}')
-
-				// Replace the nested property variable with the property value.				
-				String regex = '\\$\\{' + (uValue == 'u?' ? 'u\\?:' : 'u:') + propName + '\\}'
-				returnText = returnText.replaceAll(regex, propertyValueText)
-				
-				// Indicate to keep processing.
-				replaceNested = true
-			}
-		}
-
-		// Replace the property values.
-    	Object returnObject
-    	Boolean isTextReturn = true
-    	Matcher matcher = propertiesPattern.matcher(returnText)
-    	while (matcher.find()) {
-    		// First group in match is u or u?, second group in match is the property name.
-    		Object propertyValue = getPropertyValue(
-				matcher.group(2),
-				matcher.group(1)
-			)
+		if (text ==~ /^\s*Eval\(.*?\)\s*$/) {
+			returnObject = processEvalReplace(text)
+		} else {
+			// Initialize the text to be replaced.
+			String returnText = text
 			
-			// If the property value can be converted into a String object then do text replacement.
-			if (propertyValue instanceof String || propertyValue instanceof Number || propertyValue instanceof Boolean) {
-				String propertyValueText = propertyValue
-
-				// Recursively replace property values.			
-				if (propertiesPattern.matcher(propertyValueText).find()) {
-					propertyValueText = replaceVariablesInText(propertyValueText)
-				}
-				
-				// If the property value is not blank then replace backslash with four backslashes so that replaceall works correctly.
-	    	    if (propertyValueText) {
-					// Needed for the upcoming replaceAll so that it doesn't lose the backslashes.
-					propertyValueText = propertyValueText.replace("\\", "\\\\")
-	    	    }
-
-				// Skip replacing a property value that has syntax like a variable name, e.g. ${p:foo}
-				if (propertyValueText ==~ /\$\{.*\}/) {
-					returnText = propertyValueText
-				} else {
-					Pattern subexpr = Pattern.compile(Pattern.quote(matcher.group(0)))
-					returnText = subexpr.matcher(returnText).replaceAll(Matcher.quoteReplacement(propertyValueText))
-				}
-			} else {
-				// If the property value is a complex type then return it as-is.
-				// This only works for a single property replacement in a given string.
-				isTextReturn = false
-				returnObject = propertyValue
-				break
-			}
-    	}
-		
-		if (isTextReturn) {
-			debugMessage("Properties replace text after [$returnText].")
+			// Replace nested property values first.
+			Boolean replaceNested = true
+			while (replaceNested) {
+				Matcher nestedPropertiesMatches = nestedPropertiesPattern.matcher(returnText)
 	
-			// Determine if string needs to be evaluated as Groovy code.		
-			if (returnText ==~ /^\s*Eval\(.*?\)\s*$/) {
-				String evalStr = returnText.replaceAll(/^\s*Eval\((.*?)\)\s*$/, '$1')
-				returnObject = Eval.me(evalStr)
-				debugMessage("Properties replace text after Eval [$returnObject].")
-			} else {
+				replaceNested = false
+				while (nestedPropertiesMatches.find()) {
+					// First group in match is u or u?, second group in match is the property name.
+					String uValue = nestedPropertiesMatches.group(1)
+					String propName = nestedPropertiesMatches.group(2)
+	
+					// Get the property value for the nested property.				
+					String propertyValueText = replaceVariablesInText('${' + uValue + ':' + propName + '}')
+	
+					// Replace the nested property variable with the property value.				
+					String regex = '\\$\\{' + (uValue == 'u?' ? 'u\\?:' : 'u:') + propName + '\\}'
+					returnText = returnText.replaceAll(regex, propertyValueText)
+					
+					// Indicate to keep processing.
+					replaceNested = true
+				}
+			}
+	
+			// Replace the property values.
+	    	Boolean isTextReturn = true
+	    	Matcher matcher = propertiesPattern.matcher(returnText)
+	    	while (matcher.find()) {
+	    		// First group in match is u or u?, second group in match is the property name.
+	    		Object propertyValue = getPropertyValue(
+					matcher.group(2),
+					matcher.group(1)
+				)
+				
+				// If the property value can be converted into a String object then do text replacement.
+				if (propertyValue instanceof String || propertyValue instanceof Number || propertyValue instanceof Boolean) {
+					String propertyValueText = propertyValue
+	
+					// Recursively replace property values.			
+					if (propertiesPattern.matcher(propertyValueText).find()) {
+						propertyValueText = replaceVariablesInText(propertyValueText)
+					}
+					
+					// If the property value is not blank then replace backslash with four backslashes so that replaceall works correctly.
+		    	    if (propertyValueText) {
+						// Needed for the upcoming replaceAll so that it doesn't lose the backslashes.
+						propertyValueText = propertyValueText.replace("\\", "\\\\")
+		    	    }
+	
+					// Skip replacing a property value that has syntax like a variable name, e.g. ${p:foo}
+					if (propertyValueText ==~ /\$\{.*\}/) {
+						returnText = propertyValueText
+					} else {
+						Pattern subexpr = Pattern.compile(Pattern.quote(matcher.group(0)))
+						returnText = subexpr.matcher(returnText).replaceAll(Matcher.quoteReplacement(propertyValueText))
+					}
+				} else {
+					// If the property value is a complex type then return it as-is.
+					// This only works for a single property replacement in a given string.
+					isTextReturn = false
+					returnObject = propertyValue
+					break
+				}
+	    	}
+			
+			if (isTextReturn) {
+				debugMessage("Properties replace text after [$returnText].")
 				returnObject = returnText
 			}
 		}
-	
+		
     	return returnObject
     }
+	
+	// Process an Eval replacement.
+	public Object processEvalReplace(final String text) {
+		Object returnObject
+		
+		// Get the string inside of Eval(.*).
+		String evalStr = text.replaceAll(/^\s*Eval\((.*?)\)\s*$/, '$1')
+		Object evalParm = replaceVariablesInText(evalStr)
+		
+		debugMessage("Begin Eval [$evalParm] ${evalParm.getClass().getSimpleName()}")
+		
+		if (!(evalParm instanceof String)) {
+			throw new UcdInvalidValueException("The Eval parameter [$evalParm] must be of type String not [${evalParm.getClass().getSimpleName()}")
+		}
+
+		returnObject = Eval.me(evalParm)
+		
+		debugMessage("End Eval [$returnObject] [${returnObject.getClass().getSimpleName()}].")
+
+		return returnObject
+	}
+
+	// Run Groovy script in Groovy shell.
+	public Object runGroovyScript(
+		final Binding binding, 
+		final String scriptText) {
+		
+		Object returnObject
+		
+		// Prepare to bind the variables to the script.
+		GroovyShell shell = new GroovyShell(binding)
+		
+		// Execute the script.
+		returnObject = shell.evaluate(scriptText)
+		
+		return returnObject
+	}
+	
+	// Split a comma-delimited string.	
+	public List<String> splitCommaDelimited(final String text) {
+		List<String> splitStrings = new ArrayList<String>()
+		
+		Integer iStart = 0
+		Boolean insideDoubleQuotes = false
+		Boolean insideSingleQuotes = false
+		for (Integer iCurrent = 0; iCurrent < text.length(); iCurrent++) {
+			if (text.charAt(iCurrent) == "'") {
+				insideSingleQuotes = !insideSingleQuotes
+			} else if (text.charAt(iCurrent) == '\"') {
+				insideDoubleQuotes = !insideDoubleQuotes
+			}
+
+			Boolean atLastCharacter = (iCurrent == text.length() - 1)
+
+			if (atLastCharacter) {
+				splitStrings.add(text.substring(iStart).trim())
+			} else if (text.charAt(iCurrent) == ',' && !insideSingleQuotes && !insideDoubleQuotes) {
+				splitStrings.add(text.substring(iStart, iCurrent).trim())
+				iStart = iCurrent + 1
+			}
+		}
+
+		return splitStrings
+	}
 	
 	// Get the action class for a given action name.	
 	public Class getActionClass(final String actionName) {
@@ -896,11 +1029,15 @@ class UcAdfActionsRunner {
 	
 	// Dump the properties.
 	public dump() {
-		println "================================="
-		println "Dump of Actions Runner Properties"
-		println "================================="
+		println "=========================================================================="
+		println "Dump of Actions Runner Properties (excluding system environment variables)"
+		println "=========================================================================="
+		Map<String, String> envMap = System.getenv()
+		
 		for (Map.Entry<String, String> entry : propertyValues.entrySet()) {
-			System.out.println(entry.getKey() + "=" + entry.getValue())
+			if (!envMap.containsKey(entry.getKey())) {
+				System.out.println(entry.getKey() + "=" + entry.getValue())
+			}
 		}
 		println "---"
 	}

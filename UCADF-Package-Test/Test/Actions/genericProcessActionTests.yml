@@ -1,4 +1,4 @@
-
+# ===============================================================================
 # This actions file runs generic process action tests.
 # ===============================================================================
 propertyFiles:
@@ -11,10 +11,18 @@ actions:
   # Run the tests.
   #==============================================================================          
   # Create a generic process.
-  - action: UcdCreateGenericProcess
-    name: "${u:coreTestGenericProcess1}"
-    description: "Test generic process"
-    failIfExists: false
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdCreateGenericProcess
+        name: "${u:coreTestGenericProcess1}"
+        description: "Test generic process"
+        failIfExists: false
+        # (TBD) Need to add default resources for test.
+        #defaultResources:
 
   # Update a generic process.
   - action: UcdUpdateGenericProcess

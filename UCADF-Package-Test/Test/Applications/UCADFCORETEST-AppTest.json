@@ -1604,7 +1604,7 @@
                     "label": "UCADFCORETEST-AppProcess-SecureProperty",
                     "pattern": "",
                     "type": "SECURE",
-                    "value": "crypt_v1{AES\/CBC\/PKCS5Padding|aes128keyw5o3|ZAci06kY0eLHKEdNq50CGA==|OyKopiOM5Hs0mGj62kq96LuXavT3Ccp1eSJ\/9usBJmzAqhJCZrM\/RohzSlGuPmQhqPbuF1qTQ3rmSwBoXzqg8Eqz77\/bbMTTQX7Gk\/oTizH9HO7S4PuKlYSrntZ7yZ8d}",
+                    "value": "",
                     "required": false,
                     "description": "TestDescription",
                     "placeholder": ""

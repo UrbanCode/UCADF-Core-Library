@@ -43,7 +43,7 @@ class UcdGetApplicationProperty extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Getting application [$application] property [$property].")
+		logVerbose("Getting application [$application] property [$property].")
 
 		Object returnProperty
 
@@ -60,7 +60,7 @@ class UcdGetApplicationProperty extends UcAdfAction {
 				returnProperty = response.readEntity(String.class)
 			} else {
 				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-				logInfo(errMsg)
+				logVerbose(errMsg)
 				if (response.getStatus() != 404 || failIfNotFound) {
 					throw new UcdInvalidValueException(errMsg)
 				}

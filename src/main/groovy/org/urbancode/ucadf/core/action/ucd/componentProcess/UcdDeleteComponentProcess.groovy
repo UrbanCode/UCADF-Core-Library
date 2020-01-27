@@ -34,7 +34,7 @@ class UcdDeleteComponentProcess extends UcAdfAction {
 
 		Boolean deleted = false
 				
-		logInfo("Deleting component [$component] process [$process].")
+		logVerbose("Deleting component [$component] process [$process].")
 
 		String processId
 		if (UcdObject.isUUID(process)) {
@@ -64,11 +64,11 @@ class UcdDeleteComponentProcess extends UcAdfAction {
 			
 			Response response = target.request(MediaType.APPLICATION_JSON).delete()
 			if (response.getStatus() == 204) {
-				logInfo("Component [$component] process [$process] deleted.")
+				logVerbose("Component [$component] process [$process] deleted.")
 				deleted = true
 			} else {
 				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-				logInfo(errMsg)
+				logVerbose(errMsg)
 				if (response.getStatus() != 404 || failIfNotFound) {
 					throw new UcdInvalidValueException(errMsg)
 				}

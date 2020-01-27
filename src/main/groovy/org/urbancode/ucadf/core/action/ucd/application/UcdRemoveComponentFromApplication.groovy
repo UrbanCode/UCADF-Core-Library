@@ -35,7 +35,7 @@ class UcdRemoveComponentFromApplication extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Removing component [$component] from application [$application].")
+		logVerbose("Removing component [$component] from application [$application].")
 		
 		UcdApplication ucdApplication = actionsRunner.runAction([
 			action: UcdGetApplication.getSimpleName(),
@@ -64,7 +64,7 @@ class UcdRemoveComponentFromApplication extends UcAdfAction {
 				
 				Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 				if (response.getStatus() == 200) {
-					logInfo("Component [$component] removed from application [$application].")
+					logVerbose("Component [$component] removed from application [$application].")
 				} else {
 					throw new UcdInvalidValueException(response)
 				}

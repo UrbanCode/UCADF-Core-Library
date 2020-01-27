@@ -35,7 +35,7 @@ class UcdRemoveComponentFromTeams extends UcAdfAction {
 			String team = teamSecurity.getTeam()
 			String subtype = teamSecurity.getSubtype()
 					
-			logInfo("Remove component [$component] from team [$team]subtype [$subtype].")
+			logVerbose("Remove component [$component] from team [$team]subtype [$subtype].")
 	
 			// Replaces the subtype IDs in the team mappings by looking up the ID using the subtype name.
 			String subtypeId = subtype
@@ -57,11 +57,11 @@ class UcdRemoveComponentFromTeams extends UcAdfAction {
 
 			Response response = target.request(MediaType.APPLICATION_JSON).delete()
 			if (response.getStatus() == 204) {
-				logInfo("Component [$component] removed from team [$team]subtype [$subtype].")
+				logVerbose("Component [$component] removed from team [$team]subtype [$subtype].")
 	        } else if (response.getStatus() == 404) {
-	            logInfo("Component [$component] team [$team]subtype [$subtype] not found.")
+	            logVerbose("Component [$component] team [$team]subtype [$subtype] not found.")
 			} else if (response.getStatus() == 500) {
-				logInfo("Ignoring status ${response.getStatus()} and assuming component [$component] team [$team]subtype [$subtype] not found.")
+				logVerbose("Ignoring status ${response.getStatus()} and assuming component [$component] team [$team]subtype [$subtype] not found.")
 			} else {
 				throw new UcdInvalidValueException(response)
 			}

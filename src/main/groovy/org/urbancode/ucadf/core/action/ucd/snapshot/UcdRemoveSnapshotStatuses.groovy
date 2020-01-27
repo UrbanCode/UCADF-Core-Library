@@ -37,7 +37,7 @@ class UcdRemoveSnapshotStatuses extends UcAdfAction {
 	}
 	
 	public addSnapshotStatus(final String status) {
-		logInfo("Removing application [$application] snapshot [$snapshot] status [$status].")
+		logVerbose("Removing application [$application] snapshot [$snapshot] status [$status].")
 
 		String snapshotId = snapshot
 		if (!UcdObject.isUUID(application)) {
@@ -58,7 +58,7 @@ class UcdRemoveSnapshotStatuses extends UcAdfAction {
 		
 		Response response = target.request(MediaType.APPLICATION_JSON).delete()
 		if (response.getStatus() == 204) {
-			logInfo("Application [$application] snapshot [$snapshot] status [$status] removed.")
+			logVerbose("Application [$application] snapshot [$snapshot] status [$status] removed.")
 		} else {
 			throw new UcdInvalidValueException(response)
 		}

@@ -7,6 +7,7 @@ import javax.ws.rs.client.Entity
 import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
+
 import org.urbancode.ucadf.core.action.ucd.component.UcdGetComponent
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.component.UcdComponent
@@ -40,7 +41,7 @@ class UcdCreateComponentConfigTemplate extends UcAdfAction {
 
 		Boolean created = false
 		
-		logInfo("Creating component [$component] configuration template [$name].")
+		logVerbose("Creating component [$component] configuration template [$name].")
 
 		// If an component ID was provided then use it. Otherwise get the component information to get the ID.
 		String componentId = component
@@ -68,12 +69,21 @@ class UcdCreateComponentConfigTemplate extends UcAdfAction {
 
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() == 200) {
-			logInfo("Component [$component] configuration template [$name] created.")
+			logVerbose("Component [$component] configuration template [$name] created.")
 			created = true
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
-			if (response.getStatus() != 405 || failIfExists) {
+			logVerbose(errMsg)
+			
+			Boolean alreadyExists = false
+			if (response.getStatus() == 405) {
+				alreadyExists = true
+			} else if (response.getStatus() == 500 && errMsg ==~ /.*after response has been committed.*/) {
+				// UCD 7.0.4 is returning 500 Cannot forward after response has been committed if it already exists.
+				alreadyExists = true
+			}
+			
+			if (!alreadyExists || (alreadyExists && failIfExists)) {
 				throw new UcdInvalidValueException(errMsg)
 			}
 		}

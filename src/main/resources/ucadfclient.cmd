@@ -20,7 +20,7 @@ set EXITCODE=1
 exit /b %EXITCODE%
 
 :runJar
-%JAVACOMMAND% -Dlog4j.configuration=file:"%~dp0log4j.properties" -jar "%UCADFJAR%" %*
+%JAVACOMMAND% -Dlog4j.configurationFile="%~dp0log4j2.xml" -jar "%UCADFJAR%" %*
 set EXITCODE=%ERRORLEVEL%
 exit /b %EXITCODE%
 

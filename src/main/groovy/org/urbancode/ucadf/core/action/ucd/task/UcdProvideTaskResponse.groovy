@@ -39,11 +39,11 @@ class UcdProvideTaskResponse extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExistExclude(
 			[
-				'properties'
+				'taskProperties'
 			]
 		)
 
-		logInfo("Providing task [$taskId] response [$passFail] comment [$comment].")
+		logVerbose("Providing task [$taskId] response [$passFail] comment [$comment].")
 
 		// Initialize a request map.
 		Map requestMap = [
@@ -59,7 +59,7 @@ class UcdProvideTaskResponse extends UcAdfAction {
 		}
 		
         JsonBuilder jsonBuilder = new JsonBuilder(requestMap)
-        logInfo("jsonBuilder=$jsonBuilder")
+        logVerbose("jsonBuilder=$jsonBuilder")
 		
         WebTarget target = ucdSession.getUcdWebTarget().path("/rest/approval/task/{taskId}/close")
 			.resolveTemplate("taskId", taskId)

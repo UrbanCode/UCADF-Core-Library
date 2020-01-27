@@ -41,7 +41,7 @@ class UcdSetComponentProperties extends UcAdfAction {
 	
 	// Set a component property.
 	public setComponentProperty(final UcdProperty ucdProperty) {
-		logInfo("Setting component [$component] property [${ucdProperty.getName()}] secure [${ucdProperty.getSecure()}]" + (ucdProperty.getSecure() ? "." : " value [${ucdProperty.getValue()}]."))
+		logVerbose("Setting component [$component] property [${ucdProperty.getName()}] secure [${ucdProperty.getSecure()}]" + (ucdProperty.getSecure() ? "." : " value [${ucdProperty.getValue()}]."))
 
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/component/propValue")
 		logDebug("target=$target")
@@ -58,7 +58,7 @@ class UcdSetComponentProperties extends UcAdfAction {
 		
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() == 200) {
-			logInfo("Property [${ucdProperty.getName()}] set.")
+			logVerbose("Property [${ucdProperty.getName()}] set.")
 		} else {
             throw new UcdInvalidValueException(response)
 		}

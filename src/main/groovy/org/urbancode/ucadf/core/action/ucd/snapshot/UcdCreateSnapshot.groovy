@@ -41,7 +41,7 @@ class UcdCreateSnapshot extends UcAdfAction {
 		
 		Boolean created = false
 		
-		logInfo("Creating application [$application] snapshot [$name] with versions\n$versions.")
+		logVerbose("Creating application [$application] snapshot [$name] with versions\n$versions.")
 		
 		Map requestMap = [
 			name: name, 
@@ -56,11 +56,11 @@ class UcdCreateSnapshot extends UcAdfAction {
 		
 		Response response = target.request(MediaType.WILDCARD).accept(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() == 200) {
-			logInfo("UrbanCode [$application] application snapshot [$name] created.")
+			logVerbose("UrbanCode [$application] application snapshot [$name] created.")
 			created = true
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (!(response.getStatus() == 400 && (errMsg ==~ /.*already exists.*/ && !failIfExists))) {
 				throw new UcdInvalidValueException(errMsg)
 			}

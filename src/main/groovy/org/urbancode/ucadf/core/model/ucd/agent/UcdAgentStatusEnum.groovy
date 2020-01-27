@@ -10,7 +10,7 @@ enum UcdAgentStatusEnum {
 	/** The agent is in an error condition. */
 	ERROR,
 	
-	/** The agnet is online. */
+	/** The agent is online. */
 	ONLINE,
 	
 	/** The agent is offline. */

@@ -35,7 +35,7 @@ class UcdRemoveAgentFromTeams extends UcAdfAction {
 			String team = teamSecurityType.getTeam()
 			String subtype = teamSecurityType.getSubtype()
 					
-			logInfo("Remove agent [$agent] from team [$team] subtype [$subtype].")
+			logVerbose("Remove agent [$agent] from team [$team] subtype [$subtype].")
 	
 			// Get the subtype ID.
 			String subtypeId = subtype
@@ -58,11 +58,11 @@ class UcdRemoveAgentFromTeams extends UcAdfAction {
 			
 			Response response = target.request(MediaType.APPLICATION_JSON).delete()
 			if (response.getStatus() == 204) {
-				logInfo("Agent [$agent] removed from team [$team]subtype [$subtype].")
+				logVerbose("Agent [$agent] removed from team [$team]subtype [$subtype].")
 	        } else if (response.getStatus() == 404) {
-	            logInfo("Agent [$agent] team [$team]subtype [$subtype] not found.")
+	            logVerbose("Agent [$agent] team [$team]subtype [$subtype] not found.")
 			} else if (response.getStatus() == 500) {
-				logInfo("Ignoring status ${response.getStatus()} and assuming agent [$agent] team [$team]subtype [$subtype] not found.")
+				logVerbose("Ignoring status ${response.getStatus()} and assuming agent [$agent] team [$team]subtype [$subtype] not found.")
 			} else {
 				throw new UcdInvalidValueException(response)
 			}

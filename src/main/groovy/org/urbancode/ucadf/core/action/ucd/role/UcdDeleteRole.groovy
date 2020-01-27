@@ -33,24 +33,24 @@ class UcdDeleteRole extends UcAdfAction {
 		Boolean deleted = false
 		
 		if (commit) {
-			logInfo("Deleting role [$role]")
+			logVerbose("Deleting role [$role]")
 			WebTarget target = ucdSession.getUcdWebTarget().path("/security/role/{roleName}")
 				.resolveTemplate("roleName", role)
 			logDebug("target=$target")
 
 			Response response = target.request(MediaType.WILDCARD).delete()
 			if (response.getStatus() == 200) {
-				logInfo("Role [$role] deleted.")
+				logVerbose("Role [$role] deleted.")
 				deleted = true
 			} else {
 				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-				logInfo(errMsg)
+				logVerbose(errMsg)
 				if ((response.getStatus() != 404 && response.getStatus() != 500) || failIfNotFound) {
 					throw new UcdInvalidValueException(errMsg)
 				}
 			}
 		} else {
-			logInfo("Would delete role [$role].")
+			logVerbose("Would delete role [$role].")
 		}
 		
 		return deleted

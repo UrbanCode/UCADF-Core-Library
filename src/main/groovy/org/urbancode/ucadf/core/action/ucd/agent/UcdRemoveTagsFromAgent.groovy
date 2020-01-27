@@ -31,7 +31,7 @@ class UcdRemoveTagsFromAgent extends UcAdfAction {
 
 		for (tag in tags) {
 			if (commit) {
-				logInfo("Remove tag [$tag] from agent [$agent].")
+				logVerbose("Remove tag [$tag] from agent [$agent].")
 				
 				WebTarget target = ucdSession.getUcdWebTarget().path("/cli/agentCLI/tag")
 					.queryParam("agent", agent)
@@ -39,12 +39,12 @@ class UcdRemoveTagsFromAgent extends UcAdfAction {
 					
 				Response response = target.request(MediaType.APPLICATION_JSON).delete()
 				if (response.getStatus() == 204) {
-					logInfo("Tag [$tag] removed from agent [$agent].")
+					logVerbose("Tag [$tag] removed from agent [$agent].")
 				} else {
 		            throw new UcdInvalidValueException(response)
 				}
 			} else {
-				logInfo("Would remove tag [$tag] from agent [$agent].")
+				logVerbose("Would remove tag [$tag] from agent [$agent].")
 			}
 		}
 	}

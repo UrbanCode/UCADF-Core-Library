@@ -33,7 +33,7 @@ class UcdAddTagsToResource extends UcAdfAction {
 		validatePropsExist()
 
 		for (tag in tags) {		
-			logInfo("Add tag [$tag] to resource [$resource].")
+			logVerbose("Add tag [$tag] to resource [$resource].")
 	
 			// Validate the resource tag exists so that it's not automatically created.
 			UcdTag ucdTag = actionsRunner.runAction([
@@ -49,7 +49,7 @@ class UcdAddTagsToResource extends UcAdfAction {
 	
 			Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(""))
 			if (response.getStatus() == 204) {
-				logInfo("Tag [$tag] added to resource [$resource].")
+				logVerbose("Tag [$tag] added to resource [$resource].")
 			} else {
 				throw new UcdInvalidValueException(response)
 			}

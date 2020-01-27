@@ -63,7 +63,7 @@ class UcdCreateComponent extends UcAdfAction {
 
 		Boolean created = false
 		
-		logInfo("Creating component [$name].")
+		logVerbose("Creating component [$name].")
 
 		// Get the component template ID.
 		String templateId = template
@@ -100,11 +100,11 @@ class UcdCreateComponent extends UcAdfAction {
 
         Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
         if (response.getStatus() == 200) {
-			logInfo("Component created.")
+			logVerbose("Component created.")
 			created = true
         } else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (!(response.getStatus() == 400 && (errMsg ==~ /.*already exists.*/ && !failIfExists))) {
 				throw new UcdInvalidValueException(errMsg)
 			}

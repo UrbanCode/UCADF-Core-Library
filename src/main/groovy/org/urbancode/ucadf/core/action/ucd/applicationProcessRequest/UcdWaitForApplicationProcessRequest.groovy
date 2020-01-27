@@ -48,7 +48,7 @@ class UcdWaitForApplicationProcessRequest extends UcAdfAction {
 			]
 		)
 
-        logInfo("Waiting up to [$maxWaitSecs] seconds for application process [$requestId] to complete.")
+        logVerbose("Waiting up to [$maxWaitSecs] seconds for application process [$requestId] to complete.")
 
 		Response response
         UcdApplicationProcessRequestStatus ucdApplicationProcessRequestStatus = new UcdApplicationProcessRequestStatus()
@@ -100,7 +100,7 @@ class UcdWaitForApplicationProcessRequest extends UcAdfAction {
 			Thread.sleep(waitIntervalSecs * 1000)
 		}
 				
-        logInfo("Application process result [${ucdApplicationProcessRequestStatus.getResult().getValue()}] status [${ucdApplicationProcessRequestStatus.getStatus().getValue()}].")
+        logVerbose("Application process result [${ucdApplicationProcessRequestStatus.getResult().getValue()}] status [${ucdApplicationProcessRequestStatus.getStatus().getValue()}].")
         
 		// The status it returned to a plugin call via the output properties.
 		outProps.put(
@@ -118,11 +118,11 @@ class UcdWaitForApplicationProcessRequest extends UcAdfAction {
 			ucdApplicationProcessRequestStatus.getStatus().getValue()
 		)
 		
-		logInfo("outProps=$outProps")
+		logVerbose("outProps=$outProps")
 
 		// Write the results properties to a file.
 		if (processResultsFile != null) {
-			logInfo("Writing process request information to [" + processResultsFile + "] file.")
+			logVerbose("Writing process request information to [" + processResultsFile + "] file.")
 			PrintWriter writer = new PrintWriter(processResultsFile, "UTF-8")
 			outProps.each { outPropName, outPropValue ->
 				String line = outPropName + "=" + outPropValue

@@ -44,7 +44,7 @@ class UcdCreateAgentPool extends UcAdfAction {
 
 		Boolean created = false
 				
-		logInfo("Create agent pool [$name].")
+		logVerbose("Create agent pool [$name].")
 
 		// See if the agent pool already exists.
 		UcdAgentPool ucdAgentPool = actionsRunner.runAction([
@@ -58,10 +58,10 @@ class UcdCreateAgentPool extends UcAdfAction {
 			if (failIfExists) {
 				throw new UcdInvalidValueException("Agent pool [$name] already exists.")
 			} else {
-				logInfo("Agent pool [$name] already exists.")
+				logVerbose("Agent pool [$name] already exists.")
 			}
 		} else {
-			logInfo("Agent pool [$name] does not exist.")
+			logVerbose("Agent pool [$name] does not exist.")
 			
 			// Construct a list of agent names to add to the pool.
 			List<String> agentNames = []
@@ -71,7 +71,7 @@ class UcdCreateAgentPool extends UcAdfAction {
 			
 			// If a tag was specified then look for agents with that tag and add them to the list.			
 			if (tag) {
-				logInfo("Finding agents with tag [$tag] to add to pool.")
+				logVerbose("Finding agents with tag [$tag] to add to pool.")
 				List<UcdAgent> ucdAgents = actionsRunner.runAction([
 					action: UcdGetAgents.getSimpleName(),
 					actionInfo: false,
@@ -101,7 +101,7 @@ class UcdCreateAgentPool extends UcAdfAction {
 			
 			Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 			if (response.getStatus() == 200) {
-				logInfo("Agent pool [$name] created.")
+				logVerbose("Agent pool [$name] created.")
 				created = true
 			} else {
 				throw new UcdInvalidValueException(response)

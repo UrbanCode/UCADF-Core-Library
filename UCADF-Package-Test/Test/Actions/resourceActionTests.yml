@@ -40,10 +40,16 @@ actions:
     resource: "${u:coreTestTopResource}"
   
   # Create the top level group resource.
-  - action: UcdCreateGroupResource
-    parent: ""
-    resource: "${u:coreTestTopResource}"
-    failIfExists: false
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdCreateGroupResource
+        parent: ""
+        resource: "${u:coreTestTopResource}"
+        failIfExists: false
 
   # Create a group resource under the top resource with the specified full path.
   - action: UcdCreateGroupResource
@@ -90,11 +96,17 @@ actions:
       - team: "${u:coreTestTeam1}"
     
   # Create an agent pool resource with the specified path.
-  - action: UcdCreateAgentPoolResource
-    parent: ""
-    resource: "${u:coreTestTopResource}/${u:coreTestAgentPool1}"
-    pool: "${u:coreTestAgentPool1}"
-    failIfExists: false
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdCreateAgentPoolResource
+        parent: ""
+        resource: "${u:coreTestTopResource}/${u:coreTestAgentPool1}"
+        pool: "${u:coreTestAgentPool1}"
+        failIfExists: false
 
   # Create an agent pool resource with the specified parent path and resource name.
   - action: UcdCreateAgentPoolResource
@@ -104,11 +116,17 @@ actions:
     failIfExists: false
 
   # Create an agent resource with the specified path.
-  - action: UcdCreateAgentResource
-    parent: ""
-    resource: "${u:coreTestTopResource}/${u:agents/0/name}"
-    agent: "${u:agents/0/name}"
-    failIfExists: false
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdCreateAgentResource
+        parent: ""
+        resource: "${u:coreTestTopResource}/${u:agents/0/name}"
+        agent: "${u:agents/0/name}"
+        failIfExists: false
 
   # Create an agent resource with the specified parent path and resource name.
   - action: UcdCreateAgentResource
@@ -118,11 +136,17 @@ actions:
     failIfExists: false
 
   # Create a component resource with the specified path.
-  - action: UcdCreateComponentResource
-    parent: ""
-    resource: "${u:coreTestTopResource}/${u:agents/0/name}/${u:coreTestComp1}"
-    component: "${u:coreTestComp1}"
-    failIfExists: false
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdCreateComponentResource
+        parent: ""
+        resource: "${u:coreTestTopResource}/${u:agents/0/name}/${u:coreTestComp1}"
+        component: "${u:coreTestComp1}"
+        failIfExists: false
 
   # Create a component resource with the specified parent path and resource name.
   - action: UcdCreateComponentResource
@@ -164,12 +188,18 @@ actions:
     version: "${u:coreTestVersion1}"
 
   # Create a resource tag.
-  - action: UcdCreateResourceTag
-    name: "${u:coreTestResourceTag1}"
-    color: "RED"
-    description: "Test resource tag."
-    resource: "${u:coreTestTopResource}"
-    failIfExists: false
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdCreateResourceTag
+        name: "${u:coreTestResourceTag1}"
+        color: "RED"
+        description: "Test resource tag."
+        resource: "${u:coreTestTopResource}"
+        failIfExists: false
     
   # Add tag to resource.
   - action: UcdAddTagsToResource
@@ -292,7 +322,7 @@ actions:
 
       # If the property value has been set then break.          
       - action: UcAdfLoopBreak
-        when: 'Eval("${u?:propertyValue/id}" != "")'
+        when: '"${u?:propertyValue/id}" != ""'
       - action: UcAdfComment
         comment: "maxwaitSecs=%s"
         values:
@@ -300,7 +330,7 @@ actions:
 
       # If the 2nd try then set the resource property.        
       - action: UcdSetResourceProperties
-        when: 'Eval(${u:waitLoopControl/currentTry} == 2)'
+        when: '${u:waitLoopControl/currentTry} == 2'
         resource: "${u:coreTestTopResource}"
         properties:
           - name: "${u:coreTestProperty2}"

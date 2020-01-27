@@ -44,7 +44,7 @@ class UcdCreateSnapshotWithLatest extends UcAdfAction {
 		])
 
 		for (ucdComponent in ucdComponents) {
-			logInfo("Getting latest version of component ${ucdComponent.getName()}.")
+			logVerbose("Getting latest version of component ${ucdComponent.getName()}.")
 			
 			UcdVersion ucdVersion = actionsRunner.runAction([
 				action: UcdGetComponentLatestVersion.getSimpleName(),
@@ -54,7 +54,7 @@ class UcdCreateSnapshotWithLatest extends UcAdfAction {
 			])
 			
 			if (ucdVersion) {
-				logInfo("Latest version of component ${ucdComponent.getName()} is ${ucdVersion.getName()}.")
+				logVerbose("Latest version of component ${ucdComponent.getName()} is ${ucdVersion.getName()}.")
 				latestVersions.add(
 					[
 						(ucdComponent.getName()): ucdVersion.getName()

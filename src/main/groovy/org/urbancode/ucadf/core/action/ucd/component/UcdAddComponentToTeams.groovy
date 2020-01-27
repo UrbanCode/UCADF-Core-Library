@@ -56,7 +56,7 @@ class UcdAddComponentToTeams extends UcAdfAction {
 		final String teamName, 
 		final String subtype) {
 		
-		logInfo("Adding component [$component] to team [$teamName] subtype [$subtype].")
+		logVerbose("Adding component [$component] to team [$teamName] subtype [$subtype].")
 
 		// Get the subtype name required for the API call.
 		String subtypeName = subtype
@@ -78,7 +78,7 @@ class UcdAddComponentToTeams extends UcAdfAction {
 
         Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(""))
         if (response.getStatus() == 204) {
-            logInfo("Component added to team.")
+            logVerbose("Component added to team.")
         } else {
             throw new UcdInvalidValueException(response)
         }
@@ -107,7 +107,7 @@ class UcdAddComponentToTeams extends UcAdfAction {
 			}
 			
 			if (removeTeam) {
-				logInfo("Removing team [${team.getTeamName()}] role [${team.getSubtypeName()}].")
+				logVerbose("Removing team [${team.getTeamName()}] role [${team.getSubtypeName()}].")
 				
 				WebTarget removeTargetWithParams = ucdSession.getUcdWebTarget().path("/cli/component/teams")
 					.queryParam("component", component)

@@ -60,7 +60,7 @@ class UcdGetChildResources extends UcAdfAction {
 			}
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (response.getStatus() != 404 || failIfNotFound) {
 				throw new UcdInvalidValueException(errMsg)
 			}

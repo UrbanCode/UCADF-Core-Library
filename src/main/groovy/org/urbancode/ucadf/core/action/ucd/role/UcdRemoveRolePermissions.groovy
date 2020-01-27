@@ -38,7 +38,7 @@ class UcdRemoveRolePermissions extends UcAdfAction {
 		
 		// Add role permissions.
 		for (permission in permissions) {
-			logInfo("Removing role [$role] subtype [$subtype] permission [$permission].")
+			logVerbose("Removing role [$role] subtype [$subtype] permission [$permission].")
 			
 			// Must the the non-compliant HTTP client to pass in a DELETE body.
 			WebTarget target = ucdSession.getWebNonCompliantClient().target(ucdSession.getUcdUrl()).path("/security/role/{role}/actionMappings")
@@ -66,7 +66,7 @@ class UcdRemoveRolePermissions extends UcAdfAction {
 			target.request().accept(MediaType.TEXT_PLAIN).method("DELETE", Entity.json(jsonBuilder.toString()))
 			Response response = target.request().accept(MediaType.TEXT_PLAIN).method("DELETE", Entity.json(jsonBuilder.toString()))
 			if (response.getStatus() == 200) {
-				logInfo("Role [$role] subtype [$subtype] permission [$permission] removed.")
+				logVerbose("Role [$role] subtype [$subtype] permission [$permission] removed.")
 			} else {
 				throw new UcdInvalidValueException(response)
 			}

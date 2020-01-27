@@ -34,7 +34,7 @@ class UcdGetEnvironment extends UcAdfAction {
 
 		UcdEnvironment ucdEnvironment
 		
-		logInfo("Getting application [$application] environment [$environment].")
+		logVerbose("Getting application [$application] environment [$environment].")
 		
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/environment/info")
 			.queryParam("application", application)
@@ -47,7 +47,7 @@ class UcdGetEnvironment extends UcAdfAction {
 			ucdEnvironment = response.readEntity(UcdEnvironment)
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (response.getStatus() == 404 || response.getStatus() == 403) {
 				if (failIfNotFound) {
 					throw new UcdInvalidValueException(errMsg)
@@ -68,7 +68,7 @@ class UcdGetEnvironment extends UcAdfAction {
 				ucdEnvironment = response.readEntity(UcdEnvironment)
 			} else {
 				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-				logInfo(errMsg)
+				logVerbose(errMsg)
 				if (response.getStatus() == 404 || response.getStatus() == 403) {
 					if (failIfNotFound) {
 						throw new UcdInvalidValueException(errMsg)

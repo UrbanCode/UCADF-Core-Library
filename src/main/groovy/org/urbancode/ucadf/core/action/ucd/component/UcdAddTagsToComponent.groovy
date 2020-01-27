@@ -29,7 +29,7 @@ class UcdAddTagsToComponent extends UcAdfAction {
 		validatePropsExist()
 
 		for (tag in tags) {		
-			logInfo("Add tag [$tag] to component [$component].")
+			logVerbose("Add tag [$tag] to component [$component].")
 	
 			// Validate the component tag exists so that it's not automatically created.
 			UcdTag ucdTag = actionsRunner.runAction([
@@ -44,7 +44,7 @@ class UcdAddTagsToComponent extends UcAdfAction {
 	
 			Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(""))
 			if (response.getStatus() == 204) {
-				logInfo("Tag [$tag] added to component [$component].")
+				logVerbose("Tag [$tag] added to component [$component].")
 			} else {
 				throw new UcdInvalidValueException(response)
 			}

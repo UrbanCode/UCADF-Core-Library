@@ -41,7 +41,7 @@ class UcdGetPostProcessingScript extends UcAdfAction {
 				ucdPostProcessingScript = response.readEntity(UcdPostProcessingScript)
 			} else {
 				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-				logInfo(errMsg)
+				logVerbose(errMsg)
 				if ((response.getStatus() != 404 && response.getStatus() != 500) || failIfNotFound) {
 					throw new UcdInvalidValueException(errMsg)
 				}

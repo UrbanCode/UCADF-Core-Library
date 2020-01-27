@@ -23,7 +23,7 @@ class UcdGetPostProcessingScripts extends UcAdfAction {
 
 		List<UcdPostProcessingScript> ucdPostProcessingScripts
 
-		logInfo("Getting post processing scripts.")
+		logVerbose("Getting post processing scripts.")
 				
 		WebTarget target = ucdSession.getUcdWebTarget().path("/rest/script/postprocessing")
 		logDebug("target=$target")

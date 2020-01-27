@@ -51,10 +51,10 @@ class UcdCreateAgentTag extends UcAdfAction {
 			if (failIfExists) {
 				throw new UcdInvalidValueException("Agent tag [$name] already exists.")
 			} else {
-				logInfo("Agent tag [$name] already exists.")
+				logVerbose("Agent tag [$name] already exists.")
 			}
 		} else {
-			logInfo("Create agent tag [$name].")
+			logVerbose("Create agent tag [$name].")
 		
 			// The only way to create a new tag is by adding it to an agent temporarily.
 			List<UcdAgent> ucdAgents = actionsRunner.runAction([
@@ -84,7 +84,7 @@ class UcdCreateAgentTag extends UcAdfAction {
 	
 			Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 			if (response.getStatus() == 204) {
-	            logInfo("Agent tag [$name] created.")
+	            logVerbose("Agent tag [$name] created.")
 				created = true
 			} else {
 				throw new UcdInvalidValueException(response)

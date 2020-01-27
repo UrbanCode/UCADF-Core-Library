@@ -43,7 +43,7 @@ class UcdExportComponentTemplate extends UcAdfAction {
 			componentTemplateId = ucdComponentTemplate.getId()
 		}
 		
-		logInfo("\n=== Exporting Component template [$componentTemplate] from [${ucdSession.getUcdUrl()}] ===")
+		logVerbose("\n=== Exporting Component template [$componentTemplate] from [${ucdSession.getUcdUrl()}] ===")
 
 		WebTarget target = ucdSession.getUcdWebTarget().path("/rest/deploy/componentTemplate/{componentTemplateId}")
 			.resolveTemplate("componentTemplateId", componentTemplateId)
@@ -58,7 +58,7 @@ class UcdExportComponentTemplate extends UcAdfAction {
 		
 		// Optionally save to file.
 		if (fileName) {
-			logInfo("Saving export to file [$fileName].")
+			logVerbose("Saving export to file [$fileName].")
 			
 			File exportFile = new File(fileName)
 			

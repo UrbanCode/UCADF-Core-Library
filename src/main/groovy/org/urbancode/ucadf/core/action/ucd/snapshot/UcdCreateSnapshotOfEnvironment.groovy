@@ -42,7 +42,7 @@ class UcdCreateSnapshotOfEnvironment extends UcAdfAction {
 		
 		Boolean created = false
 		
-		logInfo("Creating application [$application] snapshot [$name] with versions from environment [$environment].")
+		logVerbose("Creating application [$application] snapshot [$name] with versions from environment [$environment].")
 		
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/snapshot/createSnapshotOfEnvironment")
 			.queryParam("environment", environment)
@@ -54,11 +54,11 @@ class UcdCreateSnapshotOfEnvironment extends UcAdfAction {
 		
 		Response response = target.request(MediaType.WILDCARD).accept(MediaType.APPLICATION_JSON).put(Entity.text(""))
 		if (response.getStatus() == 200) {
-			logInfo("Application [$application] snapshot [$name] created of environment [$environment].")
+			logVerbose("Application [$application] snapshot [$name] created of environment [$environment].")
 			created = true
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (!(response.getStatus() == 400 && (errMsg ==~ /.*already exists.*/ && !failIfExists))) {
 				throw new UcdInvalidValueException(errMsg)
 			}

@@ -70,16 +70,16 @@ class UcdDeleteUnusedAgents extends UcAdfAction {
 		if (response.getStatus() == 200) {
 			ucdAgents = response.readEntity(new GenericType<List<UcdAgent>>(){})
 		} else {
-			logInfo(response.readEntity(String.class))
+			logVerbose(response.readEntity(String.class))
 			throw new Exception("Status: ${response.getStatus()} Unable to get list of agents. $target")
 		}
 
-		logInfo("Found [${ucdAgents.size()}] agents that haven't been contacted since [$lastContactDate]."		)
+		logVerbose("Found [${ucdAgents.size()}] agents that haven't been contacted since [$lastContactDate]."		)
 
 		// Evaluate each agent and delete if possible.
 		for (ucdAgent in ucdAgents) {
 			Date lastAgentContactDate = new Date(ucdAgent.getLastContact())
-			logInfo("Evaluating agent [${ucdAgent.getName()}] last contact [$lastAgentContactDate] created [${ucdAgent.getDateCreated()}].")
+			logVerbose("Evaluating agent [${ucdAgent.getName()}] last contact [$lastAgentContactDate] created [${ucdAgent.getDateCreated()}].")
 			
 			target = ucdSession.getUcdWebTarget().path("/rest/agent/{agentId}/resources")
 				.resolveTemplate("agentId", ucdAgent.getId())
@@ -91,12 +91,12 @@ class UcdDeleteUnusedAgents extends UcAdfAction {
 			if (response.getStatus() == 200) {
 				ucdResources = response.readEntity(new GenericType<List<UcdResource>>(){})
 			} else {
-				logInfo(response.readEntity(String.class))
+				logVerbose(response.readEntity(String.class))
 				throw new Exception("Status: ${response.getStatus()} Unable to get agent resources. $target")
 			}
 
 			if (ucdResources.size() > 0) {			
-				logInfo("Skipping agent [${ucdAgent.getName()}] associated with [${ucdResources.size()}] resources.")
+				logVerbose("Skipping agent [${ucdAgent.getName()}] associated with [${ucdResources.size()}] resources.")
 				continue
 			}
 

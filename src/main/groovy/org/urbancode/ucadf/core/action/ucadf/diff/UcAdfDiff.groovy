@@ -102,7 +102,7 @@ class UcAdfDiff extends UcAdfAction {
 	
 	// Find the differences between application process names in two different applications.
 	private diffApplicationProcesses() {
-		logInfo("Finding differences between application [$name1] and [$name2] processes.")
+		logVerbose("Finding differences between application [$name1] and [$name2] processes.")
 		
 		List<UcdApplicationProcess> appProcesses1 = actionsRunner.runAction([
 			action: UcdGetApplicationProcesses.getSimpleName(),
@@ -126,7 +126,7 @@ class UcAdfDiff extends UcAdfAction {
 	
 	 // Find the differences between component process names in two different components.
 	private diffComponentProcesses() {
-		logInfo("Finding differences beteween component [$name1] and [$name2] processes.")
+		logVerbose("Finding differences beteween component [$name1] and [$name2] processes.")
 		
 		List<UcdComponentProcess> compProcesses1 = actionsRunner.runAction([
 			action: UcdGetComponentProcesses.getSimpleName(),
@@ -148,7 +148,7 @@ class UcAdfDiff extends UcAdfAction {
 
 	 // Find the differences between component property names in two different components.
 	private diffComponentProperties() {
-		logInfo("Finding differences between component [$name1] and [$name2] properties.")
+		logVerbose("Finding differences between component [$name1] and [$name2] properties.")
 		
 		List<UcdProperty> compProperties1 = actionsRunner.runAction([
 			action: UcdGetComponentProperties.getSimpleName(),
@@ -172,7 +172,7 @@ class UcAdfDiff extends UcAdfAction {
 	
 	 // Find the differences between component template process names in two different component templates.
 	private diffComponentTemplateProcesses() {
-		logInfo("Finding differences between component template [$name1] and [$name2] processes.")
+		logVerbose("Finding differences between component template [$name1] and [$name2] processes.")
 		
 		List<UcdComponentProcess> compTemplateProcesses1 = actionsRunner.runAction([
 			action: UcdGetComponentTemplateProcesses.getSimpleName(),
@@ -194,7 +194,7 @@ class UcAdfDiff extends UcAdfAction {
 
 	 // Find the differences between component template property names in two different component templates.
 	private diffComponentTemplateProperties() {
-		logInfo("Finding differences between component template [$name1] and [$name2] properties.")
+		logVerbose("Finding differences between component template [$name1] and [$name2] properties.")
 		
 		List<UcdProperty> compTemplateProperties1 = actionsRunner.runAction([
 			action: UcdGetComponentProperties.getSimpleName(),

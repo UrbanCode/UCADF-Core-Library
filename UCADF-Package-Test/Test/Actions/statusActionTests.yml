@@ -13,22 +13,28 @@ actions:
   #------------------------------------
   # Snapshot statuses.
   #------------------------------------
-  # Create snapshot statuses.
-  - action: UcdCreateStatus
-    type: SNAPSHOT
-    name: "${u:coreTestSnapshotStatus1}"
-    color: RED
-    failIfExists: false
-  - action: UcdCreateStatus
-    type: SNAPSHOT
-    name: "${u:coreTestSnapshotStatus2}"
-    color: RED
-    failIfExists: false
-  - action: UcdCreateStatus
-    type: SNAPSHOT
-    name: "${u:coreTestSnapshotStatusDelete}"
-    color: RED
-    failIfExists: false
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      # Create snapshot statuses.
+      - action: UcdCreateStatus
+        type: SNAPSHOT
+        name: "${u:coreTestSnapshotStatus1}"
+        color: RED
+        failIfExists: false
+      - action: UcdCreateStatus
+        type: SNAPSHOT
+        name: "${u:coreTestSnapshotStatus2}"
+        color: RED
+        failIfExists: false
+      - action: UcdCreateStatus
+        type: SNAPSHOT
+        name: "${u:coreTestSnapshotStatusDelete}"
+        color: RED
+        failIfExists: false
     
   # Delete a snapshot status.
   - action: UcdDeleteStatus
@@ -48,22 +54,28 @@ actions:
   #------------------------------------
   # Version statuses.
   #------------------------------------
-   # Create version statuses.
-  - action: UcdCreateStatus
-    type: VERSION
-    name: "${u:coreTestVersionStatus1}"
-    color: RED
-    failIfExists: false
-  - action: UcdCreateStatus
-    type: VERSION
-    name: "${u:coreTestVersionStatus2}"
-    color: RED
-    failIfExists: false
-  - action: UcdCreateStatus
-    type: VERSION
-    name: "${u:coreTestVersionStatusDelete}"
-    color: RED
-    failIfExists: false
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      # Create version statuses.
+      - action: UcdCreateStatus
+        type: VERSION
+        name: "${u:coreTestVersionStatus1}"
+        color: RED
+        failIfExists: false
+      - action: UcdCreateStatus
+        type: VERSION
+        name: "${u:coreTestVersionStatus2}"
+        color: RED
+        failIfExists: false
+      - action: UcdCreateStatus
+        type: VERSION
+        name: "${u:coreTestVersionStatusDelete}"
+        color: RED
+        failIfExists: false
 
   # Delete a version status.
   - action: UcdDeleteStatus

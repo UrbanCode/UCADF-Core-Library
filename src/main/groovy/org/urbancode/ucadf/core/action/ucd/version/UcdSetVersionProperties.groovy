@@ -12,6 +12,7 @@ import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
 import org.urbancode.ucadf.core.model.ucd.system.UcdSession
+import org.urbancode.ucadf.core.model.ucd.version.UcdVersion
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
@@ -45,7 +46,20 @@ class UcdSetVersionProperties extends UcAdfAction {
 	
 	// Set version property value.
 	public setVersionProperty(final UcdProperty ucdProperty) {
-		logInfo("Setting component [$component] version [$version] property [${ucdProperty.getName()}] secure [${ucdProperty.getSecure()}]" + (ucdProperty.getSecure() ? "." : " value [${ucdProperty.getValue()}]."))
+		logVerbose("Setting component [$component] version [$version] property [${ucdProperty.getName()}] secure [${ucdProperty.getSecure()}]" + (ucdProperty.getSecure() ? "." : " value [${ucdProperty.getValue()}]."))
+
+		// Work around 7.0 bug where it converts a version name with 4 hyphens to a UUID.
+		if (isIncorrectlyInterpretedAsUUID(version)) {
+			UcdVersion ucdVersion = actionsRunner.runAction([
+				action: UcdGetVersion.getSimpleName(),
+				actionInfo: false,
+				component: component,
+				version: version,
+				failIfNotFound: true
+			])
+			
+			version = ucdVersion.getId()
+		}
 		
 		WebTarget target
 		Response response
@@ -78,7 +92,7 @@ class UcdSetVersionProperties extends UcAdfAction {
 		}
 		
 		if (response.getStatus() == 200) {
-			logInfo("Property [${ucdProperty.getName()}] set.")
+			logVerbose("Property [${ucdProperty.getName()}] set.")
 		} else {
             throw new UcdInvalidValueException(response)
 		}

@@ -28,7 +28,7 @@ class UcdExportComponent extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("\n=== Exporting Component [$component] from [${ucdSession.getUcdUrl()}] ===")
+		logVerbose("\n=== Exporting Component [$component] from [${ucdSession.getUcdUrl()}] ===")
 
 		UcdComponentImport ucdComponentImport = new UcdComponentImport()
 				
@@ -45,7 +45,7 @@ class UcdExportComponent extends UcAdfAction {
 		
 		// Optionally save to file.
 		if (fileName) {
-			logInfo("Saving component [$component] export to file [$fileName].")
+			logVerbose("Saving component [$component] export to file [$fileName].")
 			
 			File exportFile = new File(fileName)
 			

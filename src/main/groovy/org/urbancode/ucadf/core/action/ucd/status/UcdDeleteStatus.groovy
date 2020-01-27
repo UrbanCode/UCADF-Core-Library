@@ -36,9 +36,9 @@ class UcdDeleteStatus extends UcAdfAction {
 		Boolean deleted = false
 				
 		if (!commit) {
-			logInfo("Would delete type [$type] status [$status].")
+			logVerbose("Would delete type [$type] status [$status].")
 		} else {
-			logInfo("Deleting type [$type] status [$status].")
+			logVerbose("Deleting type [$type] status [$status].")
 			
 			WebTarget target = ucdSession.getUcdWebTarget().path("/cli/status")
 				.queryParam("type", type)
@@ -47,11 +47,11 @@ class UcdDeleteStatus extends UcAdfAction {
 			
 			Response response = target.request().delete()
 			if (response.getStatus() == 204) {
-				logInfo("Status type [$type] status [$status] deleted.")
+				logVerbose("Status type [$type] status [$status] deleted.")
 				deleted = true
 			} else {
 				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-				logInfo(errMsg)
+				logVerbose(errMsg)
 				// Returns a 400 error with a 'Cannot change the ghosted date once set' for the deleted statuses.
 				if ((response.getStatus() != 400 && response.getStatus() != 404) || failIfNotFound) {
 					throw new UcdInvalidValueException(errMsg)

@@ -27,7 +27,7 @@ class UcdIsExternalLoginUser extends UcAdfAction {
 		
 		Boolean isExternalLoginUser = false
 
-		logInfo("Determining if user [$user] is an external login user.")
+		logVerbose("Determining if user [$user] is an external login user.")
 
 		// Get the user information.				
 		UcdUser ucdUser = actionsRunner.runAction([
@@ -50,7 +50,7 @@ class UcdIsExternalLoginUser extends UcAdfAction {
 			}
 		}
 		
-		logInfo("Is external login user [$isExternalLoginUser].")
+		logVerbose("Is external login user [$isExternalLoginUser].")
 		
 		return isExternalLoginUser
 	}

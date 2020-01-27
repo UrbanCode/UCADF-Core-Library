@@ -29,7 +29,7 @@ class UcdGetResourceTag extends UcAdfAction {
 
 		UcdTag ucdTag
 		
-		logInfo("Getting resource tag [$tag].")
+		logVerbose("Getting resource tag [$tag].")
 	
 		WebTarget target = ucdSession.getUcdWebTarget().path("/rest/tag/type/Resource/name/{tag}")
 			.resolveTemplate("tag", tag)
@@ -40,7 +40,7 @@ class UcdGetResourceTag extends UcAdfAction {
 			ucdTag = response.readEntity(UcdTag.class)
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (response.getStatus() != 400 || failIfNotFound) {
 				throw new UcdInvalidValueException(errMsg)
 			}

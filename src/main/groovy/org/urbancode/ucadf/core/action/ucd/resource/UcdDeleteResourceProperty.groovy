@@ -31,16 +31,16 @@ class UcdDeleteResourceProperty extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Delete resource [$resource] property [$property] commit [$commit].")
+		logVerbose("Delete resource [$resource] property [$property] commit [$commit].")
 		if (!commit) {
-			logInfo("Would delete resource [$resource] property [$property].")
+			logVerbose("Would delete resource [$resource] property [$property].")
 		} else {
 			WebTarget target = ucdSession.getUcdWebTarget().path("/cli/resource/deleteProperty")
 				.queryParam("resource", resource)
 				.queryParam("name", property)
 			Response response = target.request(MediaType.APPLICATION_JSON).delete()
 			if (response.getStatus() == 204) {
-				logInfo("Resource [$resource] property [$property] deleted.")
+				logVerbose("Resource [$resource] property [$property] deleted.")
 			} else if (response.getStatus() != 400 || failIfNotFound) {
 				throw new UcdInvalidValueException(response)
 			}

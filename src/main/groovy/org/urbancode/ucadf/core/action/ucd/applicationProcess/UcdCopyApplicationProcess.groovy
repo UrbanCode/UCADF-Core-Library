@@ -26,8 +26,8 @@ class UcdCopyApplicationProcess extends UcAdfAction {
 	/** The to application name or ID. */
 	String toApplication
 
-	/** The replacement list. */
-	List<UcdApplicationProcessReplacement> replaceList = []
+	/** (Optional) The list of application process replacements expressions. If not specified then the default list is used. Which is fromname->toname and value: "***"->value: "" **/
+	List<UcdApplicationProcessReplacement> replaceList
 	
 	/** If true then replace the existing process. Default is true. TODO: Is this needed? */
 	Boolean replaceProcess = true
@@ -38,20 +38,21 @@ class UcdCopyApplicationProcess extends UcAdfAction {
 	@Override
 	public Object run() {
 		// Validate the action properties.
-		validatePropsExist()
+		validatePropsExistExclude([ 'replaceList' ])
 		
 		// Initialize a default replace list if none provided.
-		if (replaceList.size() == 0) {
+		if (!replaceList) {
 			replaceList = UcdApplicationProcessReplacement.getDefaultReplaceList(fromApplication, toApplication)
 		}
 		
 		UcdApplicationProcess fromProcess = actionsRunner.runAction([
 			action: UcdGetApplicationProcess.getSimpleName(),
+			actionInfo: false,
 			application: fromApplication,
 			process: fromProcess
 		])
 
-		logInfo("Copying application process [${fromProcess.getName()}] from application [$fromApplication] to [$toApplication] replace process [$replaceProcess].")
+		logVerbose("Copying application process [${fromProcess.getName()}] from application [$fromApplication] to [$toApplication] replace process [$replaceProcess].")
 		
 		logDebug("Original process.rootActivity\n" + new JsonBuilder(fromProcess.getRootActivity()).toPrettyString())
 		logDebug("Original process.propDefs\n" + new JsonBuilder(fromProcess.getPropDefs()).toPrettyString())
@@ -93,6 +94,8 @@ class UcdCopyApplicationProcess extends UcAdfAction {
 			// In the future, may need to throw an exception and not delete if there's a secured property that can't be copied.
 			actionsRunner.runAction([
 				action: UcdDeleteApplicationProcess.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: actionVerbose,
 				application: toApplication,
 				process: fromProcess.getName()
 			])
@@ -101,6 +104,8 @@ class UcdCopyApplicationProcess extends UcAdfAction {
 		// Create the application process.
 		actionsRunner.runAction([
 			action: UcdCreateApplicationProcess.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: actionVerbose,
 			application: toApplication,
 			name: fromProcess.getName(),
 			description: fromProcess.getDescription(),
@@ -114,6 +119,8 @@ class UcdCopyApplicationProcess extends UcAdfAction {
 		if (fromProcess.getRequiredRoleId()) {
 			actionsRunner.runAction([
 				action: UcdUpdateApplicationProcess.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: actionVerbose,
 				application: toApplication,
 				process: fromProcess.getName(),
 				requiredRole: fromProcess.getRequiredRoleId()

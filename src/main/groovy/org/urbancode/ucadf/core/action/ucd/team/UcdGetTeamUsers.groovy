@@ -3,6 +3,7 @@
  */
 package org.urbancode.ucadf.core.action.ucd.team
 
+import org.urbancode.ucadf.core.action.ucd.group.UcdGetGroupMembers
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.team.UcdTeam
 import org.urbancode.ucadf.core.model.ucd.user.UcdUser
@@ -67,11 +68,11 @@ class UcdGetTeamUsers extends UcAdfAction {
 			// If the role mapping is to a group then add the users that are members of that group.
             if (ucdRoleMapping.getGroup()) {
 				List<UcdUser> ucdGroupUsers = actionsRunner.runAction([
-					action: UcdGetTeam.getSimpleName(),
+					action: UcdGetGroupMembers.getSimpleName(),
 					actionInfo: actionInfo,
 					group: ucdRoleMapping.getGroup().getName()
 				])
-				
+
 				for (ucdUser in ucdGroupUsers) {
 					if (!ucdUsersMap.containsKey(ucdUser.getName())) {
 						ucdUsersMap.put(

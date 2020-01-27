@@ -27,7 +27,7 @@ class UcdAddComponentToApplication extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Adding component [$component] to application [$application].")
+		logVerbose("Adding component [$component] to application [$application].")
 		
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/application/addComponentToApp")
 			.queryParam("application", application)
@@ -35,7 +35,7 @@ class UcdAddComponentToApplication extends UcAdfAction {
 			
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(""))
 		if (response.getStatus() == 200) {
-			logInfo("Component [$component] added to application [$application].")
+			logVerbose("Component [$component] added to application [$application].")
 		} else {
             throw new UcdInvalidValueException(response)
 		}

@@ -27,7 +27,7 @@ class UcdGetGenericProcesses extends UcAdfAction {
 
 		List<UcdGenericProcess> ucdGenericProcesses = []
 			
-		logInfo("Getting generic processes.")
+		logVerbose("Getting generic processes.")
 	
 		WebTarget target = ucdSession.getUcdWebTarget().path("/rest/process")
 		logDebug("target=$target")

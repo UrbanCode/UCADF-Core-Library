@@ -42,7 +42,7 @@ class UcdCreateAgentPoolResource extends UcAdfAction {
 
 		String resourcePath = "${parent}/${name}"
 
-		logInfo("Creating agent pool resource [$resourcePath].")
+		logVerbose("Creating agent pool resource [$resourcePath].")
 
 		created = actionsRunner.runAction([
 			action: UcdCreateResource.getSimpleName(),

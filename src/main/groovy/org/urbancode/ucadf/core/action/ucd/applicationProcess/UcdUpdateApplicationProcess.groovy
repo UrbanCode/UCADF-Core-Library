@@ -53,7 +53,7 @@ class UcdUpdateApplicationProcess extends UcAdfAction {
 			"requiredRole"
 		])
 
-		logInfo("Updating application [$application] process [$process].")
+		logVerbose("Updating application [$application] process [$process].")
 	
 		UcdApplicationProcess ucdApplicationProcess = actionsRunner.runAction([
 			action: UcdGetApplicationProcess.getSimpleName(),
@@ -63,7 +63,7 @@ class UcdUpdateApplicationProcess extends UcAdfAction {
 			failIfNotFound: true
 		])
 		
-        logInfo("Updating application [$application] process [$process] version [${ucdApplicationProcess.getVersion()}].")
+        logVerbose("Updating application [$application] process [$process] version [${ucdApplicationProcess.getVersion()}].")
 		
 		// If an required role ID was provided then use it. Otherwise get the role information to get the ID.
 		String requiredRoleId = requiredRole
@@ -96,7 +96,7 @@ class UcdUpdateApplicationProcess extends UcAdfAction {
 
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() == 200) {
-			logInfo("Application [$application] process [$process] basic information updated.")
+			logVerbose("Application [$application] process [$process] basic information updated.")
 		} else {
             throw new UcdInvalidValueException(response)
 		}

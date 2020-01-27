@@ -45,7 +45,7 @@ class UcdSetResourceProperties extends UcAdfAction {
 	public setResourceProperty(
 		final UcdProperty ucdProperty) {
 		
-		logInfo("Setting resource [$resource] property name [${ucdProperty.getName()}] secure [${ucdProperty.getSecure()}]" + (ucdProperty.getSecure() ? "." : " value [${ucdProperty.getValue()}]."))
+		logVerbose("Setting resource [$resource] property name [${ucdProperty.getName()}] secure [${ucdProperty.getSecure()}]" + (ucdProperty.getSecure() ? "." : " value [${ucdProperty.getValue()}]."))
 
 		WebTarget target
 		Response response
@@ -84,7 +84,7 @@ class UcdSetResourceProperties extends UcAdfAction {
 		}
 		
 		if (response.getStatus() == 200) {
-			logInfo("Property [${ucdProperty.getName()}] set.")
+			logVerbose("Property [${ucdProperty.getName()}] set.")
 		} else {
 			throw new UcdInvalidValueException(response)
 		}

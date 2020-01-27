@@ -50,7 +50,7 @@ class UcdImportLdapUsers extends UcAdfAction {
 		for (user in users) {
 			String userName = user.trim()
 			
-			logInfo("Importing user [$userName] into authentication realm [$authenticationRealm].")
+			logVerbose("Importing user [$userName] into authentication realm [$authenticationRealm].")
 			
 			WebTarget target = ucdSession.getUcdWebTarget().path("/security/authenticationRealm/{realmName}/importUsers/{userName}")
 				.resolveTemplate("realmName", authenticationRealm)

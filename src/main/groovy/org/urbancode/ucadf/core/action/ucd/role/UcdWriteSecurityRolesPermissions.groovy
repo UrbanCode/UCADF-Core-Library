@@ -48,7 +48,7 @@ class UcdWriteSecurityRolesPermissions extends UcAdfAction {
 		// Initialize the temporary working directory.
 		file.getParentFile()?.mkdirs()
 
-		logInfo("Writing security actions to file [${file.getAbsolutePath()}].")
+		logVerbose("Writing security actions to file [${file.getAbsolutePath()}].")
 
 		// Get the list of roles.
 		ucdRoles = actionsRunner.runAction([
@@ -81,7 +81,7 @@ class UcdWriteSecurityRolesPermissions extends UcAdfAction {
 
 	// Add create role actions.
 	private addCreateRoleActions() {
-		logInfo("Adding ${UcdCreateRole.getSimpleName()} actions.")
+		logVerbose("Adding ${UcdCreateRole.getSimpleName()} actions.")
 		
 		// For each role to be added to security, add a create role action to the list.
 		for (role in ucdRolesMap.keySet()) {
@@ -98,7 +98,7 @@ class UcdWriteSecurityRolesPermissions extends UcAdfAction {
 
 	// Add create security subtype actions.
 	private addCreateSecuritySubtypeActions() {
-		logInfo("Adding ${UcdCreateSecuritySubtype.getSimpleName()} actions.")
+		logVerbose("Adding ${UcdCreateSecuritySubtype.getSimpleName()} actions.")
 		
 		// Get the list of the security subtypes.
 		List<UcdSecuritySubtype> ucdSecuritySubtypes = actionsRunner.runAction([
@@ -138,7 +138,7 @@ class UcdWriteSecurityRolesPermissions extends UcAdfAction {
 
 	// Add role permission actions.
 	private addRolePermissions() {
-		logInfo("Adding ${UcdAddRolePermissions.getSimpleName()} actions.")
+		logVerbose("Adding ${UcdAddRolePermissions.getSimpleName()} actions.")
 		
 		for (role in ucdRolesMap.keySet()) {
 			UcdRole ucdRole = actionsRunner.runAction([

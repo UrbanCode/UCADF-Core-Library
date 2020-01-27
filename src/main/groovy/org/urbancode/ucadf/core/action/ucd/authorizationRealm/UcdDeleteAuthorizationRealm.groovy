@@ -20,8 +20,8 @@ class UcdDeleteAuthorizationRealm extends UcAdfAction {
 	/** The flag that indicates to perform the delete, otherwise show that the delete would be done. Default is true. */
 	Boolean commit = true
 	
-	/** The flag that indicates fail if the authorization realm is not found. Default is true. */
-	Boolean failIfNotFound = true
+	/** The flag that indicates fail if the authorization realm is not found. Default is false. */
+	Boolean failIfNotFound = false
 	
 	// Private properties.
 	private Boolean deleted = false
@@ -38,9 +38,9 @@ class UcdDeleteAuthorizationRealm extends UcAdfAction {
 		Boolean deleted = false
 		        
 		if (!commit) {
-			logInfo("Would delete realm [$realm].")
+			logVerbose("Would delete realm [$realm].")
 		} else {
-			logInfo("Deleting realm [$realm].")
+			logVerbose("Deleting realm [$realm].")
 	
 			if (UcdObject.isUUID(realm)) {
 				deleteAuthorizationRealm(realm)
@@ -68,11 +68,11 @@ class UcdDeleteAuthorizationRealm extends UcAdfAction {
 
 		Response response = target.request(MediaType.APPLICATION_JSON).delete()
 		if (response.getStatus() == 200 || response.getStatus() == 204) {
-			logInfo("Application [$realmId] deleted.")
+			logVerbose("Application [$realmId] deleted.")
 			deleted = true
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (response.getStatus() != 404 || failIfNotFound) {
 				throw new UcdInvalidValueException(errMsg)
 			}

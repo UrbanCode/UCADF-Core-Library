@@ -92,7 +92,7 @@ class UcAdfWaitLoop extends UcAdfLoop {
 				}
 			}
 
-			logInfo((maxWaitSecs ? "Waiting a maximum of [$maxWaitSecs] seconds with [$remainingSecs] remaining. " : "") + (maxTries ? "Maximum tries [$maxTries] with [$remainingTries] tries remaining. " : "") + ( waitIntervalSecs ? "Next try in [$waitIntervalSecs] seconds." : ""))
+			logVerbose((maxWaitSecs ? "Waiting a maximum of [$maxWaitSecs] seconds with [$remainingSecs] remaining. " : "") + (maxTries ? "Maximum tries [$maxTries] with [$remainingTries] tries remaining. " : "") + ( waitIntervalSecs ? "Next try in [$waitIntervalSecs] seconds." : ""))
 
 			processWaitInterval()
 		}

@@ -42,7 +42,7 @@ class UcdGetResourceProperties extends UcAdfAction {
 
 		List<UcdProperty> ucdProperties = []
 		
-		logInfo("Getting resource [$resource] properties.")
+		logVerbose("Getting resource [$resource] properties.")
 
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/resource/getProperties")
 			.queryParam("resource", resource)

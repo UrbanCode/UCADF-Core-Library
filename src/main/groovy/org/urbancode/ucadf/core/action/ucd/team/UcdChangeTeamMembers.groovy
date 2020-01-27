@@ -101,7 +101,7 @@ class UcdChangeTeamMembers extends UcAdfAction {
 		final String role, 
 		final String group) {
 		
-		logInfo("Adding group [$group] to team [$team] role [$role].")
+		logVerbose("Adding group [$group] to team [$team] role [$role].")
         
         // Handle difference between UCD 6.1 and UCD 6.2 API
         String roleNameParam
@@ -119,7 +119,7 @@ class UcdChangeTeamMembers extends UcAdfAction {
 		
 		Response response = target.request(MediaType.WILDCARD).accept(MediaType.APPLICATION_JSON).put(Entity.text(""))
 		if (response.getStatus() == 204) {
-			logInfo("Group added to team.")
+			logVerbose("Group added to team.")
 		} else {
             throw new UcdInvalidValueException(response)
 		}
@@ -131,7 +131,7 @@ class UcdChangeTeamMembers extends UcAdfAction {
 		final String role, 
 		final String user) {
 		
-		logInfo("Adding user [$user] to team [$team] role [$role].")
+		logVerbose("Adding user [$user] to team [$team] role [$role].")
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/teamsecurity/users")
 			.queryParam("user", user)
 			.queryParam("team", team)
@@ -140,7 +140,7 @@ class UcdChangeTeamMembers extends UcAdfAction {
 		
 		Response response = target.request(MediaType.WILDCARD).accept(MediaType.APPLICATION_JSON).put(Entity.text(""))
 		if (response.getStatus() == 204) {
-			logInfo("User added to team.")
+			logVerbose("User added to team.")
 		} else {
             throw new UcdInvalidValueException(response)
 		}
@@ -160,7 +160,7 @@ class UcdChangeTeamMembers extends UcAdfAction {
 				if (!ucdGroup && autoAddGroup) {
 					// TODO: This needs to be able to handle things other than LDAP.
 					// Attempt to add the missing LDAP group.
-					logInfo("Attempting to add missing LDAP group [$groupName].")
+					logVerbose("Attempting to add missing LDAP group [$groupName].")
 					actionsRunner.runAction([
 						action: UcdAddLdapGroups.getSimpleName(),
 						actionInfo: false,

@@ -12,7 +12,7 @@ class UcAdfLoopContinue extends UcAdfAction {
 	@Override
 	public Object run() {
 		// If this is run then that means the when evaluated to true.
-		logInfo("Loop continue is true.")
+		logVerbose("Loop continue is true.")
 		
 		return true
 	}

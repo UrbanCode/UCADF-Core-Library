@@ -25,6 +25,9 @@ class UcdWaitForProcessRequestTask extends UcAdfAction {
 	
 	/** The task name. */
 	String taskName
+
+	/** (Optional) The desired status. Default is OPEN. */
+	UcdTaskStatusEnum status = UcdTaskStatusEnum.OPEN
 	
 	/** The maximum number of seconds to wait. Default is 300. */
 	Integer maxWaitSecs = 300
@@ -52,7 +55,7 @@ class UcdWaitForProcessRequestTask extends UcAdfAction {
 			taskPath = ".*/.*/.*$processName/.*$taskName"
 		}
 		
-		logInfo("Waiting for application request [$requestId] process [$processName] task [$taskName] to be available.")
+		logVerbose("Waiting for application request [$requestId] process [$processName] task [$taskName] to be available.")
 			
         UcdComponentProcessRequestTask ucdProcessRequestTask
         
@@ -68,15 +71,19 @@ class UcdWaitForProcessRequestTask extends UcAdfAction {
 	        // Get the process tasks information.
 			ucdProcessRequestTask = actionsRunner.runAction([
 				action: UcdFindProcessRequestTask.getSimpleName(),
-				actionInfo: true,
+				actionInfo: false,
 				requestId: requestId,
 				type: type,
 				taskPath: taskPath,
-				status: UcdTaskStatusEnum.OPEN
+				status: status,
+				failIfNotFound: false
 			])
 
             if (ucdProcessRequestTask) {
-                break
+				logVerbose("Found request task with status of [${ucdProcessRequestTask.getStatus()}].")
+				if (ucdProcessRequestTask.getStatus() == status) {
+					break
+				}
             }
             
             if (ucdApplicationProcessRequest.getState() == UcdApplicationProcessRequestResponseStatusEnum.CLOSED) {
@@ -87,7 +94,7 @@ class UcdWaitForProcessRequestTask extends UcAdfAction {
                 throw new UcdInvalidValueException("Timed out waiting for process task.")
             }
             
-            logInfo("Waiting a maximum of [$remainingSecs] more seconds for process task [$taskPath]. Next check in [$waitIntervalSecs] seconds.")
+            logVerbose("Waiting a maximum of [$remainingSecs] more seconds for process task [$taskPath]. Next check in [$waitIntervalSecs] seconds.")
             Thread.sleep(waitIntervalSecs * 1000)
             remainingSecs -= waitIntervalSecs
         }

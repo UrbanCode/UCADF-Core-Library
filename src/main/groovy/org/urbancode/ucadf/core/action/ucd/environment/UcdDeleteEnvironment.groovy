@@ -38,11 +38,12 @@ class UcdDeleteEnvironment extends UcAdfAction {
 
 		Boolean deleted = false
 				
-		logInfo("Deleting application [$application] environment [$environment].")
+		logVerbose("Deleting application [$application] environment [$environment].")
 
 		// Get the environment information in order to get the environment ID.		
 		UcdEnvironment ucdEnvironment = actionsRunner.runAction([
 			action: UcdGetEnvironment.getSimpleName(),
+			actionInfo: false,
 			application: application,
 			environment: environment,
 			failIfNotFound: failIfNotFound
@@ -56,10 +57,10 @@ class UcdDeleteEnvironment extends UcAdfAction {
 			
 			Response response = target.request(MediaType.APPLICATION_JSON).delete()
 			if (response.getStatus() == 204) {
-				logInfo("Application [$application] environment [$environment] deleted.")
+				logVerbose("Application [$application] environment [$environment] deleted.")
 				deleted = true
 			} else if (response.getStatus() == 404) {
-				logInfo(response.readEntity(String.class))
+				logVerbose(response.readEntity(String.class))
 				if (failIfNotFound) {
 					throw new UcdInvalidValueException("Application [$application] environment [$environment] not found to delete.")
 				}

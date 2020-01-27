@@ -18,6 +18,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition
 import org.glassfish.jersey.media.multipart.FormDataMultiPart
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucd.version.UcdVersion
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 
@@ -50,9 +51,6 @@ class UcdAddVersionFiles extends UcAdfAction {
 	/** The flag that indicates fails if no files are added. Default is false. */
 	Boolean failIfNoFiles = false
 
-	/** If true then outputs more information about the files being added. Default is true. */
-	Boolean verbose = true
-			
 	/**
 	 * Runs the action.	
 	 */
@@ -64,11 +62,24 @@ class UcdAddVersionFiles extends UcAdfAction {
 		// Ant FileSet pattern matcher.
         AntPathMatcher antPathMatcher = new AntPathMatcher.Builder().build()
 
-        logInfo("Adding component [$component] version [$version] base [$base] saveExecuteBits [$saveExecuteBits] "
+        logVerbose("Adding component [$component] version [$version] base [$base] saveExecuteBits [$saveExecuteBits] "
 			+ (include.size() > 0 ? "include $include " : "")
 			+ (exclude.size() > 0 ? "exclude $exclude " : "")
 		)
 
+		// Work around 7.0 bug where it converts a version name with 4 hyphens to a UUID.
+		if (isIncorrectlyInterpretedAsUUID(version)) {
+			UcdVersion ucdVersion = actionsRunner.runAction([
+				action: UcdGetVersion.getSimpleName(),
+				actionInfo: false,
+				component: component,
+				version: version,
+				failIfNotFound: true
+			])
+			
+			version = ucdVersion.getId()
+		}
+		
 		// The base directory to be searched.
 		File baseDir = new File(base)
 
@@ -79,7 +90,7 @@ class UcdAddVersionFiles extends UcAdfAction {
 		// Derive a base directory path with forward slashes.
 		String baseDirAbsolutePath = getCanonicalPath(baseDir)
 
-		logInfo("Finding files in base directory [${baseDir.getCanonicalPath()}].")
+		logVerbose("Finding files in base directory [${baseDir.getCanonicalPath()}].")
 
 		Integer fileCount = 0
 				
@@ -117,7 +128,7 @@ class UcdAddVersionFiles extends UcAdfAction {
 			}
 		}
 	
-		logInfo("Added [$fileCount] files to component [$component] version [$version].")
+		logVerbose("Added [$fileCount] files to component [$component] version [$version].")
 		
 		if (fileCount == 0 && failIfNoFiles) {
 			throw new UcdInvalidValueException("No files were found to add.")
@@ -137,7 +148,7 @@ class UcdAddVersionFiles extends UcAdfAction {
 	
 		File file = new File(filePath)
 		
-		if (verbose) {
+		if (actionVerbose) {
 			print "Adding " + (file.isFile() ? "file" : "directory") + " [$filePath]"
 		}
 		
@@ -184,7 +195,7 @@ class UcdAddVersionFiles extends UcAdfAction {
 			]
 		}
 
-		if (verbose) {
+		if (actionVerbose) {
 			println " as $entryMetadataMap."
 		}
 		

@@ -29,7 +29,7 @@ class UcdGetComponentConfigTemplates extends UcAdfAction {
 
 		List<UcdComponentConfigTemplate> ucdComponentConfigTemplates = []
 		
-		logInfo("Getting component [$component] configuration templates.")
+		logVerbose("Getting component [$component] configuration templates.")
 
 		// If an component ID was provided then use it. Otherwise get the component information to get the ID.
 		String componentId = component

@@ -26,7 +26,7 @@ class UcdGetComponentsInApplication extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Getting application [$application] components.")
+		logVerbose("Getting application [$application] components.")
 
 		List<UcdComponent> ucdComponents
 		

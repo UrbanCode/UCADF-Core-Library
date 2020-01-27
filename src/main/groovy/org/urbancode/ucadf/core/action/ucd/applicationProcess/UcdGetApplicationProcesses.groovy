@@ -31,7 +31,7 @@ class UcdGetApplicationProcesses extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Getting application [$application] processes full [$full].")
+		logVerbose("Getting application [$application] processes full [$full].")
 		
 		// If an application ID was provided then use it. Otherwise get the application information to get the ID.
 		String applicationId = application

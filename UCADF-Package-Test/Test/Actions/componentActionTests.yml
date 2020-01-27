@@ -12,20 +12,24 @@ actions:
   #==============================================================================          
   # Get a value to use for a unique tag name.
   - action: UcAdfSetActionProperties
-    setStatic: true
     propertyValues:
       epoch: 'Eval(new Date().getTime())'
     
   - action: UcAdfSetActionProperties
-    setStatic: true
     propertyValues:
      componentTag: "${u:coreTestCompTagPrefix}-${u:epoch}"
       
   # Create a component.
-  - action: UcdCreateComponent
-    name: "${u:coreTestComp1}"
-    description: "Test component."
-    failIfExists: false
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdCreateComponent
+        name: "${u:coreTestComp1}"
+        description: "Test component."
+        failIfExists: false
     
   # Add team security to a specified component.
   - action: UcdAddComponentToTeams
@@ -85,11 +89,18 @@ actions:
     genProcessUpgradeType: "UPGRADE_IF_EXISTS"
     
   # Create a component tag.
-  - action: UcdCreateComponentTag
-    name: "${u:componentTag}"
-    color: "RED"
-    description: "Test component tag."
-    component: "${u:coreTestComp1}"
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdCreateComponentTag
+        name: "${u:componentTag}"
+        color: "RED"
+        description: "Test component tag."
+        component: "${u:coreTestComp1}"
+        failIfExists: false
     
   # Get information about a component tag.
   - action: UcdGetComponentTag

@@ -12,7 +12,7 @@ class UcAdfLoopBreak extends UcAdfAction {
 	@Override
 	public Object run() {
 		// If this is run then that means the when evaluated to true.
-		logInfo("Loop break is true.")
+		logVerbose("Loop break is true.")
 		return true
 	}
 }

@@ -43,7 +43,7 @@ class UcdFindProcessRequestTask extends UcAdfAction {
 			]
 		)
 
-		logInfo("Finding process [$requestId] task type [$type] task path [$taskPath] with status [$status].")
+		logVerbose("Finding process [$requestId] task type [$type] task path [$taskPath] with status [$status].")
 
 		// Only certin types are supported now.
 		if (type != UcdProcessRequestTraceTypeEnum.APPLICATIONMANUALTASK && type != UcdProcessRequestTraceTypeEnum.COMPONENTMANUALTASK) {
@@ -67,7 +67,7 @@ class UcdFindProcessRequestTask extends UcAdfAction {
 		)
 
 		if (!processRequestTask && failIfNotFound) {
-			throw new UcdInvalidValueException("Process [$requestId] task type [$type] task path [$taskPath] with status [$status]..")
+			throw new UcdInvalidValueException("Process [$requestId] task type [$type] task path [$taskPath] with status [$status] not found.")
 		}
 		
 		return processRequestTask

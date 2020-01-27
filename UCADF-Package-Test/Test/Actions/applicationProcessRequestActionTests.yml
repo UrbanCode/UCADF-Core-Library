@@ -267,12 +267,12 @@ actions:
       - "${u:actionReturn}"
     
   # Cancel the sleeping process.
-  - action: UcdCancelProcesses
-    match: "^Sleep Test$"
+  - action: UcdCancelApplicationProcesses
+    matchProcess: "^Sleep Test$"
 
   # Cancel any running test processes.
-  - action: UcdCancelProcesses
-    match: "^Task Test$"
+  - action: UcdCancelApplicationProcesses
+    matchProcess: "^Task Test$"
 
   # =======================================================
   # Application proces request tests.
@@ -291,6 +291,8 @@ actions:
       - "${u:applicationRequestStatus}"
 
   # Find the application manual task with the matching status.
+  - action: UcAdfSleep
+    seconds: 3
   - action: UcdFindProcessRequestTask
     requestId: "${u:applicationRequestStatus/requestId}"
     type: APPLICATIONMANUALTASK
@@ -332,6 +334,6 @@ actions:
     taskName: "TestTask"
 
   # Cancel any currently waiting processes.
-  - action: UcdCancelProcesses
-    match: "Application Task Test"
+  - action: UcdCancelApplicationProcesses
+    matchProcess: "Application Task Test"
     

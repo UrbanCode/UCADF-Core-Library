@@ -37,7 +37,7 @@ class UcdSetComponentTemplateProperties extends UcAdfAction {
 		// TODO: Need to determine if there's a better API to update multiple properties in one call.
 		// Process each property.
 		for (ucdProperty in ucdProperties) {
-			logInfo("Setting component template [$componentTemplate] property name [${ucdProperty.getName()}] secure [${ucdProperty.getSecure()}]" + (ucdProperty.getSecure() ? "." : " value [${ucdProperty.getValue()}]."))
+			logVerbose("Setting component template [$componentTemplate] property name [${ucdProperty.getName()}] secure [${ucdProperty.getSecure()}]" + (ucdProperty.getSecure() ? "." : " value [${ucdProperty.getValue()}]."))
 	
 			// Have to get the component template each iteration to have the correct version information.		
 			UcdComponentTemplate ucdComponentTemplate = actionsRunner.runAction([
@@ -84,7 +84,7 @@ class UcdSetComponentTemplateProperties extends UcAdfAction {
 				.put(Entity.json(jsonBuilder.toString()))
 				
 			if (response.getStatus() == 200) {
-				logInfo("Property [${ucdProperty.getName()}] set.")
+				logVerbose("Property [${ucdProperty.getName()}] set.")
 				
 				// Intentionally sleeping because of UCD 6.1 problems if the component template properties are updated too quickly in succession.
 				Thread.sleep(1000)

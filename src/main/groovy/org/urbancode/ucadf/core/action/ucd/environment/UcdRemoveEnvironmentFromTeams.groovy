@@ -38,8 +38,8 @@ class UcdRemoveEnvironmentFromTeams extends UcAdfAction {
 			String team = teamSecurity.getTeam()
 			String subtype = teamSecurity.getSubtype()
 					
-			logInfo("Remove application [$application] from team [$team]subtype [$subtype].")
-			logInfo("Removing application [$application] environment [$environment] from team [$team]subtype [$subtype].")
+			logVerbose("Remove application [$application] from team [$team]subtype [$subtype].")
+			logVerbose("Removing application [$application] environment [$environment] from team [$team]subtype [$subtype].")
 			
 			// Replaces the subtype IDs in the team mappings by looking up the ID using the subtype name.
 			String subtypeId = subtype
@@ -62,11 +62,11 @@ class UcdRemoveEnvironmentFromTeams extends UcAdfAction {
 
 			Response response = target.request(MediaType.APPLICATION_JSON).delete()
 			if (response.getStatus() == 204) {
-				logInfo("Application [$application] environment [$environment] removed from team [$team]subtype [$subtype].")
+				logVerbose("Application [$application] environment [$environment] removed from team [$team]subtype [$subtype].")
 	        } else if (response.getStatus() == 404) {
-	            logInfo("Application [$application] environment [$environment] team [$team]subtype [$subtype] not found.")
+	            logVerbose("Application [$application] environment [$environment] team [$team]subtype [$subtype] not found.")
 			} else if (response.getStatus() == 500) {
-				logInfo("Ignoring status ${response.getStatus()} and assuming application [$application] environment [$environment] team [$team]subtype [$subtype] not found.")
+				logVerbose("Ignoring status ${response.getStatus()} and assuming application [$application] environment [$environment] team [$team]subtype [$subtype] not found.")
 			} else {
 	            throw new UcdInvalidValueException(response)
 			}

@@ -28,7 +28,7 @@ class UcdGetGenericProcessRequest extends UcAdfAction {
 
 		UcdGenericProcessRequest ucdGenericProcessRequest
 		
-		logInfo("Getting generic process request [$requestId].")
+		logVerbose("Getting generic process request [$requestId].")
 
 		WebTarget target = ucdSession.getUcdWebTarget().path("/rest/process/request/{requestId}")
 			.resolveTemplate("requestId", requestId)
@@ -39,7 +39,7 @@ class UcdGetGenericProcessRequest extends UcAdfAction {
 			ucdGenericProcessRequest = response.readEntity(UcdGenericProcessRequest.class)
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (response.getStatus() == 400 || response.status == 404) {
 				if (failIfNotFound) {
 					throw new UcdInvalidValueException(errMsg)

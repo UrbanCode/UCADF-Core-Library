@@ -33,7 +33,7 @@ class UcdDeleteDesiredInventoryVersions extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 		
-		logInfo("Delete all desired inventory versions from application [$application] environment [$environment] for component [$component].")
+		logVerbose("Delete all desired inventory versions from application [$application] environment [$environment] for component [$component].")
 
 		// If an environment ID was provided then use it. Otherwise get the environment information to get the ID.
 		String environmentId = environment
@@ -68,7 +68,7 @@ class UcdDeleteDesiredInventoryVersions extends UcAdfAction {
 		
 		Response response = target.request(MediaType.APPLICATION_JSON).delete()
 		if (response.getStatus() == 200) {
-			logInfo("All desired inventory versions deleted.")
+			logVerbose("All desired inventory versions deleted.")
 		} else {
 			logError(response.readEntity(String.class))
 			throw new UcdInvalidValueException("Status: ${response.getStatus()} Unable to delete inventory. $target")

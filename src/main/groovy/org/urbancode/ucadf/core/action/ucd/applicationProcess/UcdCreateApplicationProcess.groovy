@@ -59,7 +59,7 @@ class UcdCreateApplicationProcess extends UcAdfAction {
 
 		Boolean created = false
 				
-		logInfo("Creating application [$application] process [$name].")
+		logVerbose("Creating application [$application] process [$name].")
 
 		// If an required role ID was provided then use it. Otherwise get the role information to get the ID.
 		String requiredRoleId = requiredRole
@@ -92,11 +92,11 @@ class UcdCreateApplicationProcess extends UcAdfAction {
 		
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() == 200) {
-			logInfo("Application [$application] process [$name] created.")
+			logVerbose("Application [$application] process [$name] created.")
 			created = true
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (!(response.getStatus() == 400 && (errMsg ==~ /.*already exists.*/ && !failIfExists))) {
 				throw new UcdInvalidValueException(errMsg)
 			}

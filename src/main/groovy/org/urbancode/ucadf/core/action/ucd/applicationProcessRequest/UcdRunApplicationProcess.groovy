@@ -129,7 +129,7 @@ class UcdRunApplicationProcess extends UcAdfAction {
 		logDebug("Application process request:\n${jsonBuilder.toPrettyString()}")
 
 		// Run the application process.
-		logInfo("Running application [$application] environment [$environment] process [$process] on ${ucdSession.getUcdUrl()}.")
+		logVerbose("Running application [$application] environment [$environment] process [$process] on ${ucdSession.getUcdUrl()}.")
 		
 		WebTarget requestTarget = ucdSession.getUcdWebTarget().path("/cli/applicationProcessRequest/request")
 		logDebug("requestTarget=$requestTarget")
@@ -141,7 +141,7 @@ class UcdRunApplicationProcess extends UcAdfAction {
 			ucdApplicationProcessRequestStatus = response.readEntity(UcdApplicationProcessRequestStatus.class)
 			requestId = ucdApplicationProcessRequestStatus.getRequestId()
 			
-			logInfo("Application process request ID [$requestId].")
+			logVerbose("Application process request ID [$requestId].")
 			
 			outProps.put(
 				UcdApplicationProcessRequestOutPropEnum.REQUESTID.getPropertyName(), 
@@ -155,7 +155,7 @@ class UcdRunApplicationProcess extends UcAdfAction {
 			}
 
 			detailsLink = "$useDetailsLinkAlias/#applicationProcessRequest/$requestId".toString()
-			logInfo("detailsLink=$detailsLink")
+			logVerbose("detailsLink=$detailsLink")
 			
 			outProps.put(
 				UcdApplicationProcessRequestOutPropEnum.DETAILSLINK.getPropertyName(), 
@@ -197,11 +197,11 @@ class UcdRunApplicationProcess extends UcAdfAction {
 			ucdApplicationProcessRequestStatus.getStatus().getValue()
 		)
 		
-		logInfo("outProps=$outProps")
+		logVerbose("outProps=$outProps")
 
 		// Write the results properties to a file.
 		if (processResultsFile != null) {
-			logInfo("Writing process request information to [" + processResultsFile + "] file.")
+			logVerbose("Writing process request information to [" + processResultsFile + "] file.")
 			PrintWriter writer = new PrintWriter(processResultsFile, "UTF-8")
 			outProps.each { outPropName, outPropValue ->
 				String line = outPropName + "=" + outPropValue

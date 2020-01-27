@@ -30,23 +30,29 @@ actions:
     failIfExists: true
     
   # Create an application process.
-  - action: UcdCreateApplicationProcess
-    application: "${u:coreTestApp1}"
-    name: "${u:coreTestAppProcess1}"
-    description: "Test process."
-    propDefs:
-      - name: "Property1"
-        type: "TEXT"
-      - name: "HttpSelectProperty"
-        type: "HTTP_SELECT"
-        httpUrl: "@sfUcdUrl@/cli/resource?parent=/Standard/WAS%20Management/Lists/Data%20Centers"
-        httpFormat: "JSON"
-        httpValuePath: "name"
-        httpAuthenticationType: "BASIC"
-        httpUsername: "PasswordIsAuthToken"
-        httpPassword: "@sfUcdAdminToken@"
-    requiredRole: "Administrator"
-    failIfExists: true
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdCreateApplicationProcess
+        application: "${u:coreTestApp1}"
+        name: "${u:coreTestAppProcess1}"
+        description: "Test process."
+        propDefs:
+          - name: "Property1"
+            type: "TEXT"
+          - name: "HttpSelectProperty"
+            type: "HTTP_SELECT"
+            httpUrl: "@sfUcdUrl@/cli/resource?parent=/Standard/WAS%20Management/Lists/Data%20Centers"
+            httpFormat: "JSON"
+            httpValuePath: "name"
+            httpAuthenticationType: "BASIC"
+            httpUsername: "PasswordIsAuthToken"
+            httpPassword: "@sfUcdAdminToken@"
+        requiredRole: "Administrator"
+        failIfExists: false
     
   # Update the application process required role.
   - action: UcdUpdateApplicationProcess

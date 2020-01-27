@@ -10,6 +10,7 @@ import javax.ws.rs.core.Response
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
+import org.urbancode.ucadf.core.model.ucd.version.UcdVersion
 
 class UcdGetVersionProperties extends UcAdfAction {
 	// Action properties.
@@ -33,7 +34,20 @@ class UcdGetVersionProperties extends UcAdfAction {
 
 		Map <String, UcdProperty> propertiesMap = [:]
 		
-		logInfo("Getting component [$component] version [$version] properties.")
+		logVerbose("Getting component [$component] version [$version] properties.")
+
+		// Work around 7.0 bug where it converts a version name with 4 hyphens to a UUID.
+		if (isIncorrectlyInterpretedAsUUID(version)) {
+			UcdVersion ucdVersion = actionsRunner.runAction([
+				action: UcdGetVersion.getSimpleName(),
+				actionInfo: false,
+				component: component,
+				version: version,
+				failIfNotFound: true
+			])
+			
+			version = ucdVersion.getId()
+		}
 
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/version/versionProperties")
 			.queryParam("component", component)

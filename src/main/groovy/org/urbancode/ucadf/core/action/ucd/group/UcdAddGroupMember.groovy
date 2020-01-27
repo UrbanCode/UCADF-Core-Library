@@ -30,7 +30,7 @@ class UcdAddGroupMember extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Add user [$user] to group [$group].")
+		logVerbose("Add user [$user] to group [$group].")
 		
 		// If an group ID was provided then use it. Otherwise get the group information to get the ID.
 		String groupId = group
@@ -62,7 +62,7 @@ class UcdAddGroupMember extends UcAdfAction {
 		
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.text(""))
 		if (response.getStatus() == 200) {
-			logInfo("User [$user] added to group [$group].")
+			logVerbose("User [$user] added to group [$group].")
 		} else {
 			throw new UcdInvalidValueException(response)
 		}

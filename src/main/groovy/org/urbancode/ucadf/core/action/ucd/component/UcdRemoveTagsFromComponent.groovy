@@ -27,7 +27,7 @@ class UcdRemoveTagsFromComponent extends UcAdfAction {
 		validatePropsExist()
 
 		for (tag in tags) {
-			logInfo("Remove tag [$tag] from component [$component].")
+			logVerbose("Remove tag [$tag] from component [$component].")
 			
 			WebTarget target = ucdSession.getUcdWebTarget().path("/cli/component/tag")
 				.queryParam("component", component)
@@ -35,7 +35,7 @@ class UcdRemoveTagsFromComponent extends UcAdfAction {
 				
 			Response response = target.request(MediaType.APPLICATION_JSON).delete()
 			if (response.getStatus() == 204) {
-				logInfo("Tag [$tag] removed from component [$component].")
+				logVerbose("Tag [$tag] removed from component [$component].")
 			} else {
 				throw new UcdInvalidValueException(response)
 			}

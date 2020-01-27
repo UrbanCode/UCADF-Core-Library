@@ -22,7 +22,7 @@ class UcdGetPoolAgent extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Get an agent from pool [$pool].")
+		logVerbose("Get an agent from pool [$pool].")
 		
 		// Get information about the pool.
 		UcdAgentPool agentPool = actionsRunner.runAction([
@@ -36,7 +36,7 @@ class UcdGetPoolAgent extends UcAdfAction {
 
 		UcdAgent ucdAgent = agentPool.getAgents()[0]
 		
-		logInfo("Found agent [${ucdAgent.getName()}] in pool [$pool].")
+		logVerbose("Found agent [${ucdAgent.getName()}] in pool [$pool].")
 
 		return ucdAgent
 	}	

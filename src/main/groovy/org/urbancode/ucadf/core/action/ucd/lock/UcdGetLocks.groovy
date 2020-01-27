@@ -27,7 +27,7 @@ class UcdGetLocks extends UcAdfAction {
 
 		List<UcdLock> ucdReturnLocks = []
 		
-		logInfo("Getting locks.")
+		logVerbose("Getting locks.")
 	
 		WebTarget target = ucdSession.getUcdWebTarget().path("/rest/lock/lock")
 		logDebug("target=$target")

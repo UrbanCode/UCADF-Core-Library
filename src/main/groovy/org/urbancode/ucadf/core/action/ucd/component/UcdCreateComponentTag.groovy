@@ -55,10 +55,10 @@ class UcdCreateComponentTag extends UcAdfAction {
 			if (failIfExists) {
 				throw new UcdInvalidValueException("Component tag [$name] already exists.")
 			} else {
-				logInfo("Component tag [$name] already exists.")
+				logVerbose("Component tag [$name] already exists.")
 			}
 		} else {
-			logInfo("Create component tag [$name].")
+			logVerbose("Create component tag [$name].")
 		
 			UcdComponent ucdComponent = actionsRunner.runAction([
 				action: UcdGetComponent.getSimpleName(),
@@ -83,7 +83,7 @@ class UcdCreateComponentTag extends UcAdfAction {
 	
 			Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 			if (response.getStatus() == 204) {
-	            logInfo("Component tag [$name] created.")
+	            logVerbose("Component tag [$name] created.")
 				created = true
 			} else {
 				throw new UcdInvalidValueException(response)

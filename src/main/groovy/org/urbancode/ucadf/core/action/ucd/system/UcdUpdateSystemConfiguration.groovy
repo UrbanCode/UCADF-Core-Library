@@ -41,7 +41,7 @@ class UcdUpdateSystemConfiguration extends UcAdfAction {
 			existingConfigMap.put(key, configMap.get(key))
 		}
 		
-		logInfo("Updating the system configuration.")
+		logVerbose("Updating the system configuration.")
 
 		JsonBuilder jsonBuilder = new JsonBuilder(existingConfigMap)
 		println jsonBuilder
@@ -51,7 +51,7 @@ class UcdUpdateSystemConfiguration extends UcAdfAction {
 		
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() == 204) {
-			logInfo("System configuration updated.")
+			logVerbose("System configuration updated.")
 		} else {
 			throw new UcdInvalidValueException(response)
 		}

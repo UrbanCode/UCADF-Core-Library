@@ -14,8 +14,8 @@ class UcAdfCacheGetComponentVersion extends UcAdfAction {
 	/** The cache component version or ID. */
 	String version
 	
-	/** The cache directory. */
-	File cacheDir
+	/** The name of the directory where the cached artifacts will be placed. */
+	String cacheDirName
 	
 	/** The flag that indicates fail if the cached component version is not found. Default is true. */
 	Boolean failIfNotFound = true
@@ -27,7 +27,9 @@ class UcAdfCacheGetComponentVersion extends UcAdfAction {
 	public Object run() {
 		// Validate the action properties.
 		validatePropsExist()
-		
+
+		File cacheDir = new File(cacheDirName)
+				
 		// A temporary directory for the download.
 		File tempDir = new File("${cacheDir.getPath()}.temp")
 		
@@ -40,13 +42,13 @@ class UcAdfCacheGetComponentVersion extends UcAdfAction {
 			component: component,
 			version: version,
 			fileName: artifactsFile.getPath(),
-			extractDirName: cacheDir,
+			extractDirName: cacheDirName,
 			failIfNotFound: failIfNotFound
 		])
 
 		if (downloaded) {
 			// Delete the temporary directory.
-			logInfo("Deleting temporary directory [${tempDir.getPath()}].")
+			logVerbose("Deleting temporary directory [${tempDir.getPath()}].")
 			tempDir.deleteDir()
 		}
 	}

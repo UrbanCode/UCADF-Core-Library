@@ -77,12 +77,18 @@ actions:
         comment: "Security type %s"
         values:
           - ${u:securityType}
-      - action: UcdCreateSecuritySubtype
-        when: "${u:securityType/subtypeAllowed}"
-        type: "${u:securityType/name}"
-        name: "${u:coreTestSecuritySubtypePrefix}${u:securityType/name}"
-        description: "Test security subtype description."
-        failIfExists: false
+      # Try to create twice to make sure fail if exists works correctly.
+      - action: UcAdfCounterLoop
+        actionInfo: false
+        counterBegin: 1 
+        counterEnd: 2 
+        actions:
+          - action: UcdCreateSecuritySubtype
+            when: "${u:securityType/subtypeAllowed}"
+            type: "${u:securityType/name}"
+            name: "${u:coreTestSecuritySubtypePrefix}${u:securityType/name}"
+            description: "Test security subtype description."
+            failIfExists: false
 
   # For each security type get the specific security subtype.
   - action: UcdGetSecurityTypes

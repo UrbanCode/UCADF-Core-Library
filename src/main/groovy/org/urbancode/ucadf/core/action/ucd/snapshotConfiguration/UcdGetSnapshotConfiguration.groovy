@@ -30,7 +30,7 @@ class UcdGetSnapshotConfiguration extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Getting application [$snapshot] snapshot [$snapshot] configuration.")
+		logVerbose("Getting application [$snapshot] snapshot [$snapshot] configuration.")
 
 		UcdSnapshotConfiguration ucdSnapshotConfiguration
 		
@@ -44,7 +44,7 @@ class UcdGetSnapshotConfiguration extends UcAdfAction {
 			ucdSnapshotConfiguration = response.readEntity(UcdSnapshotConfiguration.class)
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (response.getStatus() != 400 || failIfNotFound) {
 				throw new UcdInvalidValueException(errMsg)
 			}

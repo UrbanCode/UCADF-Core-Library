@@ -46,7 +46,7 @@ class UcdRemoveResourcesFromTeams extends UcAdfAction {
 		final String teamLabel,
 		final String resourceRoleLabel) {
 		
-		logInfo("Removing resource [$resource] teamLabel [$teamLabel] resourceRoleLabel [$resourceRoleLabel].")
+		logVerbose("Removing resource [$resource] teamLabel [$teamLabel] resourceRoleLabel [$resourceRoleLabel].")
 
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/resource/teams")
 			.queryParam("resource", resource)

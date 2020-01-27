@@ -20,9 +20,9 @@ class UcAdfCachePutComponentVersion extends UcAdfAction {
 	/** The version name or ID. */
 	String version
 	
-	/** The directoriy with contents to be cached. */
-	File cacheDir
-	
+	/** The name of the directoriy with the contents to be cached. */
+	String cacheDirName
+
 	/** The process request ID to be associated with the cached version. */
 	String processRequestId
 	
@@ -40,18 +40,21 @@ class UcAdfCachePutComponentVersion extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
+		File cacheDir = new File(cacheDirName)
+		
 		// If the cache directory doesn't exist then don't process it.
 		if (cacheDir.exists()) {
 			// Validate the size of the directory.
 			Long dirSize = cacheDir.directorySize()
-			logInfo("Size of directory is [$dirSize] bytes and maximum allowed size is [$cacheMaxSize].")
+			logVerbose("Size of directory is [$dirSize] bytes and maximum allowed size is [$cacheMaxSize].")
 			if (dirSize > cacheMaxSize) {
 				throw new UcdInvalidValueException("Directory size is > maximum allowed size [$cacheMaxSize].")
 			}
 			
 			// Create the version if it doesn't already exist.
 			actionsRunner.runAction([
-				action: UcdCreateVersion.class.getSimpleName(),
+				action: UcdCreateVersion.getSimpleName(),
+				actionInfo: false,
 				component: component,
 				name: version,
 				failIfExists: false
@@ -59,7 +62,8 @@ class UcAdfCachePutComponentVersion extends UcAdfAction {
 	
 			// Set the process request ID property on the version.
 			actionsRunner.runAction([
-				action: UcdSetVersionProperties.class.getSimpleName(),
+				action: UcdSetVersionProperties.getSimpleName(),
+				actionInfo: false,
 				component: component,
 				version: version,
 				properties: [
@@ -72,7 +76,9 @@ class UcAdfCachePutComponentVersion extends UcAdfAction {
 
 			// Add the files to the version.
 			actionsRunner.runAction([
-				action: UcdAddVersionFiles.class.getSimpleName(),
+				action: UcdAddVersionFiles.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: actionVerbose,
 				component: component,
 				version: version,
 				base: cacheDir.getPath(),

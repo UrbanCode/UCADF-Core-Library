@@ -74,7 +74,7 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 	
 	// Synchronize all UrbanCode group members with LDAP group members.
 	public syncAllGroupMembers() {
-		logInfo("Synchronizing all UrbanCode group members. teamRegex [$teamRegex].")
+		logVerbose("Synchronizing all UrbanCode group members. teamRegex [$teamRegex].")
 
 		// Get the names of the groups associated with UrbanCode team roles.
 		Set ucdTeamGroupNames = new TreeSet()
@@ -104,7 +104,7 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 		// Process each of the group names.
 		for (groupName in ucdTeamGroupNames) {
 			if (groupName ==~ /^P_.*/) {
-				logInfo("Skipping synchronizing group [$groupName] that has a P_ prefix and that can be large.")
+				logVerbose("Skipping synchronizing group [$groupName] that has a P_ prefix and that can be large.")
 				continue
 			}
 		
@@ -124,7 +124,7 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 		String groupName = ucdGroup.getName()
 		String groupId = ucdGroup.getId()
 
-		logInfo("Synchronizing UrbanCode group [$groupName] members.")
+		logVerbose("Synchronizing UrbanCode group [$groupName] members.")
 		
 		// Collect the LDAP group user names.
 		Set ldapUserSet = new HashSet()

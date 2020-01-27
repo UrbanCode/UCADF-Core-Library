@@ -6,10 +6,10 @@ package org.urbancode.ucadf.core.action.ucd.version
 import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.Response
 
+import org.urbancode.ucadf.core.action.ucadf.general.UcAdfExtractFile
 import org.urbancode.ucadf.core.action.ucd.component.UcdGetComponent
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.component.UcdComponent
-import org.urbancode.ucadf.core.model.ucd.system.UcdSession
 import org.urbancode.ucadf.core.model.ucd.version.UcdVersion
 
 class UcdDownloadVersionFiles extends UcAdfAction {
@@ -20,22 +20,22 @@ class UcdDownloadVersionFiles extends UcAdfAction {
 	/** The version name or ID. */
 	String version
 	
-	/** The downlaoded ZIP file name. */
+	/** The downloaded Zip file name. */
 	String fileName
 	
-	/** (Optional) The extract directory name. If specified then the download will be extracted here and the ZIP file removed. */
+	/** (Optional) The extract directory name. If specified then the download will be extracted here and the Zip file removed. */
 	String extractDirName = ""
 
 	/** The single file path. */	
 	String singleFilePath = ""
 	
-	/** The flag that indicates to skip if the download file (zip) already exists. Default is false. */
+	/** The flag that indicates to skip if the download file (Zip) already exists. Default is false. */
 	Boolean skipIfZipExists = false
 	
 	/** The flag that indicates to skip if the extracted directory already exists. Default is false. */
 	Boolean skipIfExtractDirExists = false
 
-	/** The flag that indicates to delete the download file (zip) file after downloading and extracting. Default is true. */
+	/** The flag that indicates to delete the download file (Zip) after extracting. Default is true. */
 	Boolean deleteZipIfExtracted = true
 
 	/** The flag that indicates fail if the version is not found. Default is true. */
@@ -53,12 +53,12 @@ class UcdDownloadVersionFiles extends UcAdfAction {
 		File artifactsFile = new File(fileName)
 
 		if (skipIfZipExists && artifactsFile.exists()) {
-			logInfo("Skipping downloading artifacts file [${artifactsFile.getPath()}] that already exists for component [$component] version [$version].")
+			logVerbose("Skipping downloading artifacts file [${artifactsFile.getPath()}] that already exists for component [$component] version [$version].")
 		} else if (extractDirName && skipIfExtractDirExists && new File(extractDirName).exists()) {
-			logInfo("Skipping downloading artifacts and extracting directory [${artifactsFile.getPath()}] that already exists for component [$component] version [$version].")
+			logVerbose("Skipping downloading artifacts and extracting directory [${artifactsFile.getPath()}] that already exists for component [$component] version [$version].")
 		} else {
 			// Download the component version artifacts file.
-			logInfo("Downloading artifacts file [${artifactsFile.getPath()}] for component [$component] version [$version].")
+			logVerbose("Downloading artifacts file [${artifactsFile.getPath()}] for component [$component] version [$version].")
 	
 			// Create the artifacts file target directory.
 			artifactsFile.getParentFile()?.mkdirs()
@@ -92,7 +92,7 @@ class UcdDownloadVersionFiles extends UcAdfAction {
 				failIfNotFound: true
 			])
 	
-			logInfo("Starting download of component [$component] version [$version].")
+			logVerbose("Starting download of component [$component] version [$version].")
 			
 			WebTarget target = ucdSession.getUcdWebTarget().path("/rest/deploy/version/{versionId}/downloadArtifacts")
 				.resolveTemplate("versionId", ucdVersion.getId())
@@ -124,57 +124,20 @@ class UcdDownloadVersionFiles extends UcAdfAction {
 				}
 			}
 			
-			logInfo("Downloaded artifacts file [${artifactsFile.getAbsolutePath()}] size is [${artifactsFile.length()}] bytes.")
+			logVerbose("Downloaded artifacts file [${artifactsFile.getAbsolutePath()}] size is [${artifactsFile.length()}] bytes.")
 	
 			downloaded = true
 			
 			// Extract the downloaded file.
 			if (extractDirName) {
-				File extractDir = new File(extractDirName)
-				
-				logInfo("Extracting download file [${artifactsFile.getPath()}] to directory [${extractDir.getPath()}].")
-				
-				// Create the empty target directory.
-				extractDir.mkdirs()
-		
-				AntBuilder antBuilder = new AntBuilder()
-				
-				// Determine if Windows or Linux.
-				String osName = System.properties['os.name']
-				if (osName.toLowerCase().contains('windows')) {
-					// Use Ant library to extract the artifacts file. This does not preserve permissions correctly on Linux.
-					antBuilder.unzip(
-						src:artifactsFile.getPath(), 
-						dest:extractDir.getPath(), 
-						overwrite:"false"
-					)
-				} else {
-					// Use the unzip command on Linux so that permissions are preserved on the extracted files.
-					List commandList = [ 
-						"unzip",
-						"-o",
-						artifactsFile.getPath(),
-						"-d",
-						extractDir.getPath()
-					]
-					println commandList
-					
-					UcdSession.executeCommand(
-						commandList, 
-						600, 
-						true, 
-						true
-					)
-				}
-				
-				// Use Ant library to delete the zip file.
-				// Using this step assures the file gets deleted in situations where a normal File delete hasn't been working.
-				if (deleteZipIfExtracted) {
-					antBuilder.delete(
-						file: artifactsFile.getPath(), 
-						failonerror: false
-					)  
-				}
+				actionsRunner.runAction([
+					action: UcAdfExtractFile.getSimpleName(),
+					fileName: artifactsFile.getAbsolutePath(),
+					extractDirName: extractDirName,
+					skipIfExtractDirExists: skipIfExtractDirExists,
+					deleteFileIfExtracted: deleteZipIfExtracted,
+					actionVerbose: actionVerbose
+				])
 			}
 		}
 		

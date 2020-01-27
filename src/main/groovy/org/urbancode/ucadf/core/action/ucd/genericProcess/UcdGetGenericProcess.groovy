@@ -69,7 +69,7 @@ class UcdGetGenericProcess extends UcAdfAction {
 				ucdGenericProcess = response.readEntity(UcdGenericProcess.class)
 			} else {
 				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-				logInfo(errMsg)
+				logVerbose(errMsg)
 				if (response.getStatus() == 404 || response.getStatus() == 403) {
 					if (failIfNotFound) {
 						throw new UcdInvalidValueException(errMsg)

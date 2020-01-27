@@ -39,7 +39,7 @@ class UcdCreateSnapshotWithRequestVersions extends UcAdfAction {
 
 		Boolean created = false
 		
-		logInfo("Creating application [$application] snapshot [$name] with versions from application process request [$requestId].")
+		logVerbose("Creating application [$application] snapshot [$name] with versions from application process request [$requestId].")
 		
 		// Get the versions from the application process request.
 		List<Map<String, String>> requestVersions = actionsRunner.runAction([

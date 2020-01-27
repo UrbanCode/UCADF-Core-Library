@@ -94,7 +94,7 @@ public class UcAdfPluginActionsRunner {
 					actionsRunner.runActions(actions)
 					
 					// Get the output properties from the action.
-					outProps = actionsRunner.getOutProps()
+					outProps = actionsRunner.getPropertyValue(UcAdfActionPropertyEnum.OUTPROPS.getPropertyName())
 				} catch (Exception e) {
 					if (e instanceof UcdInvalidValueException) {
 						// Throw with exception message and no stack trace.

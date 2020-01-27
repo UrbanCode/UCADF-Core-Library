@@ -40,7 +40,7 @@ class UcdAddServerToCluster extends UcAdfAction {
 		validatePropsExist()
 
 		// Save a network relay.
-		logInfo("Adding server [$name] host [$host] port [$port] active [$active] to cluster.")
+		logVerbose("Adding server [$name] host [$host] port [$port] active [$active] to cluster.")
 		
 		Map requestMap = [
 			name: name,
@@ -56,10 +56,10 @@ class UcdAddServerToCluster extends UcAdfAction {
 		
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() != 200) {	
-			logInfo("Server [$name] host [$host] port [$port] added to cluster.")
+			logVerbose("Server [$name] host [$host] port [$port] added to cluster.")
         } else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (!(response.getStatus() == 400 && (errMsg ==~ /.*already exists.*/ && !failIfExists))) {
 				throw new UcdInvalidValueException(errMsg)
 			}

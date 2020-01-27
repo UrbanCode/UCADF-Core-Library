@@ -34,7 +34,7 @@ class UcdDeleteComponentTemplate extends UcAdfAction {
 
 		Boolean deleted = false
 				
-		logInfo("Deleting component template [$componentTemplate] commit [$commit].")
+		logVerbose("Deleting component template [$componentTemplate] commit [$commit].")
 
 		if (commit) {
 			// If a component template ID was provided then use it. Otherwise get the component template information to get the ID.
@@ -60,18 +60,18 @@ class UcdDeleteComponentTemplate extends UcAdfAction {
 				
 				Response response = target.request(MediaType.APPLICATION_JSON).delete()
 				if (response.getStatus() == 204) {
-					logInfo("Component template [$componentTemplate] deleted.")
+					logVerbose("Component template [$componentTemplate] deleted.")
 					deleted = true
 				} else {
 					String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-					logInfo(errMsg)
+					logVerbose(errMsg)
 					if (response.getStatus() != 404 || failIfNotFound) {
 						throw new UcdInvalidValueException(errMsg)
 					}
 				}
 			}
 		} else {
-			logInfo("Would delete component template [$componentTemplate].")
+			logVerbose("Would delete component template [$componentTemplate].")
 		}
 		
 		return deleted

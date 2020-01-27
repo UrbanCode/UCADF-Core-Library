@@ -98,7 +98,7 @@ class UcdUpdateComponent extends UcAdfAction {
 		
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() == 200) {
-			logInfo("Component [$component] updated.")
+			logVerbose("Component [$component] updated.")
 		} else {
 			throw new UcdInvalidValueException(response)
 		}

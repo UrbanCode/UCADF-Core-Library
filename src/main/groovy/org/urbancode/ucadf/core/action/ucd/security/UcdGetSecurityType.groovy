@@ -42,7 +42,7 @@ class UcdGetSecurityType extends UcAdfAction {
 			ucdSecurityType = response.readEntity(UcdSecurityType.class)
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if ((response.getStatus() != 404) || failIfNotFound) {
 				throw new UcdInvalidValueException(errMsg)
 			}

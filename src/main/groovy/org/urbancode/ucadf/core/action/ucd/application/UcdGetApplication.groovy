@@ -26,7 +26,7 @@ class UcdGetApplication extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Getting application [$application].")
+		logVerbose("Getting application [$application].")
 	
 		// Get information about a application.
 		UcdApplication ucdApplication
@@ -40,7 +40,7 @@ class UcdGetApplication extends UcAdfAction {
 			ucdApplication = response.readEntity(UcdApplication.class)
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
         	if (response.getStatus() == 404 || response.getStatus() == 403) {
 				// 403 added for UCD 16.2.
 				if (failIfNotFound) {

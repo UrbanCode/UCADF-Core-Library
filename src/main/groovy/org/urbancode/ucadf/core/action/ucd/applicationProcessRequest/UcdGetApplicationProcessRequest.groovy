@@ -27,7 +27,7 @@ class UcdGetApplicationProcessRequest extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Getting application process request [$requestId].")
+		logVerbose("Getting application process request [$requestId].")
 
 		UcdApplicationProcessRequest ucdApplicationProcessRequest
 		
@@ -40,7 +40,7 @@ class UcdGetApplicationProcessRequest extends UcAdfAction {
 			ucdApplicationProcessRequest = response.readEntity(UcdApplicationProcessRequest.class)
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (response.getStatus() == 400 || response.status == 404) {
 				if (failIfNotFound) {
 					throw new UcdInvalidValueException(errMsg)

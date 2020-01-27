@@ -59,7 +59,7 @@ class UcdAddLdapGroups extends UcAdfAction {
 	
 	// Adds an LDAP group by finding a user of the group to import.
 	public addLdapGroups(final List<String> groupNames) {
-		logInfo("Adding LDAP groups to authentication realm [${authenticationRealm}].")
+		logVerbose("Adding LDAP groups to authentication realm [${authenticationRealm}].")
 	
 		for (groupName in groupNames) {
 			UcdGroup ucdGroup = actionsRunner.runAction([
@@ -70,22 +70,22 @@ class UcdAddLdapGroups extends UcAdfAction {
 			])
 			
 			if (ucdGroup) {
-				logInfo("Group [$groupName] already exists.")
+				logVerbose("Group [$groupName] already exists.")
 				continue
 			}
 			
-			logInfo("Attempting to automatically add group [$groupName].")
+			logVerbose("Attempting to automatically add group [$groupName].")
 			List<LdapGroupResult> ldapGroupResults = ldapManager.getGroups(groupName, 1)
 			if (ldapGroupResults && ldapGroupResults.size() > 0) {
-				logInfo("Found group [$groupName] in LDAP. Looking for a user ID to use to import group.")
+				logVerbose("Found group [$groupName] in LDAP. Looking for a user ID to use to import group.")
 				List<LdapGroupUsersResult> ldapGroupUsersResults = ldapManager.getGroupUsers(groupName, 1)
 				if (ldapGroupUsersResults && ldapGroupUsersResults.size() > 0 && ldapGroupUsersResults[0].getMembers().size() > 0) {
-					logInfo("Group [$groupName] has ${ldapGroupUsersResults[0].getMembers().size()} members.")
+					logVerbose("Group [$groupName] has ${ldapGroupUsersResults[0].getMembers().size()} members.")
 					
 					Iterator memberIterator = ldapGroupUsersResults[0].getMembers().iterator()
 					while (memberIterator.hasNext()) {
 						String userId = memberIterator.next()
-						logInfo("Found user [$userId] to use for group import.")
+						logVerbose("Found user [$userId] to use for group import.")
 						try {
 							// Attempt to import the user.
 							actionsRunner.runAction([
@@ -108,7 +108,7 @@ class UcdAddLdapGroups extends UcAdfAction {
 							}
 						} catch(Exception e) {
 							// User import failed so try another one.
-							logInfo(e.getMessage())
+							logVerbose(e.getMessage())
 						}
 					}
 					

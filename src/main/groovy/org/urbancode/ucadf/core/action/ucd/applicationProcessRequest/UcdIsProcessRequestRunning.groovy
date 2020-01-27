@@ -38,7 +38,7 @@ class UcdIsProcessRequestRunning extends UcAdfAction {
 		if (appProcessRequest) {
 			// Determin if the application process request is running.
 			if (appProcessRequest.getState() && appProcessRequest.getState() != UcdApplicationProcessRequestResponseStatusEnum.CLOSED) {
-				logInfo("Application process request ID [$requestId] is running.")
+				logVerbose("Application process request ID [$requestId] is running.")
 				isRunning = true
 			}
 		} else {
@@ -52,7 +52,7 @@ class UcdIsProcessRequestRunning extends UcAdfAction {
 			
 			if (compProcessRequest) {
 				if (compProcessRequest.getState() && compProcessRequest.getState() != UcdApplicationProcessRequestResponseStatusEnum.CLOSED) {
-					logInfo("Component process request ID [$requestId] is running.")
+					logVerbose("Component process request ID [$requestId] is running.")
 					isRunning = true
 				}
 			} else {

@@ -30,7 +30,7 @@ class UcdSetSystemProperties extends UcAdfAction {
 
 		// Sets a list of system properties.
 		for (ucdProperty in systemProperties) {
-			logInfo("Setting system property [${ucdProperty.getName()}].")
+			logVerbose("Setting system property [${ucdProperty.getName()}].")
 	
 			WebTarget target
 			Response response
@@ -58,7 +58,7 @@ class UcdSetSystemProperties extends UcAdfAction {
 			}
 			
 			if (response.getStatus() == 200) {
-				logInfo("System property set.")
+				logVerbose("System property set.")
 			} else {
 				throw new UcdInvalidValueException(response)
 			}

@@ -30,7 +30,7 @@ class UcdGetComponentProcesses extends UcAdfAction {
 
 		List<UcdComponentProcess> ucdComponentProcesses = []
 		
-		logInfo("Getting component [$component] processes.")
+		logVerbose("Getting component [$component] processes.")
 		
 		// If an component ID was provided then use it. Otherwise get the component information to get the ID.
 		String componentId = component

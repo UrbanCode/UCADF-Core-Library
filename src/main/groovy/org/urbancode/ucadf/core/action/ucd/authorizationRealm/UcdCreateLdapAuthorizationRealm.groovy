@@ -52,7 +52,7 @@ class UcdCreateLdapAuthorizationRealm extends UcAdfAction {
         
 		Boolean created = false
 		
-        logInfo("Create authorization realm [$name].")
+        logVerbose("Create authorization realm [$name].")
 		
         WebTarget target = ucdSession.getUcdWebTarget().path("/security/authorizationRealm")
         logDebug("target=$target")
@@ -74,16 +74,25 @@ class UcdCreateLdapAuthorizationRealm extends UcAdfAction {
 		]
 		
         JsonBuilder jsonBuilder = new JsonBuilder(requestMap)
-        logInfo(jsonBuilder.toString())
+        logVerbose(jsonBuilder.toString())
             
         Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.json(jsonBuilder.toString()))
         if (response.getStatus() == 200) {
-            logInfo("Created authorization realm [$name].")
+            logVerbose("Created authorization realm [$name].")
 			created = true
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
-			if (!(response.getStatus() == 403 && (errMsg ==~ /.*already exists.*/ && !failIfExists))) {
+			logVerbose(errMsg)
+			
+			Boolean alreadyExists = false
+			if (response.getStatus() == 403 && errMsg ==~ /.*already exists.*/) {
+				alreadyExists = true
+			} else if (response.getStatus() == 500 && errMsg ==~ /.*after response has been committed.*/) {
+				// UCD 7.0.4 is returning 500 Cannot forward after response has been committed if it already exists.
+				alreadyExists = true
+			}
+			
+			if (!alreadyExists || (alreadyExists && failIfExists)) {
 				throw new UcdInvalidValueException(errMsg)
 			}
 		}

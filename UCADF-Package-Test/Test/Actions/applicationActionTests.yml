@@ -20,19 +20,23 @@ actions:
   #==============================================================================          
   # Generate a unique application tag name.
   - action: UcAdfSetActionProperties
-    setStatic: true
     propertyValues:
       epoch: 'Eval(new Date().getTime())'
   - action: UcAdfSetActionProperties
-    setStatic: true
     propertyValues:
       applicationTag: "${u:coreTestAppTagPrefix}-${u:epoch}"
 
   # Create an application.
-  - action: UcdCreateApplication
-    name: "${u:coreTestApp1}"
-    description: "Test application."
-    failIfExists: false
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdCreateApplication
+        name: "${u:coreTestApp1}"
+        description: "Test application."
+        failIfExists: false
     
   # Add team security to a specified application.
   - action: UcdAddApplicationToTeams
@@ -54,15 +58,21 @@ actions:
           - ${u:item}
 
   # Create an application process that includes a required role so we can test export/import.
-  - action: UcdCreateApplicationProcess
-    application: "${u:coreTestApp1}"
-    name: "${u:coreTestAppProcess1}"
-    description: "Test process."
-    propDefs:
-      - name: "Property1"
-        type: "TEXT"
-    requiredRole: "Administrator"
-    failIfExists: false
+  # Try to create twice to make sure it works if it already exists.
+  - action: UcAdfCounterLoop
+    actionInfo: false
+    counterBegin: 1 
+    counterEnd: 2 
+    actions:
+      - action: UcdCreateApplicationProcess
+        application: "${u:coreTestApp1}"
+        name: "${u:coreTestAppProcess1}"
+        description: "Test process."
+        propDefs:
+          - name: "Property1"
+            type: "TEXT"
+        requiredRole: "Administrator"
+        failIfExists: false
     
   # Create a component.
   - action: UcdCreateComponent

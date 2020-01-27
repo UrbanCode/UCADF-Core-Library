@@ -33,6 +33,21 @@ public class UcAdfClient {
 			// Initialize the logger.
 			log = LoggerFactory.getLogger(UcAdfClient.class)
 	
+			try {
+				String javaVersion = this.getClass().getPackage().getImplementationVersion()		
+
+				// Get the properties from the Jar.
+				InputStream resourceAsStream = this.getClass().getResourceAsStream("/META-INF/maven/org.urbancode.ucadf.core/UCADF-Core-Library/pom.properties")
+				Properties jarProps = new Properties()
+				jarProps.load(resourceAsStream)
+				
+				String ucAdfVersion = jarProps.get('version')
+				
+				println "UCADF Client Version: $ucAdfVersion Java Version: $javaVersion"
+			} catch (Exception e) {
+				// Do nothing.
+			}
+			
 			// Parse the options.
 			parseOptions(args)
 	

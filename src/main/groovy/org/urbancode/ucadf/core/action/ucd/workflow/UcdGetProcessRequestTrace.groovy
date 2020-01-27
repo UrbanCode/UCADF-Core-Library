@@ -76,7 +76,7 @@ class UcdGetProcessRequestTrace extends UcAdfAction {
 					
     				trace.setLogText(target.request().get(String.class))
                 } catch(Exception e) {
-                    logInfo("Ignoring unable to get log information ${e.getMessage()}")
+                    logVerbose("Ignoring unable to get log information ${e.getMessage()}")
                     // Ignoring some kind of problem with this where it throws 500 errors.
                 }
 			}

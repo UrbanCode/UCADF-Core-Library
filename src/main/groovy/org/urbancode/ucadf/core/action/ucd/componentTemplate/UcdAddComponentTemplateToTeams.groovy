@@ -35,7 +35,7 @@ class UcdAddComponentTemplateToTeams extends UcAdfAction {
 			String team = teamSecurity.getTeam()
 			String subtype = teamSecurity.getSubtype()
 			
-			logInfo("Adding component template [$componentTemplate] to team [$team] subtype [$subtype].")
+			logVerbose("Adding component template [$componentTemplate] to team [$team] subtype [$subtype].")
 			
 			// Get the subtype name required for the API call.
 			String subtypeName = subtype
@@ -56,7 +56,7 @@ class UcdAddComponentTemplateToTeams extends UcAdfAction {
 
 	        Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(""))
 	        if (response.getStatus() == 204) {
-	            logInfo("Component template [$componentTemplate] added to team [$team].")
+	            logVerbose("Component template [$componentTemplate] added to team [$team].")
 	        } else {
 				throw new UcdInvalidValueException(response)
 	        }

@@ -33,28 +33,43 @@ class UcdGetVersion extends UcAdfAction {
 
 		UcdVersion ucdVersion
 		
-		logInfo("Getting component [$component] version [$version].")
+		logVerbose("Getting component [$component] version [$version].")
 
 		WebTarget target
 		Response response
 
 		String versionId = version
-		
+
 		if (!UcdObject.isUUID(version)) {
-			// Look up the version ID.		
-			target = ucdSession.getUcdWebTarget().path("/cli/version/getVersionId")
-				.queryParam("component", component)
-				.queryParam("version", version)
-			logDebug("target=$target")
-			
-			response = target.request().get()
-			if (response.getStatus() == 200) {
-				versionId = response.readEntity(String.class)
+			// Work around 7.0 bug where it converts a version name with 4 hyphens to a UUID.
+			if (isIncorrectlyInterpretedAsUUID(version)) {
+				// Look for a component version that matches the name.
+				List<UcdVersion> ucdVersions = actionsRunner.runAction([
+					action: UcdGetComponentVersions.getSimpleName(),
+					actionInfo: false,
+					component: component,
+					match: /^$version$/,
+					numResults: 1,
+					failIfNotFound: true
+				])
+				
+				versionId = ucdVersions[0].getId()
 			} else {
-				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-				logInfo(errMsg)
-				if (response.getStatus() != 400 || (!errMsg ==~ /.*could not be resolved.*/) || failIfNotFound) {
-					throw new UcdInvalidValueException(errMsg)
+				// Look up the version ID.		
+				target = ucdSession.getUcdWebTarget().path("/cli/version/getVersionId")
+					.queryParam("component", component)
+					.queryParam("version", version)
+				logDebug("target=$target")
+
+				response = target.request().get()
+				if (response.getStatus() == 200) {
+					versionId = response.readEntity(String.class)
+				} else {
+					String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+					logVerbose(errMsg)
+					if (response.getStatus() != 400 || (!errMsg ==~ /.*could not be resolved.*/) || failIfNotFound) {
+						throw new UcdInvalidValueException(errMsg)
+					}
 				}
 			}
 		}
@@ -69,7 +84,7 @@ class UcdGetVersion extends UcAdfAction {
 			ucdVersion = response.readEntity(UcdVersion.class)
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (response.getStatus() != 404 || failIfNotFound) {
 				throw new UcdInvalidValueException(errMsg)
 			}

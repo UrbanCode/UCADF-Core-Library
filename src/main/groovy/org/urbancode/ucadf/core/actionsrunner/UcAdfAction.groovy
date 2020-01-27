@@ -35,6 +35,11 @@ abstract class UcAdfAction extends UcdObject {
 	Boolean actionInfo = true
 	
 	/**
+	 * Indicate if the action processing should be verbose.
+	 */
+	Boolean actionVerbose = true
+	
+	/**
 	 * Evaluate as a Groovy code snippet to determine if the action should be run.
 	 */
 	String when = ""
@@ -216,6 +221,17 @@ abstract class UcAdfAction extends UcdObject {
 	 */
 	public void logInfo(final String message) {
 		if (actionInfo) {
+			log.info message
+		}
+	}
+
+	/**
+	 * Log a message with log.info.
+	 * Logging of these messages is enabled/disabled by {@link #actionVerbose}.
+	 * @param message the message to log.
+	 */
+	public void logVerbose(final String message) {
+		if (actionVerbose) {
 			log.info message
 		}
 	}

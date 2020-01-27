@@ -52,7 +52,7 @@ class UcdGetComponentVersions extends UcAdfAction {
 			ucdVersions = response.readEntity(new GenericType<List<UcdVersion>>(){})
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-			logInfo(errMsg)
+			logVerbose(errMsg)
 			if (response.getStatus() == 404) {
 				if (failIfNotFound) {
 					throw new UcdInvalidValueException(errMsg)
@@ -61,7 +61,7 @@ class UcdGetComponentVersions extends UcAdfAction {
 				throw new UcdInvalidValueException(errMsg)
 			}
 		}
-		
+
 		List<UcdVersion> ucdReturnVersions = []
 		
 		if (match) {
@@ -72,6 +72,10 @@ class UcdGetComponentVersions extends UcAdfAction {
 			}
 		} else {
 			ucdReturnVersions = ucdVersions
+		}
+		
+		if (ucdReturnVersions.size() == 0 && failIfNotFound) {
+			throw new UcdInvalidValueException("No component [$component] version(s) found. match=[$match].")
 		}
 		
 		return ucdReturnVersions

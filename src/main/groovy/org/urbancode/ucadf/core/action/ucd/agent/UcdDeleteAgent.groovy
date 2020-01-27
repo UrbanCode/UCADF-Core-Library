@@ -33,9 +33,9 @@ class UcdDeleteAgent extends UcAdfAction {
 		Boolean deleted = false
 		
 		if (!commit) {
-			logInfo("Would delete agent [$agent].")
+			logVerbose("Would delete agent [$agent].")
 		} else {
-			logInfo("Delete agent [$agent].")
+			logVerbose("Delete agent [$agent].")
 		
 			WebTarget target = ucdSession.getUcdWebTarget()
 				.path("/cli/agentCLI")
@@ -48,21 +48,21 @@ class UcdDeleteAgent extends UcAdfAction {
 				Response response = target.request(MediaType.APPLICATION_JSON).delete()
 				
 				if (response.status == 204) {
-					logInfo("Agent [$agent] deleted.")
+					logVerbose("Agent [$agent] deleted.")
 					deleted = true
 					break
 				} else if (response.status == 404) {
 					String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
-					logInfo(errMsg)
+					logVerbose(errMsg)
 					if (failIfNotFound) {
 						throw new UcdInvalidValueException(errMsg)
 					}
 					break
 				} else {
 					String responseStr = response.readEntity(String.class)
-					logInfo(responseStr)
-					if (responseStr ==~ /.*bulk manipulation query.*/ && iAttempt < MAXATTEMPTS) {
-						logInfo("Attempt $iAttempt failed. Waiting to try again.")
+					logVerbose(responseStr)
+					if ((responseStr ==~ /.*bulk manipulation query.*/ || responseStr ==~ /.*another transaction.*/) && iAttempt < MAXATTEMPTS) {
+						logVerbose("Attempt $iAttempt failed. Waiting to try again.")
 						Thread.sleep(2000)
 					} else {
 						throw new UcdInvalidValueException(response)

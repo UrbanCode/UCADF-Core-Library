@@ -24,7 +24,7 @@ class UcdGetSecurityTypes extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logInfo("Getting security types.")
+		logVerbose("Getting security types.")
 
 		// Only needs to be loaded once.
 		if (!ucdSecurityTypes) {

@@ -12,8 +12,8 @@ import org.urbancode.ucadf.core.model.ucd.version.UcdVersion
 
 class UcAdfCacheCleanProcessTemp extends UcAdfAction {
 	// Action properties.
-	/** (Optional) The directory to clean. */
-	String dirName = ""
+	/** (Optional) The cache directory name to clean. */
+	String cacheDirName
 	
 	/** The cache component name or ID. */
 	String component = ""
@@ -30,13 +30,13 @@ class UcAdfCacheCleanProcessTemp extends UcAdfAction {
 		validatePropsExist()
 
 		// Clean the process temporary directory.
-		if (dirName) {
-			cleanProcessTempDir(dirName.trim())
+		if (cacheDirName) {
+			cleanProcessTempDir()
 		}
 		
 		// Clean out any unused cache component versions.
 		if (component) {
-			logInfo("Cleaning cache component versions from component [$component].")
+			logVerbose("Cleaning cache component versions from component [$component].")
 
 			// Get the component versions.
 			List<UcdVersion> ucdVersions = actionsRunner.runAction([
@@ -77,17 +77,17 @@ class UcAdfCacheCleanProcessTemp extends UcAdfAction {
 						])
 					}
 				} catch(Exception e) {
-					logInfo(e.getMessage())
+					logVerbose(e.getMessage())
 				}
 			}
 		}		
 	}	
 	
 	// Clean up a directory that has subdirectories associated with non-running process names.
-	private cleanProcessTempDir(final String dirName) {
-		logInfo("Cleaning temporary process directories from [$dirName].")
+	private cleanProcessTempDir() {
+		logVerbose("Cleaning temporary process directories from [$cacheDirName].")
 		
-		File parentDir = new File(dirName.trim())
+		File parentDir = new File(cacheDirName.trim())
 		
 		for (dir in parentDir.listFiles()) {
 			if (!dir.isDirectory()) {
@@ -107,11 +107,11 @@ class UcAdfCacheCleanProcessTemp extends UcAdfAction {
 					requestId: requestId
 				])
 				if (!isProcessRequestRunning) {
-					logInfo("Deleting directory [${dir.getPath()}].")
+					logVerbose("Deleting directory [${dir.getPath()}].")
 					dir.deleteDir()
 				}
 			} catch(Exception e) {
-				logInfo(e.getMessage())
+				logVerbose(e.getMessage())
 			}
 		}
 	}

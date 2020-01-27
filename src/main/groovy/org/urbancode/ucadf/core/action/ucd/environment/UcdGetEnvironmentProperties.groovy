@@ -30,7 +30,7 @@ class UcdGetEnvironmentProperties extends UcAdfAction {
 
 		List<UcdProperty> ucdProperties
 		
-		logInfo("Getting application [$application] environment [$environment] properties.")
+		logVerbose("Getting application [$application] environment [$environment] properties.")
 
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/environment/getProperties")
 			.queryParam("application", application)

@@ -38,13 +38,14 @@ class UcAdfPageLoopControl extends UcdObject {
 		// Get the content range header from the response.
 		MultivaluedMap<String, Object> responseHeaders = response.getHeaders()
 		String contentRange = responseHeaders.get("Content-Range").get(0)
-		
+
 		// Parse the content range that's returned as string format: RangeStart-RangeEnd/Size.
 		String rangeStartStr, rangeEndStr, sizeStr
 		(rangeStartStr, rangeEndStr, sizeStr) = contentRange.split(/[-\/]/)
 
 		// Convert the parsed strings to integers.
-		rangeStart = Integer.valueOf(rangeStartStr)
+		// The items prefix was added in 7.0.4.
+		rangeStart = Integer.valueOf(rangeStartStr.replaceAll(/items /, ""))
 		rangeEnd = Integer.valueOf(rangeEndStr)
 		size = Integer.valueOf(sizeStr)
 		

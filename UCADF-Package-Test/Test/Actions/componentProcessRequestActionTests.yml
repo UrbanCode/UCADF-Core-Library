@@ -11,8 +11,8 @@ actions:
   # Prepare for tests.
   #==============================================================================          
   # Cancel the sleeping process.
-  - action: UcdCancelProcesses
-    match: "^Sleep Test$"
+  - action: UcdCancelApplicationProcesses
+    matchProcess: "^Sleep Test$"
 
   # Create the top level group resource.
   - action: UcdCreateGroupResource
@@ -115,8 +115,6 @@ actions:
   - action: UcdGetComponentProcessRequestTaskCompletionProperties
     requestId: "${u:requestTask/componentProcessRequest/id}"
     taskName: "TestTask"
-    setPropsProcessRequestId: "${u:applicationRequestStatus/requestId}"
-    setPropsProcessRequestSuffix: "MySuffix"
   - action: UcAdfComment
     actionInfo: false
     comment: "Component process request completion properties %s"
@@ -131,5 +129,5 @@ actions:
     taskName: "TestTask"
  
   # Cancel any currently waiting processes.
-  - action: UcdCancelProcesses
-    match: "Application Task Test"
+  - action: UcdCancelApplicationProcesses
+    matchProcess: "Application Task Test"
