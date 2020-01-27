@@ -186,8 +186,9 @@ class UcAdfActionsRunner {
 		initializeActionPackagesProperty()
 
 		// Initialize the outProps runner property for the actions run.
+		propertyValues.remove(UcAdfActionPropertyEnum.OUTPROPS.getPropertyName())
 		setPropertyValue(UcAdfActionPropertyEnum.OUTPROPS.getPropertyName(), new Properties())
-
+		
 		// Set the runner property values from the actions property values.
 		setPropertyValues(actions.getPropertyValues())
 		
@@ -234,7 +235,7 @@ class UcAdfActionsRunner {
 				actionMap
 			)
 		}
-
+		
 		return returnObject
 	}
 

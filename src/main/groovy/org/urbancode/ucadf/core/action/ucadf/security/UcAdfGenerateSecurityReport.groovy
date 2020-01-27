@@ -38,11 +38,12 @@ class UcAdfGenerateSecurityReport extends UcAdfAction {
 		// Generate the security report.
 		logVerbose("Generating Team Security Report.")
 		List<UcdTeam> ucdTeams = actionsRunner.runAction([
-			action: UcdGetTeams.getSimpleName()
+			action: UcdGetTeams.getSimpleName(),
+			actionInfo: false
 		])
 		
 		for (UcdTeam ucdTeam in ucdTeams) {
-			if ((team && ucdTeam.getName() == team) || (!team && ucdTeam.getName() ==~ /${match}/)) {
+			if ((team && ucdTeam.getName() == team) || (!team && ucdTeam.getName() ==~ /${match}/) || (!team && !match)) {
 				// Get the team details.
 				UcdTeam ucdTeamInfo = actionsRunner.runAction([
 					action: UcdGetTeam.getSimpleName(),
