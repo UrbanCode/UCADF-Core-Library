@@ -60,17 +60,39 @@ actions:
     properties:
       - name: "${u:coreTestProperty1}"
         value: "${u:coreTestProperty1}-Value"
+      - name: "${u:coreTestProperty1}-Secure"
+        value: "${u:coreTestProperty1}-Value"
+        secure: true
 
   # Get version property.
   - action: UcdGetVersionProperty
     component: "${u:coreTestComp1}"
     version: "${u:coreTestVersionDelete}"
     property: "${u:coreTestProperty1}"
+    actionReturnPropertyName: "versionProperty"
   - action: UcAdfComment
     actionInfo: false
     comment: "Version property %s"
     values:
       - ${u:actionReturn}
+  - action: UcAdfThrowException
+    when: '!"${u:versionProperty/value}".equals("${u:coreTestProperty1}-Value")'
+    message: "Invalid property value."
+    
+  # Get secure version property.
+  - action: UcdGetVersionProperty
+    component: "${u:coreTestComp1}"
+    version: "${u:coreTestVersionDelete}"
+    property: "${u:coreTestProperty1}-Secure"
+    actionReturnPropertyName: "versionProperty"
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "Version property %s"
+    values:
+      - ${u:actionReturn}
+  - action: UcAdfThrowException
+    when: '!"${u:versionProperty/value}".equals("****")'
+    message: "Invalid property value."
     
   # Get version properties.
   - action: UcdGetVersionProperties

@@ -50,12 +50,12 @@ class UcdSetComponentProperties extends UcAdfAction {
 			component : component,
 			name : ucdProperty.getName(), 
 			description : ucdProperty.getDescription(), 
-			secure : ucdProperty.getSecure(), 
+			isSecure : ucdProperty.getSecure(), 
 			value : ucdProperty.getValue()
 		]
 
 		JsonBuilder jsonBuilder = new JsonBuilder(requestMap)
-		
+
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() == 200) {
 			logVerbose("Property [${ucdProperty.getName()}] set.")

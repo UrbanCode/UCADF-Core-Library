@@ -214,16 +214,37 @@ actions:
     properties:
       - name: "${u:coreTestProperty1}"
         value: "${u:coreTestProperty1}-Value"
+      - name: "${u:coreTestProperty1}-Secure"
+        value: "${u:coreTestProperty1}-Value"
+        secure: true
 
   # Get resource property.
   - action: UcdGetResourceProperty
     resource: "${u:coreTestTopResource}"
     property: "${u:coreTestProperty1}"
+    actionReturnPropertyName: "resourceProperty"
   - action: UcAdfComment
     actionInfo: false
     comment: "Resource property %s"
     values:
       - ${u:actionReturn}
+  - action: UcAdfThrowException
+    when: '!"${u:resourceProperty/value}".equals("${u:coreTestProperty1}-Value")'
+    message: "Invalid property value."
+
+  # Get secure resource property.
+  - action: UcdGetResourceProperty
+    resource: "${u:coreTestTopResource}"
+    property: "${u:coreTestProperty1}-Secure"
+    actionReturnPropertyName: "resourceProperty"
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "Resource property %s"
+    values:
+      - ${u:actionReturn}
+  - action: UcAdfThrowException
+    when: '!"${u:resourceProperty/value}".equals("****")'
+    message: "Invalid property value."
 
   # Get resource properties as list.
   - action: UcdGetResourceProperties

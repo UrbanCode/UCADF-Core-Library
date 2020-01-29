@@ -151,20 +151,40 @@ actions:
   - action: UcdSetComponentProperties
     component: "${u:coreTestComp1}"
     properties:
-      - name: ${u:coreTestProperty1}"
+      - name: "${u:coreTestProperty1}"
         value: "${u:coreTestProperty1}-Value"
+      - name: "${u:coreTestProperty1}-Secure"
+        value: "${u:coreTestProperty1}-Value"
+        secure: true
     
   # Get component property.
   - action: UcdGetComponentProperty
     component: "${u:coreTestComp1}"
-    property: ${u:coreTestProperty1}"
+    property: "${u:coreTestProperty1}"
     actionReturnPropertyName: componentProperty
   - action: UcAdfComment
     actionInfo: false
     comment: "Component property %s"
     values:
       - ${u:componentProperty}
-   
+  - action: UcAdfThrowException
+    when: '!"${u:componentProperty/value}".equals("${u:coreTestProperty1}-Value")'
+    message: "Invalid property value."
+    
+  # Get secure component property.
+  - action: UcdGetComponentProperty
+    component: "${u:coreTestComp1}"
+    property: "${u:coreTestProperty1}-Secure"
+    actionReturnPropertyName: componentProperty
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "Component property %s"
+    values:
+      - ${u:componentProperty}
+  - action: UcAdfThrowException
+    when: '!"${u:componentProperty/value}".equals("****")'
+    message: "Invalid property value."
+    
   # Get component properties.
   - action: UcdGetComponentProperties
     component: "${u:coreTestComp1}"

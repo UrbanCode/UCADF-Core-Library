@@ -88,6 +88,9 @@ actions:
     properties:
       - name: "PROPERTY1"
         value: "PROPERTYVALUE1"
+      - name: "PROPERTY1-Secure"
+        value: "PROPERTYVALUE1"
+        secure: true
       - name: "PROPERTY2"
         value: "PROPERTYVALUE2"
       - name: "PROPERTY3"
@@ -98,6 +101,18 @@ actions:
     componentTemplate: "${u:coreTestCompTemplate1}"
     property: "PROPERTY1"
     actionReturnPropertyName: componentTemplateProperty
+  - action: UcAdfThrowException
+    when: '!"${u:componentTemplateProperty/value}".equals("PROPERTYVALUE1")'
+    message: "Invalid property value."
+    
+  # Get a component template property.
+  - action: UcdGetComponentTemplateProperty
+    componentTemplate: "${u:coreTestCompTemplate1}"
+    property: "PROPERTY1-Secure"
+    actionReturnPropertyName: componentTemplateProperty
+  - action: UcAdfThrowException
+    when: '!"${u:componentTemplateProperty/value}".equals("****")'
+    message: "Invalid property value."
     
   - action: UcAdfComment
     comment: "Component template property %s"

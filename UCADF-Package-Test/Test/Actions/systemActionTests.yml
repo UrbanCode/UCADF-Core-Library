@@ -22,4 +22,51 @@ actions:
     configMap:
       messageOfTheDay: "This is the message of the day X."
       
-  # TODO: Add system property tests.
+  # Set system properties.
+  - action: UcdSetSystemProperties
+    systemProperties:
+      - name: "${u:coreTestProperty1}"
+        value: "${u:coreTestProperty1}-Value"
+      - name: "${u:coreTestProperty1}-Secure"
+        value: "${u:coreTestProperty1}-Value"
+        secure: true
+    
+  # Get system property.
+  - action: UcdGetSystemProperty
+    property: "${u:coreTestProperty1}"
+    actionReturnPropertyName: systemProperty
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "System property %s"
+    values:
+      - ${u:systemProperty}
+  - action: UcAdfThrowException
+    when: '!"${u:systemProperty/value}".equals("${u:coreTestProperty1}-Value")'
+    message: "Invalid property value."
+    
+  # Get secure system property.
+  - action: UcdGetSystemProperty
+    property: "${u:coreTestProperty1}-Secure"
+    actionReturnPropertyName: systemProperty
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "System property %s"
+    values:
+      - ${u:systemProperty}
+  - action: UcAdfThrowException
+    when: '!"${u:systemProperty/value}".equals("****")'
+    message: "Invalid property value."
+
+  # Get system properties.
+  - action: UcdGetSystemProperties
+    actionReturnPropertyName: systemProperties
+  - action: UcAdfItemsLoop
+    actionInfo: false
+    items: ${u:systemProperties}
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "System property %s"
+        values:
+          - ${u:item}
+

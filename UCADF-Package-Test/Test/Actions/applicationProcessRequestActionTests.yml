@@ -126,21 +126,31 @@ actions:
   - action: UcdGetApplicationProcessRequestProperties
     requestId: "${u:requestStatus/requestId}"
     returnAs: MAPBYNAME
-    actionReturnPropertyName: "requestProperty"
+    actionReturnPropertyName: "requestProperties"
   - action: UcAdfComment
     actionInfo: false
     comment: "Property id=[%s] value=[%s] secure=[%s]\nProperty id=[%s] value=[%s] secure=[%s]\nProperty id=[%s] value=[%s] secure=[%s]"
     values: 
-      - "${u:requestProperty'/originalRequest/UCADFCORETEST-AppProcess-TextProperty'/id}"
-      - "${u:requestProperty'/originalRequest/UCADFCORETEST-AppProcess-TextProperty'/value}"
-      - "${u:requestProperty'/originalRequest/UCADFCORETEST-AppProcess-TextProperty'/secure}"
-      - "${u:requestProperty/MyProperty1/id}"
-      - "${u:requestProperty/MyProperty1/value}"
-      - "${u:requestProperty/MyProperty1/secure}"
-      - "${u:requestProperty/MyProperty2/id}"
-      - "${u:requestProperty/MyProperty2/value}"
-      - "${u:requestProperty/MyProperty2/secure}"
+      - "${u:requestProperties'/originalRequest/UCADFCORETEST-AppProcess-TextProperty'/id}"
+      - "${u:requestProperties'/originalRequest/UCADFCORETEST-AppProcess-TextProperty'/value}"
+      - "${u:requestProperties'/originalRequest/UCADFCORETEST-AppProcess-TextProperty'/secure}"
+      - "${u:requestProperties/MyProperty1/id}"
+      - "${u:requestProperties/MyProperty1/value}"
+      - "${u:requestProperties/MyProperty1/secure}"
+      - "${u:requestProperties/MyProperty2/id}"
+      - "${u:requestProperties/MyProperty2/value}"
+      - "${u:requestProperties/MyProperty2/secure}"
       
+  # Validate request property.
+  - action: UcAdfThrowException
+    when: '!"${u:requestProperties/MyProperty1/value}".equals("MyProperty1Value")'
+    message: "Invalid property value."
+    
+  # Validate secure process request property.
+  - action: UcAdfThrowException
+    when: '!"${u:requestProperties/MyProperty2/value}".equals("****")'
+    message: "Invalid property value."
+    
   # Get the application process request properties. Return as list.
   - action: UcdGetApplicationProcessRequestProperties
     requestId: "${u:requestStatus/requestId}"
