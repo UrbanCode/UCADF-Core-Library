@@ -49,7 +49,7 @@ class UcdSetApplicationProperties extends UcAdfAction {
 				application : application,
 				name : name, 
 				description : description, 
-				secure : secure, 
+				isSecure : secure, 
 				value : value
 			]
 		

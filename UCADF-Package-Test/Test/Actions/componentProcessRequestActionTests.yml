@@ -120,7 +120,41 @@ actions:
     comment: "Component process request completion properties %s"
     values:
       - "${u:actionReturn}"
-      
+
+   # Set additional component process request properties.
+  - action: UcdSetComponentProcessRequestProperties
+    requestId: "${u:requestTask/componentProcessRequest/id}"
+    properties:
+      - name: "MyProperty1"
+        value: "MyProperty1Value"
+      - name: "MyProperty2"
+        value: "MyProperty2Value"
+        secure: true
+
+  # Get the component process request properties.        
+  - action: UcdGetComponentProcessRequestProperties
+    requestId: "${u:requestTask/componentProcessRequest/id}"
+    actionReturnPropertyName: requestProperties
+  - action: UcAdfItemsLoop
+    actionInfo: false
+    items: ${u:requestProperties}
+    actions:
+      - action: UcAdfComment
+        actionInfo: false
+        comment: "Component process request property %s"
+        values:
+          - ${u:item}
+  
+  # Validate request property.
+  - action: UcAdfThrowException
+    when: '!"${u:requestProperties/MyProperty1/value}".equals("MyProperty1Value")'
+    message: "Invalid property value."
+    
+  # Validate secure process request property.
+  - action: UcAdfThrowException
+    when: '!"${u:requestProperties/MyProperty2/value}".equals("****")'
+    message: "Invalid property value."
+    
   # Cancel any currently waiting component tasks.
   - action: UcdCancelProcessRequestTasks
     requestId: "${u:applicationRequestStatus/requestId}"

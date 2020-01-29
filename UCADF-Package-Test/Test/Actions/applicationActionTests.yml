@@ -124,6 +124,9 @@ actions:
     properties:
       - name: "${u:coreTestProperty1}"
         value: "${u:coreTestProperty1}-Value"
+      - name: "${u:coreTestProperty1}-Secure"
+        value: "${u:coreTestProperty1}-Value"
+        secure: true
     
   # Get an application property.
   - action: UcdGetApplicationProperty
@@ -135,6 +138,23 @@ actions:
     comment: "Application property %s"
     values:
       - ${u:applicationProperty}
+  - action: UcAdfThrowException
+    when: '!"${u:applicationProperty/value}".equals("${u:coreTestProperty1}-Value")'
+    message: "Invalid property value."
+   
+  # Get an application property.
+  - action: UcdGetApplicationProperty
+    application: "${u:coreTestApp1}"
+    property: "${u:coreTestProperty1}-Secure"
+    actionReturnPropertyName: applicationProperty
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "Application property %s"
+    values:
+      - ${u:applicationProperty}
+  - action: UcAdfThrowException
+    when: '!"${u:applicationProperty/value}".equals("****")'
+    message: "Invalid property value."
    
   # Get application properties.
   - action: UcdGetApplicationProperties
