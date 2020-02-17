@@ -602,7 +602,8 @@ class UcAdfActionsRunner {
 	// Set a property.
 	public setPropertyValue(
 		final String propertyName, 
-		final Object propertyValue) {
+		final Object propertyValue,
+		final Boolean merge = false) {
 
 		// Set debugging.
 		if (UcAdfActionPropertyEnum.ACTIONDEBUG.getPropertyName().equals(propertyName)) {
@@ -618,7 +619,17 @@ class UcAdfActionsRunner {
 				debugMessage("Setting property name [$propertyName] value [$propertyValue] (Map).")
 				
 				// Merge the maps.
-				propertyValues.put(propertyName, propertyValues.get(propertyName) + propertyValue)
+				if (merge) {
+					propertyValues.put(
+						propertyName, 
+						mergeMaps( [ propertyValues.get(propertyName), propertyValue ])
+					)
+				} else {
+					propertyValues.put(
+						propertyName,
+						propertyValue
+					)
+				}
 			} else {
 				debugMessage("Setting property name [$propertyName] value [$propertyValue].")
 	
@@ -628,10 +639,33 @@ class UcAdfActionsRunner {
 		}
 	}
 
+	// Recursively merge a list of maps into a single map.
+	public Map mergeMaps(List<Map> maps) {
+		Map mergedMap
+		
+		if (maps.size() == 1) {
+			mergedMap = maps[0]
+		} else if (maps.size() == 0) {
+			mergedMap = [:]
+		} else {
+			mergedMap = maps.inject([:]) { resultMap, addMap ->
+				addMap.each { mapKey, mapValue ->
+					resultMap[mapKey] = resultMap[mapKey] instanceof Map ? mergeMaps([ resultMap[mapKey], mapValue ]) : mapValue
+				}
+				resultMap
+			}
+		}
+		
+		return mergedMap
+	}
+	
 	// Set property values from a map collection.
-	public setPropertyValues(final Map<String, Object> propertyValues) {
+	public setPropertyValues(
+		final Map<String, Object> propertyValues,
+		final Boolean merge = false) {
+		
 		propertyValues.each { k, v ->
-			setPropertyValue(k, v)
+			setPropertyValue(k, v, merge)
 		}
 	}	
 	

@@ -29,11 +29,15 @@ class UcdGetVersion extends UcAdfAction {
 	@Override
 	public UcdVersion run() {
 		// Validate the action properties.
-		validatePropsExist()
+		validatePropsExistExclude([ 'component' ])
 
 		UcdVersion ucdVersion
-		
-		logVerbose("Getting component [$component] version [$version].")
+
+		if (component) {
+			logVerbose("Getting component [$component] version [$version].")
+		} else {
+			logVerbose("Getting version [$version].")
+		}
 
 		WebTarget target
 		Response response
@@ -41,6 +45,10 @@ class UcdGetVersion extends UcAdfAction {
 		String versionId = version
 
 		if (!UcdObject.isUUID(version)) {
+			if (!component) {
+				throw new UcdInvalidValueException("A component name must be specified if the version specified is not a UUID.")
+			}
+			
 			// Work around 7.0 bug where it converts a version name with 4 hyphens to a UUID.
 			if (isIncorrectlyInterpretedAsUUID(version)) {
 				// Look for a component version that matches the name.

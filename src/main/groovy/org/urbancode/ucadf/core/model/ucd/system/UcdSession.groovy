@@ -161,6 +161,7 @@ class UcdSession {
 	 * @param noDefaultAuth The flag to indicate no default authentication.
 	 * @return The stdout buffer, the stderr buffer, the exit value.
 	 */
+	@Deprecated	// Use UcAdfExecuteCommand action.
 	public static executeCommand(
 		final List commandList, 
 		final Integer maxWaitSecs, 

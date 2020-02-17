@@ -41,7 +41,8 @@ class UcAdfCacheCleanProcessTemp extends UcAdfAction {
 			// Get the component versions.
 			List<UcdVersion> ucdVersions = actionsRunner.runAction([
 				action: UcdGetComponentVersions.getSimpleName(),
-				component: component
+				component: component,
+				failIfNotFound: false
 			])
 	
 			for (UcdVersion ucdVersion in ucdVersions) {

@@ -68,79 +68,87 @@ class UcdDownloadVersionFiles extends UcAdfAction {
 				action: UcdGetComponent.getSimpleName(),
 				actionInfo: false,
 				component: component,
-				failIfNotFound: true
+				failIfNotFound: failIfNotFound
 			])
 	
 	        String useVersion = version
-	        if ("latest".equals(version)) {
-				UcdVersion ucdVersion = actionsRunner.runAction([
-					action: UcdGetComponentLatestVersion.getSimpleName(),
+			UcdVersion ucdVersion
+			
+			if (ucdComponent) {
+		        if ("latest".equals(version)) {
+					UcdVersion ucdLatestVersion = actionsRunner.runAction([
+						action: UcdGetComponentLatestVersion.getSimpleName(),
+						actionInfo: false,
+						component: component,
+						failIfNotFound: failIfNotFound
+					])
+		
+					useVersion = ucdLatestVersion.getName()
+		        }
+		        
+		        // Make sure the version exists.
+				ucdVersion = actionsRunner.runAction([
+					action: UcdGetVersion.getSimpleName(),
 					actionInfo: false,
 					component: component,
-					failIfNotFound: true
+					version: useVersion,
+					failIfNotFound: failIfNotFound
 				])
-	
-				useVersion = ucdVersion.getName()
-	        }
-	        
-	        // Make sure the version exists.
-			UcdVersion ucdVersion = actionsRunner.runAction([
-				action: UcdGetVersion.getSimpleName(),
-				actionInfo: false,
-				component: component,
-				version: version,
-				failIfNotFound: true
-			])
-	
-			logVerbose("Starting download of component [$component] version [$version].")
+			}
 			
-			WebTarget target = ucdSession.getUcdWebTarget().path("/rest/deploy/version/{versionId}/downloadArtifacts")
-				.resolveTemplate("versionId", ucdVersion.getId())
-			logDebug("target=$target")
-			
-			Response response = target.request().get()
-			
-			InputStream inputStream = response.readEntity(InputStream.class)
-	
-			FileOutputStream fileOutputStream = new FileOutputStream(artifactsFile)
-	
-			try {
-				byte[] dataBuffer = new byte[1024]
-				int bytesRead
-				while ((bytesRead = inputStream.read(dataBuffer, 0, 1024)) != -1) {
-					fileOutputStream.write(dataBuffer, 0, bytesRead)
-				}
-			} finally {
+			if (ucdVersion) {
+				logVerbose("Starting download of component [$component] version [$version].")
+				
+				WebTarget target = ucdSession.getUcdWebTarget().path("/rest/deploy/version/{versionId}/downloadArtifacts")
+					.resolveTemplate("versionId", ucdVersion.getId())
+				logDebug("target=$target")
+				
+				Response response = target.request().get()
+				
+				InputStream inputStream = response.readEntity(InputStream.class)
+		
+				FileOutputStream fileOutputStream = new FileOutputStream(artifactsFile)
+		
 				try {
-					inputStream.close()
-				} catch (Exception e) {
-					// Ignore close exception.
+					byte[] dataBuffer = new byte[1024]
+					int bytesRead
+					while ((bytesRead = inputStream.read(dataBuffer, 0, 1024)) != -1) {
+						fileOutputStream.write(dataBuffer, 0, bytesRead)
+					}
+				} finally {
+					try {
+						inputStream.close()
+					} catch (Exception e) {
+						// Ignore close exception.
+					}
+					
+					try {
+						fileOutputStream.close()
+					} catch (Exception e) {
+						// Ignore close exception.
+					}
 				}
 				
-				try {
-					fileOutputStream.close()
-				} catch (Exception e) {
-					// Ignore close exception.
+				logVerbose("Downloaded artifacts file [${artifactsFile.getAbsolutePath()}] size is [${artifactsFile.length()}] bytes.")
+		
+				downloaded = true
+				
+				// Extract the downloaded file.
+				if (extractDirName) {
+					actionsRunner.runAction([
+						action: UcAdfExtractFile.getSimpleName(),
+						fileName: artifactsFile.getAbsolutePath(),
+						extractDirName: extractDirName,
+						skipIfExtractDirExists: skipIfExtractDirExists,
+						deleteFileIfExtracted: deleteZipIfExtracted,
+						actionVerbose: actionVerbose
+					])
 				}
-			}
-			
-			logVerbose("Downloaded artifacts file [${artifactsFile.getAbsolutePath()}] size is [${artifactsFile.length()}] bytes.")
-	
-			downloaded = true
-			
-			// Extract the downloaded file.
-			if (extractDirName) {
-				actionsRunner.runAction([
-					action: UcAdfExtractFile.getSimpleName(),
-					fileName: artifactsFile.getAbsolutePath(),
-					extractDirName: extractDirName,
-					skipIfExtractDirExists: skipIfExtractDirExists,
-					deleteFileIfExtracted: deleteZipIfExtracted,
-					actionVerbose: actionVerbose
-				])
+			} else {
+				logVerbose("Component [$component] version [$version] not found.")
 			}
 		}
-		
+
 		return downloaded
 	}	
 }
