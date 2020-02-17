@@ -13,6 +13,10 @@ class UcAdfSetActionProperties extends UcAdfAction {
 	/** If true then show debug information. */
 	Boolean debug = false
 
+	/** If true then merge maps rather than replacing them. */
+	Boolean merge = false
+	
+	/** If true then set once. */
 	Boolean setFinal = false
 		
 	/**
@@ -24,7 +28,10 @@ class UcAdfSetActionProperties extends UcAdfAction {
 		validatePropsExist()
 
 		// Set the property values.		
-		actionsRunner.setPropertyValues(propertyValues)
+		actionsRunner.setPropertyValues(
+			propertyValues, 
+			merge
+		)
 
 		if (setFinal) {
 			propertyValues.keySet().each { propertyName ->

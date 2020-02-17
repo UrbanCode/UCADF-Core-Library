@@ -74,6 +74,23 @@ class UcdVersion extends UcdObject {
 	/** The security properties. */
 	UcdSecurityPermissionProperties security
 
+	/** Flag that indicates version is importing. */
+	Boolean importing
+
+	/** Z/OS properties. */
+	Long totalZosAddSequentialCount
+	Long totalZosDelSequentialcount
+	Long totalZosAddPdsCount
+	Long totalZosDelPdsCount
+	Long totalZosAddPdsMemberCount
+	Long totalZosDelPdsMemberCount
+	Long totalZosGenericCount
+	Long totalZosGenericMemberCount
+	Long totalZosAddUssDirectoryCount
+	Long totalZosDelUssDirectoryCount
+	Long totalZosAddUssFileCount
+	Long totalZosDelUssFileCount
+	
 	// Constructors.	
 	UcdVersion() {
 	}

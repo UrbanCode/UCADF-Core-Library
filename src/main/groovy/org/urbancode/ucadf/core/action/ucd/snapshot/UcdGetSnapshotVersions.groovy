@@ -81,7 +81,7 @@ class UcdGetSnapshotVersions extends UcAdfAction {
 				}
 			}
 		}
-println snapshotVersions		
+
 		return snapshotVersions
 	}
 }
