@@ -56,17 +56,17 @@ class UcdImportApplication extends UcAdfAction {
 	/** Remove the team mappings from the imported objects. */
 	Boolean removeTeamMappings = false
 	
-	/** Import the components with names matching the regular expression. */
-	String compMatch
+	/** Import the components with names matching the regular expression. Default: import all. */
+	String compMatch = ".*"
 	
-	/** Import the component templates with names matching the regular expression. */
-	String compTempMatch
+	/** Import the component templates with names matching the regular expression. Default: import all. */
+	String compTempMatch = ".*"
 	
-	/** Import the generic processes with names matching the regular expression. */
-	String genProcessMatch
+	/** Import the generic processes with names matching the regular expression. Default: import all. */
+	String genProcessMatch = ".*"
 	
-	/** Import the application environments with names matching the regular expression. */
-	String envMatch
+	/** Import the application environments with names matching the regular expression. Default: import all. */
+	String envMatch = ".*"
 	
 	/**
 	 * Runs the action.	
