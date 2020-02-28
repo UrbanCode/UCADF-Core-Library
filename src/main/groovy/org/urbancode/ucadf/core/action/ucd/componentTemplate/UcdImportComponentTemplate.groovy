@@ -35,10 +35,10 @@ class UcdImportComponentTemplate extends UcAdfAction {
 	String fileName
 	
 	/** The component template upgrade type. */
-	UcdImportTypeEnum compTempUpgradeType
+	UcdImportTypeEnum compTempUpgradeType = UcdImportTypeEnum.UPGRADE_IF_EXISTS
 	
 	/** The generic process upgrade type. */
-	UcdImportTypeEnum genProcessUpgradeType
+	UcdImportTypeEnum genProcessUpgradeType = UcdImportTypeEnum.UPGRADE_IF_EXISTS
 	
 	/** The flag that indicates remove encrypted strings. */
 	Boolean removeCrypt = false
