@@ -9,55 +9,96 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.action.ucd.applicationProcessRequest.UcdGetApplicationProcessRequest
 import org.urbancode.ucadf.core.action.ucd.componentProcessRequest.UcdGetComponentProcessRequest
+import org.urbancode.ucadf.core.action.ucd.genericProcessRequest.UcdGetGenericProcessRequest
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.applicationProcessRequest.UcdApplicationProcessRequest
 import org.urbancode.ucadf.core.model.ucd.componentProcessRequest.UcdComponentProcessRequest
 import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucd.genericProcessRequest.UcdGenericProcessRequest
 import org.urbancode.ucadf.core.model.ucd.processRequest.UcdProcessRequestTrace
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
 
 // TODO: This is not complete and does not currently return anything.
 class UcdGetProcessRequestTrace extends UcAdfAction {
 	// Action properties.
-	/** The application process request ID. */
-	String appProcessRequestId
+	/** The request ID. */
+	String requestId
 	
-	/** The component process request ID. */
-	String compProcessRequestId
-	
+	/** The flag that indicates fail if the process request is not found. Default is true. */
+	Boolean failIfNotFound = true
+
 	/**
-	 * Runs the action.	
+	 * Runs the request trace.	
 	 */
 	@Override
-	public Object run() {
+	public UcdProcessRequestTrace run() {
 		// Validate the action properties.
 		validatePropsExist()
 
-		// Get an application process request trace.
-		if (appProcessRequestId) {
-			UcdApplicationProcessRequest ucdApplicationProcessRequest = actionsRunner.runAction([
-				action: UcdGetApplicationProcessRequest.getSimpleName(),
-				requestId: appProcessRequestId
-			])
-
-			// Recursively process the child traces.			
-			getRequestTrace(ucdApplicationProcessRequest.getRootTrace())
-		}
-
-		// Get a component process request trace.		
-		if (compProcessRequestId) {
-			UcdComponentProcessRequest ucdComponentProcessRequest = actionsRunner.runAction([
-				action: UcdGetComponentProcessRequest.getSimpleName(),
-				requestId: compProcessRequestId
-			])
+		UcdProcessRequestTrace requestTrace
+		
+		Boolean foundProcess = false
+		
+		// Determine if request ID is associated with a running application process.
+		UcdApplicationProcessRequest appProcessRequest = actionsRunner.runAction([
+			action: UcdGetApplicationProcessRequest.getSimpleName(),
+//			actionInfo: false,
+//			actionVerbose: false,
+			requestId: requestId,
+			failIfNotFound: false
+		])
+		
+		if (appProcessRequest) {
+			foundProcess = true
 			
-			// Recursively process the child traces.
-			if (ucdComponentProcessRequest.getChildren()) {
-				for (childTrace in ucdComponentProcessRequest.getChildren()) {
-					getRequestTrace(childTrace)
+			// Recursively process the child traces.			
+			requestTrace = appProcessRequest.getRootTrace()
+			
+			// Fill in the details of the request tract.
+			getRequestTrace(requestTrace)
+		} else {
+			// Determine if request ID is associated with a running component process.
+			UcdComponentProcessRequest compProcessRequest = actionsRunner.runAction([
+				action: UcdGetComponentProcessRequest.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
+				requestId: requestId,
+				failIfNotFound: false
+			])
+
+			if (compProcessRequest) {
+				foundProcess = true
+
+				requestTrace = compProcessRequest
+
+				// Fill in the details of the request tract.
+				getRequestTrace(requestTrace)
+			} else {
+				// Determine if request ID is associated with a running generic process.
+				UcdGenericProcessRequest genericProcessRequest = actionsRunner.runAction([
+					action: UcdGetGenericProcessRequest.getSimpleName(),
+					actionInfo: false,
+					actionVerbose: false,
+					requestId: requestId,
+					failIfNotFound: false
+				])
+				
+				if (genericProcessRequest) {
+					foundProcess = true
+					
+					requestTrace = genericProcessRequest.getTrace()
+								
+					// Fill in the details of the request tract.
+					getRequestTrace(requestTrace)
 				}
-			}	
+			}
 		}
+		
+		if (!foundProcess && failIfNotFound) {
+			throw new UcdInvalidValueException("Process request [$requestId] not found.")
+		}
+
+		return requestTrace
 	}
 	
 	// Get the process request trace information.
@@ -66,7 +107,7 @@ class UcdGetProcessRequestTrace extends UcAdfAction {
 		
 		// Get the workflow step logs.
 		if (trace.getWorkflowTraceId()) {
-			if (trace.getExtraLogs() != null) {
+			if (trace.getExtraLogs() != null || "plugin".equals(trace.getType())) {
                 try {
     				WebTarget target = ucdSession.getUcdWebTarget().path("/rest/logView/trace/{workflowTraceId}/{stepId}/stdOut.txt")
 						.resolveTemplate("workflowTraceId", trace.getWorkflowTraceId())
@@ -101,12 +142,15 @@ class UcdGetProcessRequestTrace extends UcAdfAction {
 		if (trace.getComponentProcessRequestId()) {
 			UcdComponentProcessRequest ucdComponentProcessRequest = actionsRunner.runAction([
 				action: UcdGetComponentProcessRequest.getSimpleName(),
+				actionInfo: false,
 				requestId: trace.getComponentProcessRequestId()
 			])
-			
+
 			trace.setComponentProcessRequest(
 				ucdComponentProcessRequest
 			)
+			
+			getRequestTrace(ucdComponentProcessRequest)
 		}
 		
 		// Recursively process the children.
@@ -114,6 +158,6 @@ class UcdGetProcessRequestTrace extends UcAdfAction {
 			for (childTrace in trace.getChildren()) {
 				getRequestTrace(childTrace)
 			}
-		}			
+		}
 	}
 }

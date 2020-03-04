@@ -6,9 +6,9 @@ package org.urbancode.ucadf.core.action.ucd.processRequest
 import org.urbancode.ucadf.core.action.ucd.applicationProcessRequest.UcdGetApplicationProcessRequest
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.applicationProcessRequest.UcdApplicationProcessRequest
-import org.urbancode.ucadf.core.model.ucd.applicationProcessRequest.UcdApplicationProcessRequestResponseStatusEnum
 import org.urbancode.ucadf.core.model.ucd.componentProcessRequest.UcdComponentProcessRequestTask
 import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucd.processRequest.UcdProcessRequestResponseStatusEnum
 import org.urbancode.ucadf.core.model.ucd.processRequest.UcdProcessRequestTraceTypeEnum
 import org.urbancode.ucadf.core.model.ucd.task.UcdTaskStatusEnum
 
@@ -86,7 +86,7 @@ class UcdWaitForProcessRequestTask extends UcAdfAction {
 				}
             }
             
-            if (ucdApplicationProcessRequest.getState() == UcdApplicationProcessRequestResponseStatusEnum.CLOSED) {
+            if (ucdApplicationProcessRequest.getState() == UcdProcessRequestResponseStatusEnum.CLOSED) {
                 throw new UcdInvalidValueException("Application process [$requestId] ended before task information was available.")
             }
 

@@ -1,11 +1,11 @@
 /**
- * This enumeration represents the application process request response status values.
+ * This enumeration represents the process request response status values.
  */
-package org.urbancode.ucadf.core.model.ucd.applicationProcessRequest
+package org.urbancode.ucadf.core.model.ucd.processRequest
 
 import com.fasterxml.jackson.annotation.JsonValue
 
-enum UcdApplicationProcessRequestResponseStatusEnum {
+enum UcdProcessRequestResponseStatusEnum {
 	EMPTY(""),
 	CANCELING("CANCELING"),
 	CLOSED("CLOSED"),
@@ -20,11 +20,11 @@ enum UcdApplicationProcessRequestResponseStatusEnum {
 	private String value
 	
 	// Constructor.	
-	UcdApplicationProcessRequestResponseStatusEnum(final String value) {
+	UcdProcessRequestResponseStatusEnum(final String value) {
 		this.value = value
 	}
 
-	/** Get the application process request response status value. This is the value to use for serialization. */
+	/** Get the process request response status value. This is the value to use for serialization. */
 	@JsonValue
 	public String getValue() {
 		return value

@@ -276,6 +276,15 @@ actions:
     values:
       - "${u:actionReturn}"
     
+  # Get the application process request trace.
+  - action: UcdGetProcessRequestTrace
+    requestId: "${u:requestStatus/requestId}"
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "Trace %s"
+    values:
+      - "${u:actionReturn}"
+    
   # Cancel the sleeping process.
   - action: UcdCancelApplicationProcesses
     matchProcess: "^Sleep Test$"

@@ -6,6 +6,7 @@ package org.urbancode.ucadf.core.model.ucd.genericProcessRequest
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.genericProcess.UcdGenericProcess
 import org.urbancode.ucadf.core.model.ucd.processRequest.UcdProcessRequestResponseResultEnum
+import org.urbancode.ucadf.core.model.ucd.processRequest.UcdProcessRequestResponseStatusEnum
 import org.urbancode.ucadf.core.model.ucd.processRequest.UcdProcessRequestTrace
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
@@ -45,8 +46,8 @@ class UcdGenericProcessRequest extends UcdObject {
 	/** The request response result. */
 	UcdProcessRequestResponseResultEnum result
 	
-	/** The request response state. TODO: Enumeration? */
-	String state
+	/** The request response state. */
+	UcdProcessRequestResponseStatusEnum state
 	
 	/** The request response paused. */
 	String paused

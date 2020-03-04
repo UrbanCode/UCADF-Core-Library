@@ -38,10 +38,18 @@ class UcdGetComponentProcessRequest extends UcAdfAction {
 		Response response = target.request().get()
 		if (response.getStatus() == 200) {
 			ucdComponentProcessRequest = response.readEntity(UcdComponentProcessRequest.class)
+			
+			// This response can return a 200 but still be not found.
+			if (!ucdComponentProcessRequest.getId()) {
+				ucdComponentProcessRequest = null
+				if (failIfNotFound) {
+					throw new UcdInvalidValueException("Component process request [$requestId] not found.")
+				}
+			}
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
 			logVerbose(errMsg)
-			if (response.getStatus() == 400 || response.status == 404) {
+			if (response.getStatus() == 400 || response.getStatus() == 404) {
 				if (failIfNotFound) {
 					throw new UcdInvalidValueException(errMsg)
 				}
@@ -49,7 +57,7 @@ class UcdGetComponentProcessRequest extends UcAdfAction {
 				throw new UcdInvalidValueException(errMsg)
 			}
 		}
-		
+
 		return ucdComponentProcessRequest
 	}
 }

@@ -137,7 +137,7 @@ class UcdRunGenericProcess extends UcAdfAction {
 				}
 			}
 		}
-		
+
 		if (waitForProcess && maxWaitSecs > 0) {
 			// Wait for each process to finish.
 			for (UcdGenericProcessRequest ucdGenericProcessRequest in ucdGenericProcessRequests) {
@@ -152,19 +152,24 @@ class UcdRunGenericProcess extends UcAdfAction {
 				Integer remainingSecs = maxWaitSecs
 				while (true) {
 					// Get information about the running generic process.
-					ucdGenericProcessRequest = actionsRunner.runAction([
+					UcdGenericProcessRequest evaluateGenericProcessRequest = actionsRunner.runAction([
 						action: UcdGetGenericProcessRequest.getSimpleName(),
 						actionInfo: false,
 						requestId: requestId
 					])
 
-					logDebug("result=${ucdGenericProcessRequest.getResult()}")
-					if (ucdGenericProcessRequest.getResult() == UcdProcessRequestResponseResultEnum.SUCCEEDED) {
+					logDebug("result=${evaluateGenericProcessRequest.getResult()}")
+					if (evaluateGenericProcessRequest.getResult() == UcdProcessRequestResponseResultEnum.SUCCEEDED) {
+						ucdGenericProcessRequest.setResult(evaluateGenericProcessRequest.getResult())
+						ucdGenericProcessRequest.setState(evaluateGenericProcessRequest.getState())
 						break
-					} else if (ucdGenericProcessRequest.getResult() == UcdProcessRequestResponseResultEnum.FAULTED || ucdGenericProcessRequest.getResult() == UcdProcessRequestResponseResultEnum.FAILEDTOSTART) {
+					} else if (evaluateGenericProcessRequest.getResult() == UcdProcessRequestResponseResultEnum.FAULTED || evaluateGenericProcessRequest.getResult() == UcdProcessRequestResponseResultEnum.FAILEDTOSTART) {
 						if (throwException) {
 							throw new UcdInvalidValueException("Generic process [$requestId] failed.")
 						}
+						
+						ucdGenericProcessRequest.setResult(evaluateGenericProcessRequest.getResult())
+						ucdGenericProcessRequest.setState(evaluateGenericProcessRequest.getState())
 						break
 					}
 		
@@ -172,7 +177,7 @@ class UcdRunGenericProcess extends UcAdfAction {
 					if (remainingSecs <= 0) {
 						throw new UcdInvalidValueException("Generic process [$requestId] wait time exceeded [$maxWaitSecs] seconds.")
 					}
-		
+					
 					Thread.sleep(waitIntervalSecs * 1000)
 				}
 			}
