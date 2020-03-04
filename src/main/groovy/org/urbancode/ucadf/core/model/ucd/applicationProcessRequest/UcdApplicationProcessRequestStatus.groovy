@@ -5,6 +5,7 @@ package org.urbancode.ucadf.core.model.ucd.applicationProcessRequest
 
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.processRequest.UcdProcessRequestResponseResultEnum
+import org.urbancode.ucadf.core.model.ucd.processRequest.UcdProcessRequestResponseStatusEnum
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
@@ -17,7 +18,7 @@ class UcdApplicationProcessRequestStatus extends UcdObject {
 	UcdProcessRequestResponseResultEnum result = UcdProcessRequestResponseResultEnum.EMPTY
 	
 	/** The request status. */
-	UcdApplicationProcessRequestResponseStatusEnum status = UcdApplicationProcessRequestResponseStatusEnum.EMPTY
+	UcdProcessRequestResponseStatusEnum status = UcdProcessRequestResponseStatusEnum.EMPTY
 
 	/** This is not returned by the API but is in this class to be able to convey the overall application process status for {@link UcdWaitForApplicationProcessRequest}. */
 	UcdApplicationProcessRequestStatusEnum applicationProcessStatus

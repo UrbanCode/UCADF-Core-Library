@@ -3,7 +3,6 @@
  */
 package org.urbancode.ucadf.core.model.ucd.processRequest
 
-import org.urbancode.ucadf.core.model.ucd.applicationProcessRequest.UcdApplicationProcessRequestResponseStatusEnum
 import org.urbancode.ucadf.core.model.ucd.component.UcdComponent
 import org.urbancode.ucadf.core.model.ucd.componentProcess.UcdComponentProcess
 import org.urbancode.ucadf.core.model.ucd.componentProcessRequest.UcdComponentProcessRequest
@@ -28,7 +27,7 @@ class UcdProcessRequestTrace extends UcdObject {
 	String type
 
 	/** The response state. */	
-	UcdApplicationProcessRequestResponseStatusEnum state
+	UcdProcessRequestResponseStatusEnum state
 	
 	/** The response result. */
 	UcdProcessRequestResponseResultEnum result

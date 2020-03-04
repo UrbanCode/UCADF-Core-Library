@@ -8,6 +8,7 @@ import org.urbancode.ucadf.core.model.ucd.applicationProcess.UcdApplicationProce
 import org.urbancode.ucadf.core.model.ucd.environment.UcdEnvironment
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.processRequest.UcdProcessRequestResponseResultEnum
+import org.urbancode.ucadf.core.model.ucd.processRequest.UcdProcessRequestResponseStatusEnum
 import org.urbancode.ucadf.core.model.ucd.processRequest.UcdProcessRequestTrace
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
 
@@ -55,7 +56,7 @@ class UcdApplicationProcessRequest extends UcdObject {
 	UcdProcessRequestResponseResultEnum result
 	
 	/** The request state (a.k.a the request status). */
-	UcdApplicationProcessRequestResponseStatusEnum state
+	UcdProcessRequestResponseStatusEnum state
 	
 	/** The flag that indicates the process is paused. */
 	Boolean paused

@@ -21,8 +21,6 @@ import groovy.util.logging.Slf4j
 
 @Slf4j
 class UcAdfActionsRunner {
-	public final static String PASSWORDISAUTHTOKEN = "PasswordIsAuthToken"
-
 	// List of actions that defer property evaluation of their child actions until they run.
 	private final static List<String> DEFERRED_PROPERTY_ACTIONS = [
 		"UcAdfCounterLoop",
@@ -415,7 +413,7 @@ class UcAdfActionsRunner {
 		// Determine if a new session is needed.
 		Boolean needNewSession = true
 		if (ucdSession) {
-			if (ucdSession.getUcdUrl() == ucdUrl && (ucdSession.getUcdUserId() == ucdUserId && ucdSession.getUcdUserPw() == ucdUserPw) || (PASSWORDISAUTHTOKEN.equals(ucdUserId) && ucdSession.getUcdUserPw() == ucdAuthToken)) {
+			if (ucdSession.getUcdUrl() == ucdUrl && (ucdSession.getUcdUserId() == ucdUserId && ucdSession.getUcdUserPw() == ucdUserPw) || (UcdSession.PASSWORDISAUTHTOKEN.equals(ucdUserId) && ucdSession.getUcdUserPw() == ucdAuthToken)) {
 				// There's currently a session and the action properties match it.
 				debugMessage("Using existing matching session [$ucdSession].")
 				needNewSession = false
@@ -450,12 +448,12 @@ class UcAdfActionsRunner {
 			// Determine if the user ID/password or an auth token should be used for authentication.
 			// If no user ID was provided then set the user ID for token authentication.
 			if (!ucdUserId) {
-				ucdUserId = PASSWORDISAUTHTOKEN
+				ucdUserId = UcdSession.PASSWORDISAUTHTOKEN
 				debugMessage("No ucdUserId value so setting it to PasswordIsAuthToken.")
 			}
 			
 			// If the user ID is a token user and no password was provided then use the auth token as the user password.
-			if (PASSWORDISAUTHTOKEN.equals(ucdUserId) && !ucdUserPw.toString()) {
+			if (UcdSession.PASSWORDISAUTHTOKEN.equals(ucdUserId) && !ucdUserPw.toString()) {
 				debugMessage("User is PasswordIsAuthToken and no password provided so setting ucdUserPw to ucdAuthToken.")
 				
 				// If no auth token value then use DS_AUTH_TOKEN system environment variable.

@@ -25,6 +25,8 @@ import groovy.util.logging.Slf4j
 @Slf4j
 @TypeChecked
 class UcdSession {
+	public final static String PASSWORDISAUTHTOKEN = "PasswordIsAuthToken"
+	
 	// UrbanCode version matches.
     public final static String UCDVERSION_61 = /6\.1\..*/
     public final static String UCDVERSION_62 = /6\.2\..*/
@@ -97,7 +99,7 @@ class UcdSession {
 			// If no user ID provided and a password was provided then assume the password id a token
 			log.debug "Using provided ucdUserPwOrToken"
 			ucdHttpAuthStr = /PasswordIsAuthToken:{"token":"$ucdUserPwOrToken"}/
-			this.ucdUserId = "PasswordIsAuthToken"
+			this.ucdUserId = PASSWORDISAUTHTOKEN
 			this.ucdUserPw = ucdUserPwOrToken
 		} else {
 			// If no user ID provided and no password provided then use the session token
@@ -107,7 +109,7 @@ class UcdSession {
 			}
 		
 			ucdHttpAuthStr = /PasswordIsAuthToken:{"token":"$ucdAuthToken"}/
-			this.ucdUserId = "PasswordIsAuthToken"
+			this.ucdUserId = PASSWORDISAUTHTOKEN
 			this.ucdUserPw = ucdAuthToken
 		}
 	}

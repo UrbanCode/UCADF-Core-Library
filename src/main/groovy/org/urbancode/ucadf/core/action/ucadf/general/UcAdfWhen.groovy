@@ -4,14 +4,6 @@
 package org.urbancode.ucadf.core.action.ucadf.general
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.actionsrunner.UcAdfActions
-import org.urbancode.ucadf.core.actionsrunner.UcAdfActionsRunner
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
-import org.yaml.snakeyaml.TypeDescription
-import org.yaml.snakeyaml.Yaml
-import org.yaml.snakeyaml.constructor.Constructor
-
-import groovy.json.JsonSlurper
 
 class UcAdfWhen extends UcAdfAction {
 	// Action properties.
