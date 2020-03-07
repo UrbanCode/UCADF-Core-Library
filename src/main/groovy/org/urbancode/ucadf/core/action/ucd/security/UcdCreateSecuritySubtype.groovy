@@ -66,7 +66,7 @@ class UcdCreateSecuritySubtype extends UcAdfAction {
 			logVerbose(errMsg)
 			
 			Boolean alreadyExists = false
-			if (response.getStatus() == 403 && errMsg ==~ /.*already exists.*/) {
+			if ((response.getStatus() == 400 || response.getStatus() == 403) && errMsg ==~ /.*already exists.*/) {
 				alreadyExists = true
 			} else if (response.getStatus() == 500 && errMsg ==~ /.*after response has been committed.*/) {
 				// UCD 7.0.4 is returning 500 Cannot forward after response has been committed if it already exists.
