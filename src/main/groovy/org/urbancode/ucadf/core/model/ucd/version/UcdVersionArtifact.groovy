@@ -46,6 +46,9 @@ abstract class UcdVersionArtifact extends UcdObject {
 	
 	/** The flag that indicates metadata only. */
 	Boolean metaOnly
+
+	/** The parent artifact. */
+	UcdVersionArtifact parentArtifact
 	
 	// Constructors.	
 	UcdVersionArtifact() {
