@@ -6,6 +6,7 @@ package org.urbancode.ucadf.core.model.ucd.property
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.system.UcdSession
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type
@@ -25,6 +26,7 @@ import groovy.util.logging.Slf4j
 	@Type(value = UcdPropDefText.class, name = UcdPropDef.TYPE_TEXT),
 	@Type(value = UcdPropDefTextArea.class, name = UcdPropDef.TYPE_TEXTAREA)
 ])
+@JsonIgnoreProperties(ignoreUnknown = true)
 abstract class UcdPropDef extends UcdObject {
 	public final static String TYPE_CHECKBOX = "CHECKBOX"
 	public final static String TYPE_HTTP_MULTI_SELECT = "HTTP_MULTI_SELECT"
