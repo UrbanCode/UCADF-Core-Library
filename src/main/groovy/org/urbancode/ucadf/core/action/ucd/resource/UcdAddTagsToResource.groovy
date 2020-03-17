@@ -39,6 +39,7 @@ class UcdAddTagsToResource extends UcAdfAction {
 			UcdTag ucdTag = actionsRunner.runAction([
 				action: UcdGetResourceTag.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: actionVerbose,
 				tag: tag
 			])
 	

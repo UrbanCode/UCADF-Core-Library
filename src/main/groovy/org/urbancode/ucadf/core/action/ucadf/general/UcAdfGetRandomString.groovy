@@ -5,11 +5,11 @@ package org.urbancode.ucadf.core.action.ucadf.general
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 
-// Get the next version sequence number.
-// versionPattern is of the form: *, 1.*, 1.0.*, etc.
-// versions is a list of versions used to determine the last used sequence matching the pattern.
 class UcAdfGetRandomString extends UcAdfAction {
 	// Action properties.
+	/** The list of characters to use for the random string. Default is ['a'..'z','A'..'Z',0..9,'_','%','$','!'] */
+	List<String> chars = ['a'..'z','A'..'Z',0..9,'_','%','$','!'].flatten()
+	
 	/** The number of characters for the string. */
 	Integer numChars
 
@@ -22,11 +22,10 @@ class UcAdfGetRandomString extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 	
-		def pool = ['a'..'z','A'..'Z',0..9,'_','%','$','!'].flatten()
 		Random rand = new Random(System.currentTimeMillis())
 		
-		def randomChars = (0..numChars).collect { 
-			pool[ rand.nextInt(pool.size()) ] 
+		List<String> randomChars = (0..numChars-1).collect {
+			chars[ rand.nextInt(chars.size()) ]
 		}
 		
 		return randomChars.iterator().join()
