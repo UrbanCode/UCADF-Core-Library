@@ -46,15 +46,18 @@ abstract class UcdVersionArtifact extends UcdObject {
 	
 	/** The flag that indicates metadata only. */
 	Boolean metaOnly
+	
+	/** The user attributes. */
+	UcdVersionArtifactUserAttributes userAttributes
 
-	/** The parent artifact. */
-	UcdVersionArtifact parentArtifact
+	/** The parent artifact. Have to ignore childArtifacts to prevent recursion during deserialization. */
+	@JsonIgnoreProperties("childArtifacts")
+ 	UcdVersionArtifact parentArtifact
+	
+	/** The child artifacts. */
+	List<UcdVersionArtifact> childArtifacts = []
 	
 	// Constructors.	
 	UcdVersionArtifact() {
 	}
-	
-	abstract public List<UcdVersionArtifact> getChildArtifacts()
-	
-	abstract public setChildArtifacts(List<UcdVersionArtifact> artifacts)
 }

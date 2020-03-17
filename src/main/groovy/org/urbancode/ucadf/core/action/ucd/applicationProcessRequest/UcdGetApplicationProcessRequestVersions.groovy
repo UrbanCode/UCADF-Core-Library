@@ -34,6 +34,9 @@ class UcdGetApplicationProcessRequestVersions extends UcAdfAction {
 	/** This flag indicates to validate that only one full version of each component is selected. */
 	Boolean validateSingleFullVersions = false
 	
+	/** This flag indicates to validate that only one incremental version of each component is selected. */
+	Boolean validateSingleIncrementalVersions = false
+	
 	/** The flag that indicates fail if the application process request is not found. Default is true. */
 	Boolean failIfNotFound = true
 
@@ -70,7 +73,8 @@ class UcdGetApplicationProcessRequestVersions extends UcAdfAction {
 			ucdApplicationProcessRequestVersions = response.readEntity(UcdApplicationProcessRequestVersions.class)
 
 			// Process the list of versions returned by the API.
-			Boolean hasMultiple = false
+			Boolean hasMultipleFull = false
+			Boolean hasMultipleIncremental = false
 			for (ucdVersion in ucdApplicationProcessRequestVersions.getVersions()) {
 				String compName = ucdVersion.getComponent().getName()
 				String versionName = ucdVersion.getName()
@@ -80,8 +84,12 @@ class UcdGetApplicationProcessRequestVersions extends UcAdfAction {
 				// A map is created regardless of the return type in order to determine if multiple full versions exist.
 				if (requestVersionsMap['components'].containsKey(compName)) {
 					if (ucdVersion.getType() == UcdVersionTypeEnum.FULL && validateSingleFullVersions) {
-						logError("Component [$compName] has more than one version selected.")
-						hasMultiple = true
+						logError("Component [$compName] has more than one full version selected.")
+						hasMultipleFull = true
+					}
+					if (ucdVersion.getType() == UcdVersionTypeEnum.INCREMENTAL && validateSingleIncrementalVersions) {
+						logError("Component [$compName] has more than one incremental version selected.")
+						hasMultipleIncremental = true
 					}
 				} else {
 					// Add the component to the components map.
@@ -124,8 +132,12 @@ class UcdGetApplicationProcessRequestVersions extends UcAdfAction {
 				}
 			}
 			
-			if (validateSingleFullVersions && hasMultiple) {
+			if (validateSingleFullVersions && hasMultipleFull) {
 				throw new UcdInvalidValueException("A given component is not allowed to have more than one full version selected.")
+			}
+			
+			if (validateSingleIncrementalVersions && hasMultipleIncremental) {
+				throw new UcdInvalidValueException("A given component is not allowed to have more than one incremental version selected.")
 			}
 		} else {
 			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)

@@ -42,12 +42,12 @@ class UcdGetProcessRequestTrace extends UcAdfAction {
 		// Determine if request ID is associated with a running application process.
 		UcdApplicationProcessRequest appProcessRequest = actionsRunner.runAction([
 			action: UcdGetApplicationProcessRequest.getSimpleName(),
-//			actionInfo: false,
-//			actionVerbose: false,
+			actionInfo: false,
+			actionVerbose: false,
 			requestId: requestId,
 			failIfNotFound: false
 		])
-		
+
 		if (appProcessRequest) {
 			foundProcess = true
 			
@@ -103,61 +103,65 @@ class UcdGetProcessRequestTrace extends UcAdfAction {
 	
 	// Get the process request trace information.
 	public getRequestTrace(UcdProcessRequestTrace trace) {
-		logDebug("[${trace.getDisplayName()}] [${trace.getId()}] workflowTraceId [${trace.getWorkflowTraceId()}] componentProcessRequestId [${trace.getComponentProcessRequestId()}]")
-		
-		// Get the workflow step logs.
-		if (trace.getWorkflowTraceId()) {
-			if (trace.getExtraLogs() != null || "plugin".equals(trace.getType())) {
-                try {
-    				WebTarget target = ucdSession.getUcdWebTarget().path("/rest/logView/trace/{workflowTraceId}/{stepId}/stdOut.txt")
-						.resolveTemplate("workflowTraceId", trace.getWorkflowTraceId())
-						.resolveTemplate("stepId", trace.getId())
-						.queryParam("fileDownload", "true")
-    				logDebug("target=$target")
-					
-    				trace.setLogText(target.request().get(String.class))
-                } catch(Exception e) {
-                    logVerbose("Ignoring unable to get log information ${e.getMessage()}")
-                    // Ignoring some kind of problem with this where it throws 500 errors.
-                }
-			}
-
-			// Get the workflow step properties			
-			WebTarget target = ucdSession.getUcdWebTarget().path("/rest/workflow/{workflowTraceId}/{stepId}/properties")
-				.resolveTemplate("workflowTraceId", trace.getWorkflowTraceId())
-				.resolveTemplate("stepId", trace.getId())
-			logDebug("target=$target")
+		if (trace) {
+			logDebug("[${trace.getDisplayName()}] [${trace.getId()}] workflowTraceId [${trace.getWorkflowTraceId()}] componentProcessRequestId [${trace.getComponentProcessRequestId()}]")
 			
-			Response response = target.request().get()
-			if (response.getStatus() == 200) {
-				Map responseMap = response.readEntity(new GenericType<Map<String, List<UcdProperty>>>(){})
-				trace.setStepProperties(responseMap.get("properties"))
-				trace.setStepOutputProps(responseMap.get("outputProps"))
-			} else {
-				throw new UcdInvalidValueException(response)
+			// Get the workflow step logs.
+			if (trace.getWorkflowTraceId()) {
+				if (trace.getExtraLogs() != null || "plugin".equals(trace.getType())) {
+	                try {
+	    				WebTarget target = ucdSession.getUcdWebTarget().path("/rest/logView/trace/{workflowTraceId}/{stepId}/stdOut.txt")
+							.resolveTemplate("workflowTraceId", trace.getWorkflowTraceId())
+							.resolveTemplate("stepId", trace.getId())
+							.queryParam("fileDownload", "true")
+	    				logDebug("target=$target")
+						
+	    				trace.setLogText(target.request().get(String.class))
+	                } catch(Exception e) {
+	                    logVerbose("Ignoring unable to get log information ${e.getMessage()}")
+	                    // Ignoring some kind of problem with this where it throws 500 errors.
+	                }
+				}
+	
+				// Get the workflow step properties			
+				WebTarget target = ucdSession.getUcdWebTarget().path("/rest/workflow/{workflowTraceId}/{stepId}/properties")
+					.resolveTemplate("workflowTraceId", trace.getWorkflowTraceId())
+					.resolveTemplate("stepId", trace.getId())
+				logDebug("target=$target")
+				
+				Response response = target.request().get()
+				if (response.getStatus() == 200) {
+					Map responseMap = response.readEntity(new GenericType<Map<String, List<UcdProperty>>>(){})
+					trace.setStepProperties(responseMap.get("properties"))
+					trace.setStepOutputProps(responseMap.get("outputProps"))
+				} else {
+					throw new UcdInvalidValueException(response)
+				}
 			}
-		}
-
-		// Get the component process request trace.
-		if (trace.getComponentProcessRequestId()) {
-			UcdComponentProcessRequest ucdComponentProcessRequest = actionsRunner.runAction([
-				action: UcdGetComponentProcessRequest.getSimpleName(),
-				actionInfo: false,
-				requestId: trace.getComponentProcessRequestId()
-			])
-
-			trace.setComponentProcessRequest(
-				ucdComponentProcessRequest
-			)
+	
+			// Get the component process request trace.
+			if (trace.getComponentProcessRequestId()) {
+				UcdComponentProcessRequest ucdComponentProcessRequest = actionsRunner.runAction([
+					action: UcdGetComponentProcessRequest.getSimpleName(),
+					actionInfo: false,
+					requestId: trace.getComponentProcessRequestId()
+				])
+	
+				trace.setComponentProcessRequest(
+					ucdComponentProcessRequest
+				)
+				
+				getRequestTrace(ucdComponentProcessRequest)
+			}
 			
-			getRequestTrace(ucdComponentProcessRequest)
-		}
-		
-		// Recursively process the children.
-		if (trace.getChildren()) {
-			for (childTrace in trace.getChildren()) {
-				getRequestTrace(childTrace)
+			// Recursively process the children.
+			if (trace.getChildren()) {
+				for (childTrace in trace.getChildren()) {
+					getRequestTrace(childTrace)
+				}
 			}
+		} else {
+			logVerbose("Trace is null or empty.")
 		}
 	}
 }

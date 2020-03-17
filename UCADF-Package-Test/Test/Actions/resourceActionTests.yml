@@ -10,6 +10,21 @@ actions:
   #==============================================================================          
   # Prepare for tests.
   #==============================================================================          
+  # Get a value to use for a unique tag name.
+  - action: UcAdfSetActionProperties
+    propertyValues:
+      epoch: 'Eval(new Date().getTime())'
+    
+  - action: UcAdfSetActionProperties
+    propertyValues:
+     resourceTag: "${u:coreTestResourceTagPrefix}-${u:epoch}"
+      
+  # Create the top level group resource.
+  - action: UcdCreateGroupResource
+    parent: ""
+    resource: "${u:coreTestTopResource}"
+    failIfExists: false
+    
   # Get the list of agents to have the name of one to create a pool.
   - action: UcdGetAgents
     actionReturnPropertyName: agents
@@ -195,7 +210,7 @@ actions:
     counterEnd: 2 
     actions:
       - action: UcdCreateResourceTag
-        name: "${u:coreTestResourceTag1}"
+        name: "${u:resourceTag}"
         color: "RED"
         description: "Test resource tag."
         resource: "${u:coreTestTopResource}"
@@ -205,7 +220,7 @@ actions:
   - action: UcdAddTagsToResource
     resource: "${u:coreTestTopResource}/${u:coreTestGroupResource1}"
     tags:
-      - "${u:coreTestResourceTag1}"
+      - "${u:resourceTag}"
     removeOthers: true
 
   # Set resource properties.
@@ -285,7 +300,7 @@ actions:
   # Get child resources with tag.
   - action: UcdGetChildResources
     resource: "${u:coreTestTopResource}"
-    tag: "${u:coreTestResourceTag1}"
+    tag: "${u:resourceTag}"
   - action: UcAdfItemsLoop
     actionInfo: false
     items: ${u:actionReturn}
@@ -299,7 +314,7 @@ actions:
   - action: UcdRemoveTagsFromResource
     resource: "${u:coreTestTopResource}"
     tags:
-      - "${u:coreTestResourceTag1}"
+      - "${u:resourceTag}"
     
    # Dump resource tree properties.
   - action: UcdDumpResourceTreeProperties

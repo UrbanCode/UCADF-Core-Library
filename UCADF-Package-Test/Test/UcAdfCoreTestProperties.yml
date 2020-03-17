@@ -39,7 +39,6 @@ propertyValues:
   
   # Component tags.
   coreTestCompTagPrefix: "UCADFCORETEST-CompTag"
-  coreTestCompTag1: "UCADFCORETEST-CompTag1"
   
   # Components for CRUD tests.
   coreTestComp1: "UCADFCORETEST-Comp1"

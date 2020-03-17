@@ -101,7 +101,7 @@ class UcdGetVersionArtifacts extends UcAdfAction {
 	
 				// Recursively get the child artifacts.
 				for (artifact in artifacts) {
-					artifact.setParentArtifact(artifact)
+					artifact.setParentArtifact(parentArtifact)
 					if (artifact.getChildren()) {
 						artifact.setChildArtifacts(getArtifacts(artifact))
 					}
