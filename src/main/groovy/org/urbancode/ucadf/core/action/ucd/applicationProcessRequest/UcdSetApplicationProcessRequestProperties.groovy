@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
 
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -67,7 +67,7 @@ class UcdSetApplicationProcessRequestProperties extends UcAdfAction {
 					logInfo "Attempt $iAttempt failed. Waiting to try again."
 					Thread.sleep(2000)
 				} else {
-					throw new UcdInvalidValueException("Status: ${response.getStatus()} Unable to set application process request property. $target")
+					throw new UcAdfInvalidValueException("Status: ${response.getStatus()} Unable to set application process request property. $target")
 				}
 			}
 		}

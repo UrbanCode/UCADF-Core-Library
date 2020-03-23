@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 class UcdDeleteResourceProperty extends UcAdfAction {
 	/** The resource path or ID. */
@@ -42,7 +42,7 @@ class UcdDeleteResourceProperty extends UcAdfAction {
 			if (response.getStatus() == 204) {
 				logVerbose("Resource [$resource] property [$property] deleted.")
 			} else if (response.getStatus() != 400 || failIfNotFound) {
-				throw new UcdInvalidValueException(response)
+				throw new UcAdfInvalidValueException(response)
 			}
 		}
 	}

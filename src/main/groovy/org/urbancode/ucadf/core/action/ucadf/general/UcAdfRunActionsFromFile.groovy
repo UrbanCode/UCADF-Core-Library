@@ -10,7 +10,7 @@ import org.urbancode.ucadf.core.actionsrunner.UcAdfActionPropertyFile
 import org.urbancode.ucadf.core.actionsrunner.UcAdfActions
 import org.urbancode.ucadf.core.actionsrunner.UcAdfActionsFileTypeEnum
 import org.urbancode.ucadf.core.actionsrunner.UcAdfActionsRunner
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.yaml.snakeyaml.TypeDescription
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
@@ -72,7 +72,7 @@ class UcAdfRunActionsFromFile extends UcAdfAction {
 			}
 			
 			if (!foundFile) {
-				throw new UcdInvalidValueException("File [$fileName] does not exist.")
+				throw new UcAdfInvalidValueException("File [$fileName] does not exist.")
 			}
 		}
 
@@ -86,7 +86,7 @@ class UcAdfRunActionsFromFile extends UcAdfAction {
 			} else if (fileName.toLowerCase() ==~ /.*\.(json)$/) {
 				derivedFileType = UcAdfActionsFileTypeEnum.JSON
 			} else {
-				throw new UcdInvalidValueException("Unable to automatically determine the type of file by the file extension of file [$fileName].")
+				throw new UcAdfInvalidValueException("Unable to automatically determine the type of file by the file extension of file [$fileName].")
 			}
 		}		
 
@@ -106,7 +106,7 @@ class UcAdfRunActionsFromFile extends UcAdfAction {
 				try {
 					actions = yaml.load(new FileInputStream(actionsFile))
 				} catch (Exception e) {
-					throw new UcdInvalidValueException(e.getMessage())
+					throw new UcAdfInvalidValueException(e.getMessage())
 				}
 				break
 				
@@ -115,12 +115,12 @@ class UcAdfRunActionsFromFile extends UcAdfAction {
 				try {
 					actions = new JsonSlurper().parseText(actionsFile.text)
 				} catch (Exception e) {
-					throw new UcdInvalidValueException(e.getMessage())
+					throw new UcAdfInvalidValueException(e.getMessage())
 				}
 				break
 				
 			default:
-				throw new UcdInvalidValueException("Unknown file type [$fileType].")
+				throw new UcAdfInvalidValueException("Unknown file type [$fileType].")
 		}
 
 		// At this point the actions object has the propertyValues and propertyFiles that were parsed from the actions file.

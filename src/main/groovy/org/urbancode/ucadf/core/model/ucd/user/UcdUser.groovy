@@ -3,8 +3,8 @@
  */
 package org.urbancode.ucadf.core.model.ucd.user
 
+import org.urbancode.ucadf.core.model.ucadf.UcAdfSecureString
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
-import org.urbancode.ucadf.core.model.ucd.general.UcdSecureString
 import org.urbancode.ucadf.core.model.ucd.group.UcdGroup
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
@@ -27,7 +27,7 @@ class UcdUser extends UcdObject {
 	String email
 	
 	/** The password. */
-	UcdSecureString password
+	UcAdfSecureString password
 	
 	/** The authentication realm. */
 	String authenticationRealm

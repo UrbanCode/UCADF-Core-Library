@@ -3,8 +3,8 @@
  */
 package org.urbancode.ucadf.core.action.ucadf.loop
 
-import org.urbancode.ucadf.core.model.ucadf.UcAdfWaitLoopControl
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.loop.UcAdfWaitLoopControl
 
 class UcAdfWaitLoop extends UcAdfLoop {
 	/** The number of seconds to wait before retrying. */	
@@ -36,7 +36,7 @@ class UcAdfWaitLoop extends UcAdfLoop {
 		if ((waitIntervalSecs != null && maxWaitSecs != null) || maxTries != null) {
 			processWaitLoop()
 		} else {
-			throw new UcdInvalidValueException("Wait loop requires waitIntervalSecs and maxWaitSecs, and/or maxTries properties.")
+			throw new UcAdfInvalidValueException("Wait loop requires waitIntervalSecs and maxWaitSecs, and/or maxTries properties.")
 		}
 	}
 	
@@ -82,13 +82,13 @@ class UcAdfWaitLoop extends UcAdfLoop {
 			
 			if (waitIntervalSecs && maxWaitSecs) {
 				if (remainingSecs <= 0) {
-					throw new UcdInvalidValueException("Loop wait time exceeded [$maxWaitSecs] seconds.")
+					throw new UcAdfInvalidValueException("Loop wait time exceeded [$maxWaitSecs] seconds.")
 				}
 			}
 			
 			if (maxTries) {
 				if (remainingTries <= 0) {
-					throw new UcdInvalidValueException("Loop retries exceeded [$maxTries] tries.")
+					throw new UcAdfInvalidValueException("Loop retries exceeded [$maxTries] tries.")
 				}
 			}
 

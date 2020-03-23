@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.environment.UcdEnvironment
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdColorEnum
 
 class UcdCreateEnvironment extends UcAdfAction {
@@ -54,7 +54,7 @@ class UcdCreateEnvironment extends UcAdfAction {
 			])
 			
 			if (ucdEnvironment) {
-				throw new UcdInvalidValueException("Application [$application] environment [$name] already exists.")
+				throw new UcAdfInvalidValueException("Application [$application] environment [$name] already exists.")
 			}
 		}
 		
@@ -74,7 +74,7 @@ class UcdCreateEnvironment extends UcAdfAction {
             logVerbose("Application [$application] environment [$name] created.")
 			created = true
         } else {
-            throw new UcdInvalidValueException(response)
+            throw new UcAdfInvalidValueException(response)
         }
 		
 		return created

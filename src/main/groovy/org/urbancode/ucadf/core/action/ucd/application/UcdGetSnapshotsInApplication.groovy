@@ -9,7 +9,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.environment.UcdEnvironment
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.snapshot.UcdSnapshot
 
@@ -38,7 +38,7 @@ class UcdGetSnapshotsInApplication extends UcAdfAction {
 		if (response.getStatus() == 200) {
 			snapshots = response.readEntity(new GenericType<List<UcdSnapshot>>(){})
 		} else {
-            throw new UcdInvalidValueException(response)
+            throw new UcAdfInvalidValueException(response)
 		}
 		
 		return snapshots

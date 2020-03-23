@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.version.UcdVersion
 
@@ -55,7 +55,7 @@ class UcdDeleteVersion extends UcAdfAction {
 				String errMsg = "Version [$version] not found."
 				logVerbose(errMsg)
 				if (failIfNotFound) {
-					throw new UcdInvalidValueException(errMsg)
+					throw new UcAdfInvalidValueException(errMsg)
 				}
 			}
 		}
@@ -71,10 +71,10 @@ class UcdDeleteVersion extends UcAdfAction {
 					logVerbose("Component [$component] Version [$version] deleted.")
 					deleted = true
 				} else {
-					String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+					String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 					logVerbose(errMsg)
 					if (response.getStatus() != 404 || failIfNotFound) {
-						throw new UcdInvalidValueException(errMsg)
+						throw new UcAdfInvalidValueException(errMsg)
 					}
 				}
 			} else {

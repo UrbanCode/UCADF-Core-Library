@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.property.UcdPropDef
 import org.urbancode.ucadf.core.model.ucd.property.UcdPropSheetDef
 
@@ -57,7 +57,7 @@ class UcdCreatePropDef extends UcAdfAction {
             logVerbose("Added property defintion.")
         } else {
             logError(response.readEntity(String.class))
-            throw new UcdInvalidValueException("Status: ${response.getStatus()} Unable to add property definition. $target")
+            throw new UcAdfInvalidValueException("Status: ${response.getStatus()} Unable to add property definition. $target")
         }
     }
 }

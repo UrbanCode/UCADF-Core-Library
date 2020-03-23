@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response
 import org.urbancode.ucadf.core.action.ucd.component.UcdGetComponent
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.component.UcdComponent
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 
 import groovy.json.JsonBuilder
@@ -72,7 +72,7 @@ class UcdCreateComponentConfigTemplate extends UcAdfAction {
 			logVerbose("Component [$component] configuration template [$name] created.")
 			created = true
 		} else {
-			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+			String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 			logVerbose(errMsg)
 			
 			Boolean alreadyExists = false
@@ -84,7 +84,7 @@ class UcdCreateComponentConfigTemplate extends UcAdfAction {
 			}
 			
 			if (!alreadyExists || (alreadyExists && failIfExists)) {
-				throw new UcdInvalidValueException(errMsg)
+				throw new UcAdfInvalidValueException(errMsg)
 			}
 		}
 		

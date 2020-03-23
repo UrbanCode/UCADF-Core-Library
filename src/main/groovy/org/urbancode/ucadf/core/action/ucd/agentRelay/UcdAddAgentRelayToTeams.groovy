@@ -11,7 +11,7 @@ import org.urbancode.ucadf.core.action.ucd.security.UcdGetSecurityTeamMappings
 import org.urbancode.ucadf.core.action.ucd.team.UcdGetTeam
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.agentRelay.UcdAgentRelay
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.system.UcdSession
 import org.urbancode.ucadf.core.model.ucd.team.UcdTeam
 import org.urbancode.ucadf.core.model.ucd.team.UcdTeamSecurity
@@ -66,7 +66,7 @@ class UcdAddAgentRelayToTeams extends UcAdfAction {
 		
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() != 200) {	
-			throw new UcdInvalidValueException(response)
+			throw new UcAdfInvalidValueException(response)
 		}
 	}
 }

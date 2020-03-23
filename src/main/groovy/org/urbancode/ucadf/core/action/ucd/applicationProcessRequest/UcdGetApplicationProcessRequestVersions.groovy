@@ -8,7 +8,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.applicationProcessRequest.UcdApplicationProcessRequestVersions
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.version.UcdVersionTypeEnum
 
 class UcdGetApplicationProcessRequestVersions extends UcAdfAction {
@@ -133,21 +133,21 @@ class UcdGetApplicationProcessRequestVersions extends UcAdfAction {
 			}
 			
 			if (validateSingleFullVersions && hasMultipleFull) {
-				throw new UcdInvalidValueException("A given component is not allowed to have more than one full version selected.")
+				throw new UcAdfInvalidValueException("A given component is not allowed to have more than one full version selected.")
 			}
 			
 			if (validateSingleIncrementalVersions && hasMultipleIncremental) {
-				throw new UcdInvalidValueException("A given component is not allowed to have more than one incremental version selected.")
+				throw new UcAdfInvalidValueException("A given component is not allowed to have more than one incremental version selected.")
 			}
 		} else {
-			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+			String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 			logVerbose(errMsg)
 			if (response.getStatus() == 400 || response.status == 404) {
 				if (failIfNotFound) {
-					throw new UcdInvalidValueException(errMsg)
+					throw new UcAdfInvalidValueException(errMsg)
 				}
 			} else {
-				throw new UcdInvalidValueException(errMsg)
+				throw new UcAdfInvalidValueException(errMsg)
 			}
 		}
 

@@ -16,7 +16,7 @@ import org.urbancode.ucadf.core.model.ucd.applicationProcessRequest.UcdApplicati
 import org.urbancode.ucadf.core.model.ucd.applicationProcessRequest.UcdApplicationProcessRequestStatus
 import org.urbancode.ucadf.core.model.ucd.applicationProcessRequest.UcdApplicationProcessRequestStatusEnum
 import org.urbancode.ucadf.core.model.ucd.applicationProcessRequest.UcdApplicationProcessRequestVersion
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
 
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -220,7 +220,7 @@ class UcdRunApplicationProcess extends UcAdfAction {
 		} else {
 			// Throw exception if requested instead of letting output properties status return to plugin step.
 			if (UcdApplicationProcessRequestStatusEnum.SUCCESS != ucdApplicationProcessRequestStatus.getApplicationProcessStatus() && throwException) {
-				throw new UcdInvalidValueException("Application process failed.")
+				throw new UcAdfInvalidValueException("Application process failed.")
 			}
 		}
 		

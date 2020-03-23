@@ -10,8 +10,8 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.authenticationRealm.UcdAuthenticationRealm
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
-import org.urbancode.ucadf.core.model.ucd.general.UcdSecureString
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.UcAdfSecureString
 
 import groovy.json.JsonBuilder
 
@@ -21,7 +21,7 @@ class UcdCreateUser extends UcAdfAction {
 	String name
 	
 	/** The password. */
-	UcdSecureString password
+	UcAdfSecureString password
 	
 	/** (Optional) The actual name. */
 	String actualName = ""
@@ -67,7 +67,7 @@ class UcdCreateUser extends UcAdfAction {
 			logVerbose("User [$name] created.")
 			created = true
 		} else {
-			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+			String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 			logVerbose(errMsg)
 			
 			Boolean alreadyExists = false
@@ -79,7 +79,7 @@ class UcdCreateUser extends UcAdfAction {
 			}
 			
 			if (!alreadyExists || (alreadyExists && failIfExists)) {
-				throw new UcdInvalidValueException(errMsg)
+				throw new UcAdfInvalidValueException(errMsg)
 			}
 		}
 		

@@ -8,7 +8,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.component.UcdComponentImport
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.importExport.UcdExport
 
 class UcdExportComponent extends UcAdfAction {
@@ -40,7 +40,7 @@ class UcdExportComponent extends UcAdfAction {
 		if (response.getStatus() == 200) {
 			ucdComponentImport = response.readEntity(UcdComponentImport.class)
 		} else {
-			throw new UcdInvalidValueException(response)
+			throw new UcAdfInvalidValueException(response)
 		}
 		
 		// Optionally save to file.

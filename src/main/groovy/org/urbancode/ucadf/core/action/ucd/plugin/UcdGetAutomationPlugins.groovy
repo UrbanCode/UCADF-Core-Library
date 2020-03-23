@@ -8,7 +8,7 @@ import javax.ws.rs.core.GenericType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.plugin.UcdAutomationPlugin
 
 class UcdGetAutomationPlugins extends UcAdfAction {
@@ -29,7 +29,7 @@ class UcdGetAutomationPlugins extends UcAdfAction {
 		if (response.getStatus() == 200) {
 			ucdReturnPlugins = target.request().get(new GenericType<List<UcdAutomationPlugin>>(){})
 		} else {
-			throw new UcdInvalidValueException(response)
+			throw new UcAdfInvalidValueException(response)
 		}
 
 		return ucdReturnPlugins

@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 class UcdDeleteResource extends UcAdfAction {
 	// Action properties.
@@ -49,7 +49,7 @@ class UcdDeleteResource extends UcAdfAction {
 					logVerbose(responseStr)
 					if (response.getStatus() == 404) {
 						if (failIfNotFound) {
-							throw new UcdInvalidValueException(response)
+							throw new UcAdfInvalidValueException(response)
 						}
 						break
 					} else {
@@ -57,7 +57,7 @@ class UcdDeleteResource extends UcAdfAction {
 							logVerbose("Attempt $iAttempt failed. Waiting to try again.")
 							Thread.sleep(2000)
 						} else {
-							throw new UcdInvalidValueException(response)
+							throw new UcAdfInvalidValueException(response)
 						}
 					}
 				}

@@ -7,7 +7,7 @@ import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.resource.UcdResource
 
 class UcdGetResource extends UcAdfAction {
@@ -36,14 +36,14 @@ class UcdGetResource extends UcAdfAction {
 		if (response.getStatus() == 200) {
 			ucdResource = response.readEntity(UcdResource)
 		} else if (response.getStatus() == 404 || response.getStatus() == 403) {
-			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+			String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 			if (failIfNotFound) {
-				throw new UcdInvalidValueException(errMsg)
+				throw new UcAdfInvalidValueException(errMsg)
 			} else {
 				logVerbose("Resource [$resource] not found.")
 			}
 		} else {
-            throw new UcdInvalidValueException(response)
+            throw new UcAdfInvalidValueException(response)
 		}
 		
 		return ucdResource

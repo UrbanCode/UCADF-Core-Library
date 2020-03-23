@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.action.ucd.security.UcdGetSecuritySubtype
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.security.UcdSecuritySubtype
 import org.urbancode.ucadf.core.model.ucd.team.UcdTeamSecurity
@@ -59,7 +59,7 @@ class UcdAddApplicationToTeams extends UcAdfAction {
 			if (response.getStatus() == 204) {
 				logVerbose("Application [$application] added to team [$team]subtype [$subtype].")
 			} else {
-				throw new UcdInvalidValueException(response)
+				throw new UcAdfInvalidValueException(response)
 			}
 		}
 	}

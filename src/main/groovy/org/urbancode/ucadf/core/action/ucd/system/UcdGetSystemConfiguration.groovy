@@ -7,7 +7,7 @@ import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.system.UcdSession
 import org.urbancode.ucadf.core.model.ucd.system.UcdSystemConfiguration
 
@@ -45,7 +45,7 @@ class UcdGetSystemConfiguration extends UcAdfAction {
 				returnSystemConfiguration = response.readEntity(Map.class)
 			}
 		} else {
-			throw new UcdInvalidValueException(response)
+			throw new UcAdfInvalidValueException(response)
 		}
 
 		// Weird problem where the value it returns is multiplied by 1000 so we divide it to get it back to the right value.

@@ -3,7 +3,7 @@
  */
 package org.urbancode.ucadf.core.model.ucd.processRequest
 
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonValue
@@ -28,7 +28,7 @@ enum UcdProcessRequestTraceTypeEnum {
 		}
 		
 		if (!newEnum) {
-			throw new UcdInvalidValueException("Process request trace type enumeration [$value] is invalid.")
+			throw new UcAdfInvalidValueException("Process request trace type enumeration [$value] is invalid.")
 		}
 		
 		return newEnum

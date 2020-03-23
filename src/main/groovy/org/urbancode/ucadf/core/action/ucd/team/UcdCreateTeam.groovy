@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 class UcdCreateTeam extends UcAdfAction {
 	/** The team name. */
@@ -44,10 +44,10 @@ class UcdCreateTeam extends UcAdfAction {
 			logVerbose("Team created.")
 			created = true
 		} else {
-			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+			String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 			logVerbose(errMsg)
 			if (!(response.getStatus() == 400 && (errMsg ==~ /.*already exists.*/ && !failIfExists))) {
-				throw new UcdInvalidValueException(errMsg)
+				throw new UcAdfInvalidValueException(errMsg)
 			}
 		}
 		

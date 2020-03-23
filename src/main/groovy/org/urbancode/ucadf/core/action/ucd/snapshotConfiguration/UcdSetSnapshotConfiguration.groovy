@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.action.ucd.snapshot.UcdGetSnapshot
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.snapshot.UcdSnapshot
 
@@ -74,7 +74,7 @@ class UcdSetSnapshotConfiguration extends UcAdfAction {
 		if (response.getStatus() == 204) {
 			logVerbose("Application [$application] snapshot [$snapshot] configuration reset to latest.")
 		} else {
-			throw new UcdInvalidValueException(response)
+			throw new UcAdfInvalidValueException(response)
 		}
 	}
 
@@ -103,7 +103,7 @@ class UcdSetSnapshotConfiguration extends UcAdfAction {
 		if (response.getStatus() == 204) {
 			logVerbose("Application [$application] snapshot [$snapshot] configuration latest entries locked to current.")
 		} else {
-			throw new UcdInvalidValueException(response)
+			throw new UcAdfInvalidValueException(response)
 		}
 	}
 }

@@ -7,7 +7,7 @@ import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.status.UcdStatusTypeEnum
 
 class UcdDeleteStatus extends UcAdfAction {
@@ -50,11 +50,11 @@ class UcdDeleteStatus extends UcAdfAction {
 				logVerbose("Status type [$type] status [$status] deleted.")
 				deleted = true
 			} else {
-				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+				String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 				logVerbose(errMsg)
 				// Returns a 400 error with a 'Cannot change the ghosted date once set' for the deleted statuses.
 				if ((response.getStatus() != 400 && response.getStatus() != 404) || failIfNotFound) {
-					throw new UcdInvalidValueException(errMsg)
+					throw new UcAdfInvalidValueException(errMsg)
 				}
 			}
 		}

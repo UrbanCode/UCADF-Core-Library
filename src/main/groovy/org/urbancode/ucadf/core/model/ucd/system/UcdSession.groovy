@@ -15,7 +15,7 @@ import javax.ws.rs.core.Response
 import org.glassfish.jersey.client.ClientConfig
 import org.glassfish.jersey.client.ClientProperties
 import org.urbancode.ucadf.core.integration.jersey.JerseyManager
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 
@@ -214,7 +214,7 @@ class UcdSession {
 			}
 		}
 		if (exitValue && throwOnFail) {
-			throw new UcdInvalidValueException("Command failed.")
+			throw new UcAdfInvalidValueException("Command failed.")
 		}
 
 		return [ stdOut, stdErr, exitValue]
@@ -226,7 +226,7 @@ class UcdSession {
 	 */
 	public WebTarget getUcdWebTarget() {
 		if (!getUcdUrl()) {
-			throw new UcdInvalidValueException("Unable to determine value for ucdUrl.")
+			throw new UcAdfInvalidValueException("Unable to determine value for ucdUrl.")
 		}
 
 		if (!ucdWebClient) {
@@ -290,7 +290,7 @@ class UcdSession {
 			Response response = target.request().get()
 			if (response.getStatus() != 200 && response.status != 401) {	
 				log.error response.readEntity(String.class)
-				throw new UcdInvalidValueException("Status: ${response.getStatus()} Unable to get UrbanCode Deploy version. $target")
+				throw new UcAdfInvalidValueException("Status: ${response.getStatus()} Unable to get UrbanCode Deploy version. $target")
 			}
 			
 			String responseText = response.readEntity(String.class)

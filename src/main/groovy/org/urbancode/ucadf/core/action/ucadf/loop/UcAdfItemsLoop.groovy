@@ -3,7 +3,7 @@
  */
 package org.urbancode.ucadf.core.action.ucadf.loop
 
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 class UcAdfItemsLoop extends UcAdfLoop {
 	// Action properties.
@@ -29,7 +29,7 @@ class UcAdfItemsLoop extends UcAdfLoop {
 		} else if (items instanceof Map) {
 			processMapLoop()
 		} else {
-			throw new UcdInvalidValueException("items must be of type List or Map.")
+			throw new UcAdfInvalidValueException("items must be of type List or Map.")
 		}
 	}
 	

@@ -8,7 +8,7 @@ import java.util.regex.Matcher
 import org.urbancode.ucadf.core.model.ucd.agent.UcdAgent
 import org.urbancode.ucadf.core.model.ucd.agent.UcdAgentStatusEnum
 import org.urbancode.ucadf.core.model.ucd.agentPool.UcdAgentPool
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdSecurityTypeObject
 import org.urbancode.ucadf.core.model.ucd.property.UcdPropSheet
 import org.urbancode.ucadf.core.model.ucd.security.UcdExtendedSecurity
@@ -160,7 +160,7 @@ class UcdResource extends UcdSecurityTypeObject {
 	public static List<String> getParentPathAndName(final String path) {
 		Matcher matcher = (path =~ /(.*)\/(.*?)$/)
 		if (!matcher.matches()) {
-			throw new UcdInvalidValueException("Unable to split path [$path] into parent and name.")
+			throw new UcAdfInvalidValueException("Unable to split path [$path] into parent and name.")
 		}
 		
 		List<String> splitArr = matcher[0]

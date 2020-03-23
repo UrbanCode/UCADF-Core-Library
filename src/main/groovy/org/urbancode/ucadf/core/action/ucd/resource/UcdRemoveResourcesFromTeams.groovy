@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.team.UcdTeamSecurity
 
 class UcdRemoveResourcesFromTeams extends UcAdfAction {
@@ -56,7 +56,7 @@ class UcdRemoveResourcesFromTeams extends UcAdfAction {
 		
 		Response response = target.request(MediaType.APPLICATION_JSON).delete()
 		if (response.getStatus() != 204) {
-			throw new UcdInvalidValueException(response)
+			throw new UcAdfInvalidValueException(response)
 		}
 	}
 }

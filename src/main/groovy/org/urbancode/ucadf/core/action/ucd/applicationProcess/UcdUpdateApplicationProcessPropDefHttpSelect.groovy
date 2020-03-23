@@ -10,8 +10,8 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.applicationProcess.UcdApplicationProcess
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
-import org.urbancode.ucadf.core.model.ucd.general.UcdSecureString
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.UcAdfSecureString
 import org.urbancode.ucadf.core.model.ucd.property.UcdPropDefHttpSelect
 
 import groovy.json.JsonBuilder
@@ -50,7 +50,7 @@ class UcdUpdateApplicationProcessPropDefHttpSelect extends UcAdfAction {
 	String httpUsername
 	
 	/** (Optional) The property definition HTTP password. */
-	UcdSecureString httpPassword
+	UcAdfSecureString httpPassword
 	
 	/** (Optional) The property definition HTTP format. */
 	String httpFormat
@@ -134,7 +134,7 @@ class UcdUpdateApplicationProcessPropDefHttpSelect extends UcAdfAction {
 		
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() != 200) {
-            throw new UcdInvalidValueException(response)
+            throw new UcAdfInvalidValueException(response)
 		}
 	}
 }

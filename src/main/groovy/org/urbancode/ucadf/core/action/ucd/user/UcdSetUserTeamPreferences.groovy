@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.user.UcdUserTeamMappingsEnum
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
@@ -36,7 +36,7 @@ class UcdSetUserTeamPreferences extends UcAdfAction {
 
 		// Validate a user ID and password were provided.
 		if (!ucdUserId || !ucdUserPw || ucdAuthToken) {
-			throw new UcdInvalidValueException("This action requires a value for ucdUserId and ucdUserPw, not ucdAuthToken.")
+			throw new UcAdfInvalidValueException("This action requires a value for ucdUserId and ucdUserPw, not ucdAuthToken.")
 		}
 		
 		logVerbose("Set user team preferences type [$defaultTeamMappingType] teamNames [$teamNames].")
@@ -64,7 +64,7 @@ class UcdSetUserTeamPreferences extends UcAdfAction {
 			if (response.getStatus() == 200) {
 				userGroups = target.request().get(new GenericType<List<UserGroup>>(){})
 			} else {
-				throw new UcdInvalidValueException(response)
+				throw new UcAdfInvalidValueException(response)
 			}
 		
 			List<String> teamIds = []
@@ -74,7 +74,7 @@ class UcdSetUserTeamPreferences extends UcAdfAction {
 				}
 				
 				if (!userTeam) {
-					throw new UcdInvalidValueException("User [$ucdUserId] is not a member of team [$teamName].")
+					throw new UcAdfInvalidValueException("User [$ucdUserId] is not a member of team [$teamName].")
 				}
 				
 				String teamId = userTeam.getId()
@@ -92,7 +92,7 @@ class UcdSetUserTeamPreferences extends UcAdfAction {
 		
 		Response response = target.request(MediaType.WILDCARD).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() != 200) {
-            throw new UcdInvalidValueException(response)
+            throw new UcAdfInvalidValueException(response)
 		}
 	}	
 }

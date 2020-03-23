@@ -13,7 +13,7 @@ import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.applicationProcess.UcdApplicationProcess
 import org.urbancode.ucadf.core.model.ucd.applicationProcess.UcdApplicationProcessInventoryManagementTypeEnum
 import org.urbancode.ucadf.core.model.ucd.applicationProcess.UcdApplicationProcessOfflineAgentHandlingEnum
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.role.UcdRole
 
@@ -98,7 +98,7 @@ class UcdUpdateApplicationProcess extends UcAdfAction {
 		if (response.getStatus() == 200) {
 			logVerbose("Application [$application] process [$process] basic information updated.")
 		} else {
-            throw new UcdInvalidValueException(response)
+            throw new UcAdfInvalidValueException(response)
 		}
 	}
 }

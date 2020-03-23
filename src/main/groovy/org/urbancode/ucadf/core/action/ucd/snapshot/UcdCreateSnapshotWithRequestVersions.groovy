@@ -5,7 +5,7 @@ package org.urbancode.ucadf.core.action.ucd.snapshot
 
 import org.urbancode.ucadf.core.action.ucd.applicationProcessRequest.UcdGetApplicationProcessRequestVersions
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 class UcdCreateSnapshotWithRequestVersions extends UcAdfAction {
 	// Action properties.
@@ -51,7 +51,7 @@ class UcdCreateSnapshotWithRequestVersions extends UcAdfAction {
 		])
 
 		if (requireVersions && requestVersions.size() < 1) {
-			throw new UcdInvalidValueException("This snapshot must be created with at least one component version selected.")
+			throw new UcAdfInvalidValueException("This snapshot must be created with at least one component version selected.")
 		}
 		
 		// Create the snapshot with the versions.

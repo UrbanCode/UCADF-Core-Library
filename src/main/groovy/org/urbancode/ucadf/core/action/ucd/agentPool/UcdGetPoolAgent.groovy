@@ -6,7 +6,7 @@ package org.urbancode.ucadf.core.action.ucd.agentPool
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.agent.UcdAgent
 import org.urbancode.ucadf.core.model.ucd.agentPool.UcdAgentPool
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 // Get a random agent from an agent pool.
 class UcdGetPoolAgent extends UcAdfAction {
@@ -31,7 +31,7 @@ class UcdGetPoolAgent extends UcAdfAction {
 		])
 
 		if (agentPool.getAgents().size() < 1) {
-			throw new UcdInvalidValueException("No agents found in [$pool] pool.")
+			throw new UcAdfInvalidValueException("No agents found in [$pool] pool.")
 		}
 
 		UcdAgent ucdAgent = agentPool.getAgents()[0]

@@ -5,7 +5,7 @@ package org.urbancode.ucadf.core.action.ucadf.loop
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.actionsrunner.UcAdfActionPropertyEnum
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 abstract class UcAdfLoop extends UcAdfAction {
 	/** The actions to perform for each iteration. */
@@ -22,7 +22,7 @@ abstract class UcAdfLoop extends UcAdfAction {
 	 */
 	@Override
 	public Object run() {
-		throw new UcdInvalidValueException("This is an abstract action that can't be used directly.")
+		throw new UcAdfInvalidValueException("This is an abstract action that can't be used directly.")
 	}
 	
 	/**

@@ -10,7 +10,7 @@ import org.urbancode.ucadf.core.action.ucd.user.UcdGetUser
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.componentProcessRequest.UcdComponentProcessRequest
 import org.urbancode.ucadf.core.model.ucd.componentProcessRequest.UcdComponentProcessRequestTask
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.user.UcdUser
 
 class UcdGetComponentProcessRequestTaskCompletionProperties extends UcAdfAction {
@@ -65,7 +65,7 @@ class UcdGetComponentProcessRequestTaskCompletionProperties extends UcAdfAction 
             logVerbose("Completed by [$completedBy] on [$completedOn].")
 			UcdUser completedByUser = getUserInfoByDisplayName(completedBy)
 			if (!completedByUser) {
-				throw new UcdInvalidValueException("Unable to determine user name from user display name [$completedBy]")
+				throw new UcAdfInvalidValueException("Unable to determine user name from user display name [$completedBy]")
 			}
 			completedBy = completedByUser.getName()
 			completedByDisplayName = completedByUser.getDisplayName()
@@ -79,7 +79,7 @@ class UcdGetComponentProcessRequestTaskCompletionProperties extends UcAdfAction 
 			taskReturn.setTaskCompletedByDisplayName(completedByDisplayName)
 			taskReturn.setTaskCompletedOn(completedOnTs)
 		} else {
-			throw new UcdInvalidValueException("Unable to get task information.")
+			throw new UcAdfInvalidValueException("Unable to get task information.")
 		}
 
 		return taskReturn

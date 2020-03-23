@@ -10,8 +10,8 @@ import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.integration.ldap.LdapManager
 import org.urbancode.ucadf.core.integration.ldap.model.LdapGroupResult
 import org.urbancode.ucadf.core.integration.ldap.model.LdapGroupUsersResult
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
-import org.urbancode.ucadf.core.model.ucd.general.UcdSecureString
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.UcAdfSecureString
 import org.urbancode.ucadf.core.model.ucd.group.UcdGroup
 import org.urbancode.ucadf.core.model.ucd.user.UcdUser
 
@@ -26,7 +26,7 @@ class UcdAddLdapGroups extends UcAdfAction {
 	String authorizationRealm
 	
 	/** The connection password. */
-	UcdSecureString connectionPassword = new UcdSecureString()
+	UcAdfSecureString connectionPassword = new UcAdfSecureString()
 	
 	/** The list of group names or IDs. */
 	List<String> groups
@@ -130,10 +130,10 @@ class UcdAddLdapGroups extends UcAdfAction {
 						maxSyncUsers: maxSyncUsers
 					])
 				} else {
-					throw new UcdInvalidValueException("Unable to automatically add group [$groupName]. This could be because the group has only owners and no members.")
+					throw new UcAdfInvalidValueException("Unable to automatically add group [$groupName]. This could be because the group has only owners and no members.")
 				}
 			} else {
-				throw new UcdInvalidValueException("LDAP group [$groupName] not found.")
+				throw new UcAdfInvalidValueException("LDAP group [$groupName] not found.")
 			}
 		}
 	}

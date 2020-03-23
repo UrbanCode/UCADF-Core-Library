@@ -14,7 +14,7 @@ import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.component.UcdComponent
 import org.urbancode.ucadf.core.model.ucd.component.UcdComponentTypeEnum
 import org.urbancode.ucadf.core.model.ucd.componentTemplate.UcdComponentTemplate
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.version.UcdVersionTypeEnum
 
@@ -100,7 +100,7 @@ class UcdUpdateComponent extends UcAdfAction {
 		if (response.getStatus() == 200) {
 			logVerbose("Component [$component] updated.")
 		} else {
-			throw new UcdInvalidValueException(response)
+			throw new UcAdfInvalidValueException(response)
 		}
 	}
 }

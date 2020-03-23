@@ -8,7 +8,7 @@ import javax.ws.rs.core.GenericType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.security.UcdSecuritySubtype
 import org.urbancode.ucadf.core.model.ucd.security.UcdSecurityType
 
@@ -83,7 +83,7 @@ class UcdGetSecuritySubtypes extends UcAdfAction {
 		if (response.getStatus() == 200) {
 			ucdSecuritySubtypes = response.readEntity(new GenericType<List<UcdSecuritySubtype>>(){})
 		} else {
-			throw new UcdInvalidValueException(response)
+			throw new UcAdfInvalidValueException(response)
 		}
 
 		return ucdSecuritySubtypes

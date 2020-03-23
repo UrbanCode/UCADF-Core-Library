@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.version.UcdVersion
 
 class UcdRemoveVersionStatuses extends UcAdfAction {
@@ -56,7 +56,7 @@ class UcdRemoveVersionStatuses extends UcAdfAction {
 			if (response.getStatus() == 204) {
 				logVerbose("Status [$status] removed from component [$component] version [$version].")
 			} else {
-				throw new UcdInvalidValueException(response)
+				throw new UcAdfInvalidValueException(response)
 			}
 		}
 	}

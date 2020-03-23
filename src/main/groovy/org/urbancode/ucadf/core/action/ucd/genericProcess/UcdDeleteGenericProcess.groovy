@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.genericProcess.UcdGenericProcess
 
 class UcdDeleteGenericProcess extends UcAdfAction {
@@ -52,7 +52,7 @@ class UcdDeleteGenericProcess extends UcAdfAction {
 					logVerbose("Generic [$process] deleted.")
 					deleted = true
 				} else {
-					throw new UcdInvalidValueException(response)
+					throw new UcAdfInvalidValueException(response)
 				}
 			}
 		} else {

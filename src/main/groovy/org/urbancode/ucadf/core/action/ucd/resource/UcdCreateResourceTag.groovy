@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdColorEnum
 import org.urbancode.ucadf.core.model.ucd.resource.UcdResource
 import org.urbancode.ucadf.core.model.ucd.tag.UcdTag
@@ -49,7 +49,7 @@ class UcdCreateResourceTag extends UcAdfAction {
 
 		if (ucdTag) {
 			if (failIfExists) {
-				throw new UcdInvalidValueException("Resource tag [$name] already exists.")
+				throw new UcAdfInvalidValueException("Resource tag [$name] already exists.")
 			} else {
 				logVerbose("Resource tag [$name] already exists.")
 			}
@@ -82,7 +82,7 @@ class UcdCreateResourceTag extends UcAdfAction {
 			if (response.getStatus() == 204) {
 	            logVerbose("Resource tag [$name] created.")
 			} else {
-				throw new UcdInvalidValueException(response)
+				throw new UcAdfInvalidValueException(response)
 			}
 			
 			// Remove the tag from where it was temporarily created.

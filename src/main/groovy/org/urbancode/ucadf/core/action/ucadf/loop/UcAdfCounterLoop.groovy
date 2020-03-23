@@ -3,7 +3,7 @@
  */
 package org.urbancode.ucadf.core.action.ucadf.loop
 
-import org.urbancode.ucadf.core.model.ucadf.UcAdfCounterLoopControl
+import org.urbancode.ucadf.core.model.ucadf.loop.UcAdfCounterLoopControl
 
 class UcAdfCounterLoop extends UcAdfLoop {
 	/** The counter loop begin value. */

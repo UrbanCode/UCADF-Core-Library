@@ -7,7 +7,7 @@ import org.urbancode.ucadf.core.action.ucd.version.UcdAddVersionFiles
 import org.urbancode.ucadf.core.action.ucd.version.UcdCreateVersion
 import org.urbancode.ucadf.core.action.ucd.version.UcdSetVersionProperties
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 class UcAdfCachePutComponentVersion extends UcAdfAction {
 	// Constants.
@@ -48,7 +48,7 @@ class UcAdfCachePutComponentVersion extends UcAdfAction {
 			Long dirSize = cacheDir.directorySize()
 			logVerbose("Size of directory is [$dirSize] bytes and maximum allowed size is [$cacheMaxSize].")
 			if (dirSize > cacheMaxSize) {
-				throw new UcdInvalidValueException("Directory size is > maximum allowed size [$cacheMaxSize].")
+				throw new UcAdfInvalidValueException("Directory size is > maximum allowed size [$cacheMaxSize].")
 			}
 			
 			// Create the version if it doesn't already exist.
@@ -86,7 +86,7 @@ class UcAdfCachePutComponentVersion extends UcAdfAction {
 			])
 		} else {
 			if (failIfNotFound) {
-				throw new UcdInvalidValueException("Cache directory [${cacheDir.getPath()}] not found.")
+				throw new UcAdfInvalidValueException("Cache directory [${cacheDir.getPath()}] not found.")
 			}
 		}
 	}	

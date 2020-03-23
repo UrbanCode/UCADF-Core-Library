@@ -24,7 +24,7 @@ import org.urbancode.ucadf.core.model.ucd.application.UcdApplication
 import org.urbancode.ucadf.core.model.ucd.application.UcdApplicationImport
 import org.urbancode.ucadf.core.model.ucd.component.UcdComponentImport
 import org.urbancode.ucadf.core.model.ucd.componentTemplate.UcdComponentTemplate
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.genericProcess.UcdGenericProcessImport
 import org.urbancode.ucadf.core.model.ucd.importExport.UcdImportActionEnum
 import org.urbancode.ucadf.core.model.ucd.importExport.UcdImportTypeEnum
@@ -94,11 +94,11 @@ class UcdImportApplication extends UcAdfAction {
 		])
 
 		if (ucdApplication && appUpgradeType == UcdImportTypeEnum.FAIL_IF_EXISTS) {
-			throw new UcdInvalidValueException("Application already exists.")
+			throw new UcAdfInvalidValueException("Application already exists.")
 		}
 		
 		if (!ucdApplication && appUpgradeType == UcdImportTypeEnum.FAIL_IF_DOESNT_EXIST) {
-			throw new UcdInvalidValueException("Application doesn't exist.")
+			throw new UcAdfInvalidValueException("Application doesn't exist.")
 		}
 
 		// Import the generic processes.
@@ -193,7 +193,7 @@ class UcdImportApplication extends UcAdfAction {
 			if (response.getStatus() != 200) {
 				String errorMsg = response.readEntity(String.class)
 				logError("$errorMsg\n${errorMsg.replaceAll(/.*(Error importing.*?)&quot.*/, '$1')}")
-				throw new UcdInvalidValueException("Status: ${response.getStatus()} Unable to import application. $target")
+				throw new UcAdfInvalidValueException("Status: ${response.getStatus()} Unable to import application. $target")
 			}
 
 			// Re-add the components from the saved list.

@@ -4,7 +4,7 @@
 package org.urbancode.ucadf.core.action.ucd.version
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
 
 class UcdGetVersionProperty extends UcAdfAction {
@@ -63,7 +63,7 @@ class UcdGetVersionProperty extends UcAdfAction {
 			}
 		} else {
 			if (failIfNotFound) {
-				throw new UcdInvalidValueException("Component [$component] version [$version] property [$property] not found.")
+				throw new UcAdfInvalidValueException("Component [$component] version [$version] property [$property] not found.")
 			}
 		}
 		

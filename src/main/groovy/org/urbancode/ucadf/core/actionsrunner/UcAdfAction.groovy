@@ -1,8 +1,8 @@
 package org.urbancode.ucadf.core.actionsrunner
 
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.UcAdfSecureString
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
-import org.urbancode.ucadf.core.model.ucd.general.UcdSecureString
 import org.urbancode.ucadf.core.model.ucd.system.UcdSession
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo
@@ -63,12 +63,12 @@ abstract class UcAdfAction extends UcdObject {
 	/**
 	 * The UCD user password or auth token. If left blank then will be set by the {@link #actionsRunner}.
 	 */
- 	UcdSecureString ucdUserPw = new UcdSecureString("")
+ 	UcAdfSecureString ucdUserPw = new UcAdfSecureString("")
 
 	/**
 	 * The UCD auth token. If left blank then will be set by the {@link #actionsRunner}.
 	 */
-	UcdSecureString ucdAuthToken = new UcdSecureString("")
+	UcAdfSecureString ucdAuthToken = new UcAdfSecureString("")
 
 	/**
 	 * Property values provided to the action.
@@ -166,7 +166,7 @@ abstract class UcAdfAction extends UcdObject {
 		}
 
 		if (invalidProps) {
-			throw new UcdInvalidValueException("Required properties not specified for action.")
+			throw new UcAdfInvalidValueException("Required properties not specified for action.")
 		}
 	}
 	
@@ -193,7 +193,7 @@ abstract class UcAdfAction extends UcdObject {
 				}
 				
 				String outputStr
-				if (propValue instanceof UcdSecureString) {
+				if (propValue instanceof UcAdfSecureString) {
 					outputStr = "***"
 				} else {
 					outputStr = new ObjectMapper().writer().writeValueAsString(propValue)

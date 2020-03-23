@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 class UcdDeleteTeam extends UcAdfAction {
 	/** The team name or ID. */
@@ -48,10 +48,10 @@ class UcdDeleteTeam extends UcAdfAction {
 				// Some older versions return a 500.
 				logVerbose(response.readEntity(String.class))
 				if (failIfNotFound) {
-					throw new UcdInvalidValueException("Team not found to delete.")
+					throw new UcAdfInvalidValueException("Team not found to delete.")
 				}
 			} else {
-				throw new UcdInvalidValueException(response)
+				throw new UcAdfInvalidValueException(response)
 			}
 		}
 		

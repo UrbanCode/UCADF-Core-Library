@@ -8,7 +8,7 @@
  */
 package org.urbancode.ucadf.core.action.ucadf.loop
 
-import org.urbancode.ucadf.core.model.ucadf.UcAdfPageLoopControl
+import org.urbancode.ucadf.core.model.ucadf.loop.UcAdfPageLoopControl
 
 class UcAdfPageLoop extends UcAdfLoop {
 	// Action properties.

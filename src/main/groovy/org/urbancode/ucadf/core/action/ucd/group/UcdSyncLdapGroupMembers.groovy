@@ -9,7 +9,7 @@ import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.integration.ldap.LdapManager
 import org.urbancode.ucadf.core.integration.ldap.model.LdapGroupResult
 import org.urbancode.ucadf.core.integration.ldap.model.LdapGroupUsersResult
-import org.urbancode.ucadf.core.model.ucd.general.UcdSecureString
+import org.urbancode.ucadf.core.model.ucadf.UcAdfSecureString
 import org.urbancode.ucadf.core.model.ucd.group.UcdGroup
 import org.urbancode.ucadf.core.model.ucd.role.UcdRoleMapping
 import org.urbancode.ucadf.core.model.ucd.team.UcdTeam
@@ -26,7 +26,7 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 	String authorizationRealm
 	
 	/** The connection password. */
-	UcdSecureString connectionPassword = new UcdSecureString()
+	UcAdfSecureString connectionPassword = new UcAdfSecureString()
 
 	/** (Optional) The name of a group to synchronize. */
 	String group = ""

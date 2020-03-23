@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.version.UcdVersion
 
 class UcdAddVersionLink extends UcAdfAction {
@@ -60,7 +60,7 @@ class UcdAddVersionLink extends UcAdfAction {
         if (response.getStatus() == 204) {
             logVerbose("Version link added.")
         } else {
-            throw new UcdInvalidValueException(response)
+            throw new UcAdfInvalidValueException(response)
         }
     }
 }

@@ -10,8 +10,8 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.environment.UcdEnvironment
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
-import org.urbancode.ucadf.core.model.ucd.exception.UcdNotFoundException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfNotFoundException
 import org.urbancode.ucadf.core.model.ucd.team.UcdTeamSecurity
 
 class UcdAddEnvironmentToTeams extends UcAdfAction {
@@ -61,7 +61,7 @@ class UcdAddEnvironmentToTeams extends UcAdfAction {
 			}
 		} else {
 			if (failIfNotFound) {
-				throw new UcdNotFoundException("Environment [$environment] not found.")
+				throw new UcAdfNotFoundException("Environment [$environment] not found.")
 			}
 		}
 	}
@@ -83,7 +83,7 @@ class UcdAddEnvironmentToTeams extends UcAdfAction {
 		
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(""))
 		if (response.getStatus() != 204) {
-            throw new UcdInvalidValueException(response)
+            throw new UcAdfInvalidValueException(response)
 		}
 	}
 	
@@ -100,7 +100,7 @@ class UcdAddEnvironmentToTeams extends UcAdfAction {
 		])
 
 		if (!derivedEnvironment) {
-			throw new UcdInvalidValueException("Application [$application] environment [$environment] not found.")
+			throw new UcAdfInvalidValueException("Application [$application] environment [$environment] not found.")
 		}
 
 		for (team in derivedEnvironment.getExtendedSecurity().getTeams()) {
@@ -131,7 +131,7 @@ class UcdAddEnvironmentToTeams extends UcAdfAction {
 				
 				Response response = removeTargetWithParams.request(MediaType.APPLICATION_JSON).delete()
 				if (response.getStatus() != 204) {
-					throw new UcdInvalidValueException(response)
+					throw new UcAdfInvalidValueException(response)
 				}
 			}
 		}

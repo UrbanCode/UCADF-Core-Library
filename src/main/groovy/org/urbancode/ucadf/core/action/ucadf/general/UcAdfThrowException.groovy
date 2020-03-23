@@ -4,7 +4,7 @@
 package org.urbancode.ucadf.core.action.ucadf.general
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 class UcAdfThrowException extends UcAdfAction {
 	// Action properties.
@@ -20,6 +20,6 @@ class UcAdfThrowException extends UcAdfAction {
 		validatePropsExist()
 		
 		// Throw an exception message.
-		throw new UcdInvalidValueException(message)
+		throw new UcAdfInvalidValueException(message)
 	}
 }

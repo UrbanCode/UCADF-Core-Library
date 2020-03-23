@@ -14,7 +14,7 @@ import org.urbancode.ucadf.core.model.ucd.component.UcdComponent
 import org.urbancode.ucadf.core.model.ucd.componentTemplate.UcdComponentTemplate
 import org.urbancode.ucadf.core.model.ucd.environment.UcdEnvironment
 import org.urbancode.ucadf.core.model.ucd.environment.UcdEnvironmentTemplate
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.genericProcess.UcdGenericProcess
 import org.urbancode.ucadf.core.model.ucd.resource.UcdResource
 import org.urbancode.ucadf.core.model.ucd.resource.UcdResourceTemplate
@@ -65,7 +65,7 @@ enum UcdSecurityTypeEnum {
 		}
 		
 		if (!newEnum) {
-			throw new UcdInvalidValueException("Security type enumeration [$value] is invalid.")
+			throw new UcAdfInvalidValueException("Security type enumeration [$value] is invalid.")
 		}
 		
 		return newEnum

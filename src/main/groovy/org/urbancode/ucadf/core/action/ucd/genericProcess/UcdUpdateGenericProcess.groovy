@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.action.ucd.resource.UcdGetResource
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.genericProcess.UcdGenericProcess
 import org.urbancode.ucadf.core.model.ucd.resource.UcdResource
@@ -75,7 +75,7 @@ class UcdUpdateGenericProcess extends UcAdfAction {
 		if (notificationScheme) {
 			if (!UcdObject.isUUID(notificationScheme)) {
 				// TODO: Need to have notification scheme lookup.
-				throw new UcdInvalidValueException("Ability to specify notification scheme name not implemented yet.")
+				throw new UcAdfInvalidValueException("Ability to specify notification scheme name not implemented yet.")
 			}
 		}
 
@@ -101,7 +101,7 @@ class UcdUpdateGenericProcess extends UcAdfAction {
 		if (response.getStatus() == 200) {
 			logVerbose("Generic process [$process] updated.")
 		} else {
-			throw new UcdInvalidValueException(response)
+			throw new UcAdfInvalidValueException(response)
 		}
 	}	
 }

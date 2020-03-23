@@ -13,8 +13,8 @@ import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.authenticationRealm.UcdAuthenticationRealm
 import org.urbancode.ucadf.core.model.ucd.authenticationRealm.UcdAuthenticationRealmProperties
 import org.urbancode.ucadf.core.model.ucd.authorizationRealm.UcdAuthorizationRealm
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
-import org.urbancode.ucadf.core.model.ucd.general.UcdSecureString
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.UcAdfSecureString
 import org.urbancode.ucadf.core.model.ucd.system.UcdSession
 
 import groovy.json.JsonBuilder
@@ -34,7 +34,7 @@ class UcdCreateLdapAuthenticationRealm extends UcAdfAction {
 	String connectionName = ""
 	
 	/** The connection password. */
-	UcdSecureString connectionPassword = new UcdSecureString()
+	UcAdfSecureString connectionPassword = new UcAdfSecureString()
 
 	/** The user pattern. */
 	String userPattern = ""
@@ -127,7 +127,7 @@ class UcdCreateLdapAuthenticationRealm extends UcAdfAction {
             logVerbose("Created authentication realm [$name].")
 			created = true
 		} else {
-			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+			String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 			logVerbose(errMsg)
 			
 			Boolean alreadyExists = false
@@ -139,7 +139,7 @@ class UcdCreateLdapAuthenticationRealm extends UcAdfAction {
 			}
 			
 			if (!alreadyExists || (alreadyExists && failIfExists)) {
-				throw new UcdInvalidValueException(errMsg)
+				throw new UcAdfInvalidValueException(errMsg)
 			}
 		}
 		

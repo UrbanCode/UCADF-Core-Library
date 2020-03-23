@@ -9,7 +9,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.action.ucd.security.UcdGetSecurityTypePermissions
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.role.UcdRole
 import org.urbancode.ucadf.core.model.ucd.role.UcdRolePermissionMap
 
@@ -63,7 +63,7 @@ class UcdAddRolePermissions extends UcAdfAction {
 			// Determine if the permission exists for the instance.
 			if (!securityTypePermissionsMapById.find { type.equals(it.value['type']) && permission.equals(it.value['permission']) }) {
 				if (failIfNotFound) {
-					throw new UcdInvalidValueException("Security [$type] permission [$permission] doesn't exist for this instance.")
+					throw new UcAdfInvalidValueException("Security [$type] permission [$permission] doesn't exist for this instance.")
 				}
 				
 				println "Skipping [$type] [$permission] that doesn't exist for the instance."
@@ -97,7 +97,7 @@ class UcdAddRolePermissions extends UcAdfAction {
 
 			Response response = target.request().post(Entity.json(jsonBuilder.toString()))
 			if (response.getStatus() != 200) {
-				throw new UcdInvalidValueException(response)
+				throw new UcAdfInvalidValueException(response)
 			}
 		}
 		

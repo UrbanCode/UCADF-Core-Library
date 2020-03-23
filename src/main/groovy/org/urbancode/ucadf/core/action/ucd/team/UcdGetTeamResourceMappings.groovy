@@ -8,7 +8,7 @@ import javax.ws.rs.core.GenericType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.security.UcdSecurityTypeEnum
 
@@ -49,7 +49,7 @@ class UcdGetTeamResourceMappings extends UcAdfAction {
 			if (responseMessage.matches(/.*Unknown.*/)) {
 				teamResourceMappings = new ArrayList<UcdObject>()
 			} else {
-				throw new UcdInvalidValueException("Error: $response.status. Unable to get team resource mappings. $target")
+				throw new UcAdfInvalidValueException("Error: $response.status. Unable to get team resource mappings. $target")
 			}
 		}
 		

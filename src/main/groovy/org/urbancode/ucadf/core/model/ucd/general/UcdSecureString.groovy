@@ -3,27 +3,19 @@
  */
 package org.urbancode.ucadf.core.model.ucd.general
 
+import org.urbancode.ucadf.core.model.ucadf.UcAdfSecureString
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
+@Deprecated // Use UcAdfSecureString.
 @JsonIgnoreProperties(ignoreUnknown = true)
-class UcdSecureString extends UcdObject {
-	// This will have the String class methods.
-	@Delegate final String secureString
-	
+class UcdSecureString extends UcAdfSecureString {
 	// Constructors.	
 	UcdSecureString() {
-		this("")
+		super()
 	}
 	
 	UcdSecureString(final String secureString) {
-		this.secureString = secureString
-	}
-
-	/**
-	 * Gets a string representation of the secure string.
-	 * @return The string.	
-	 */
-	public String toString() {
-		return secureString
+		super(secureString)
 	}
 }

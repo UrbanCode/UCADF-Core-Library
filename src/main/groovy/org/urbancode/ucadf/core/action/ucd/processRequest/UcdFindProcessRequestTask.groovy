@@ -7,7 +7,7 @@ import org.urbancode.ucadf.core.action.ucd.applicationProcessRequest.UcdGetAppli
 import org.urbancode.ucadf.core.action.ucd.componentProcessRequest.UcdGetComponentProcessRequest
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.applicationProcessRequest.UcdApplicationProcessRequest
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.processRequest.UcdProcessRequestTask
 import org.urbancode.ucadf.core.model.ucd.processRequest.UcdProcessRequestTrace
 import org.urbancode.ucadf.core.model.ucd.processRequest.UcdProcessRequestTraceTypeEnum
@@ -47,7 +47,7 @@ class UcdFindProcessRequestTask extends UcAdfAction {
 
 		// Only certin types are supported now.
 		if (type != UcdProcessRequestTraceTypeEnum.APPLICATIONMANUALTASK && type != UcdProcessRequestTraceTypeEnum.COMPONENTMANUALTASK) {
-			throw new UcdInvalidValueException("Finding tasks for type [$type] not currently supported.")
+			throw new UcAdfInvalidValueException("Finding tasks for type [$type] not currently supported.")
 		}		
 		
 		// Get the application process request.
@@ -67,7 +67,7 @@ class UcdFindProcessRequestTask extends UcAdfAction {
 		)
 
 		if (!processRequestTask && failIfNotFound) {
-			throw new UcdInvalidValueException("Process [$requestId] task type [$type] task path [$taskPath] with status [$status] not found.")
+			throw new UcAdfInvalidValueException("Process [$requestId] task type [$type] task path [$taskPath] with status [$status] not found.")
 		}
 		
 		return processRequestTask

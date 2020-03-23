@@ -9,7 +9,7 @@ import javax.ws.rs.core.Response
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.authToken.UcdAuthToken
 import org.urbancode.ucadf.core.model.ucd.authToken.UcdAuthTokenTable
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.filterField.UcdFilterField
 import org.urbancode.ucadf.core.model.ucd.filterField.UcdFilterFieldClassEnum
 import org.urbancode.ucadf.core.model.ucd.filterField.UcdFilterFieldTypeEnum
@@ -57,7 +57,7 @@ class UcdGetAuthTokens extends UcAdfAction {
 			UcdAuthTokenTable ucdAuthTokenTable = response.readEntity(UcdAuthTokenTable.class)
 			ucdAuthTokens = ucdAuthTokenTable.getRecords()
 		} else {
-            throw new UcdInvalidValueException(response)
+            throw new UcAdfInvalidValueException(response)
 		}
 				
 		return ucdAuthTokens

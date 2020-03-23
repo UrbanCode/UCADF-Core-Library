@@ -8,7 +8,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.agent.UcdAgent
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.property.UcdPropSheet
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
@@ -73,7 +73,7 @@ class UcdGetAgentProperties extends UcAdfAction {
 				agentProperties = propertiesMap
 			}
 		} else {
-            throw new UcdInvalidValueException(response)
+            throw new UcAdfInvalidValueException(response)
 		}
 		
 		return agentProperties

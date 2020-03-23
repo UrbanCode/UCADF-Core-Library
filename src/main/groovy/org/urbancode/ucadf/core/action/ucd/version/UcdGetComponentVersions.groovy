@@ -8,7 +8,7 @@ import javax.ws.rs.core.GenericType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.version.UcdVersion
 
 class UcdGetComponentVersions extends UcAdfAction {
@@ -51,14 +51,14 @@ class UcdGetComponentVersions extends UcAdfAction {
 		if (response.getStatus() == 200) {
 			ucdVersions = response.readEntity(new GenericType<List<UcdVersion>>(){})
 		} else {
-			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+			String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 			logVerbose(errMsg)
 			if (response.getStatus() == 404) {
 				if (failIfNotFound) {
-					throw new UcdInvalidValueException(errMsg)
+					throw new UcAdfInvalidValueException(errMsg)
 				}
 			} else {
-				throw new UcdInvalidValueException(errMsg)
+				throw new UcAdfInvalidValueException(errMsg)
 			}
 		}
 
@@ -75,7 +75,7 @@ class UcdGetComponentVersions extends UcAdfAction {
 		}
 		
 		if (ucdReturnVersions.size() == 0 && failIfNotFound) {
-			throw new UcdInvalidValueException("No component [$component] version(s) found. match=[$match].")
+			throw new UcAdfInvalidValueException("No component [$component] version(s) found. match=[$match].")
 		}
 		
 		return ucdReturnVersions
