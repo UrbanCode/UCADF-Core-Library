@@ -8,7 +8,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.componentProcessRequest.UcdComponentProcessRequest
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 class UcdGetComponentProcessRequest extends UcAdfAction {
 	// Action properties.
@@ -43,18 +43,18 @@ class UcdGetComponentProcessRequest extends UcAdfAction {
 			if (!ucdComponentProcessRequest.getId()) {
 				ucdComponentProcessRequest = null
 				if (failIfNotFound) {
-					throw new UcdInvalidValueException("Component process request [$requestId] not found.")
+					throw new UcAdfInvalidValueException("Component process request [$requestId] not found.")
 				}
 			}
 		} else {
-			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+			String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 			logVerbose(errMsg)
 			if (response.getStatus() == 400 || response.getStatus() == 404) {
 				if (failIfNotFound) {
-					throw new UcdInvalidValueException(errMsg)
+					throw new UcAdfInvalidValueException(errMsg)
 				}
 			} else {
-				throw new UcdInvalidValueException(errMsg)
+				throw new UcAdfInvalidValueException(errMsg)
 			}
 		}
 

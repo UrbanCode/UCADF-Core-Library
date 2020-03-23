@@ -9,7 +9,7 @@ import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.integration.ldap.LdapManager
 import org.urbancode.ucadf.core.model.ucd.authenticationRealm.UcdAuthenticationRealm
 import org.urbancode.ucadf.core.model.ucd.authorizationRealm.UcdAuthorizationRealm
-import org.urbancode.ucadf.core.model.ucd.general.UcdSecureString
+import org.urbancode.ucadf.core.model.ucadf.UcAdfSecureString
 
 class UcdGetLdapManager extends UcAdfAction {
 	// Action properties.
@@ -20,7 +20,7 @@ class UcdGetLdapManager extends UcAdfAction {
 	String authorizationRealm
 	
 	/** (Optional) The LDAP connection password. */
-	UcdSecureString connectionPassword = new UcdSecureString()
+	UcAdfSecureString connectionPassword = new UcAdfSecureString()
 	
 	private ldapManagerPropertyName
 	

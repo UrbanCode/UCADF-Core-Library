@@ -7,7 +7,7 @@ import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.genericProcessRequest.UcdGenericProcessRequest
 
 class UcdGetGenericProcessRequest extends UcAdfAction {
@@ -38,14 +38,14 @@ class UcdGetGenericProcessRequest extends UcAdfAction {
 		if (response.getStatus() == 200) {
 			ucdGenericProcessRequest = response.readEntity(UcdGenericProcessRequest.class)
 		} else {
-			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+			String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 			logVerbose(errMsg)
 			if (response.getStatus() == 400 || response.status == 404) {
 				if (failIfNotFound) {
-					throw new UcdInvalidValueException(errMsg)
+					throw new UcAdfInvalidValueException(errMsg)
 				}
 			} else {
-				throw new UcdInvalidValueException(errMsg)
+				throw new UcAdfInvalidValueException(errMsg)
 			}
 		}
 		

@@ -8,7 +8,7 @@ import org.urbancode.ucadf.core.action.ucd.genericProcessRequest.UcdGetGenericPr
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.applicationProcessRequest.UcdApplicationProcessRequest
 import org.urbancode.ucadf.core.model.ucd.componentProcessRequest.UcdComponentProcessRequest
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.genericProcessRequest.UcdGenericProcessRequest
 import org.urbancode.ucadf.core.model.ucd.processRequest.UcdProcessRequestResponseStatusEnum
 
@@ -88,7 +88,7 @@ class UcdIsProcessRequestRunning extends UcAdfAction {
 		}
 
 		if (!foundProcess && failIfNotFound) {
-			throw new UcdInvalidValueException("Process request [$requestId] not found.")
+			throw new UcAdfInvalidValueException("Process request [$requestId] not found.")
 		}		
 		
 		return isRunning

@@ -8,7 +8,7 @@ import javax.ws.rs.core.GenericType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.role.UcdRole
 
 class UcdGetRoles extends UcAdfAction {
@@ -34,7 +34,7 @@ class UcdGetRoles extends UcAdfAction {
 		if (response.getStatus() == 200) {
 			ucdRoles = response.readEntity(new GenericType<List<UcdRole>>(){})
 		} else {
-            throw new UcdInvalidValueException(response)
+            throw new UcAdfInvalidValueException(response)
 		}
 		
 		List<UcdRole> ucdReturnRoles = []

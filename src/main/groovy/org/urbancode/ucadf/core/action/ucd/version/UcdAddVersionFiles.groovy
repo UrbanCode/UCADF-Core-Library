@@ -17,7 +17,7 @@ import org.glassfish.jersey.media.multipart.FormDataBodyPart
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition
 import org.glassfish.jersey.media.multipart.FormDataMultiPart
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.version.UcdVersion
 
 import com.fasterxml.jackson.annotation.JsonIgnore
@@ -84,7 +84,7 @@ class UcdAddVersionFiles extends UcAdfAction {
 		File baseDir = new File(base)
 
 		if (!baseDir.exists()) {
-			throw new UcdInvalidValueException("Base directory [$baseDir] not found.")
+			throw new UcAdfInvalidValueException("Base directory [$baseDir] not found.")
 		}
 		
 		// Derive a base directory path with forward slashes.
@@ -131,7 +131,7 @@ class UcdAddVersionFiles extends UcAdfAction {
 		logVerbose("Added [$fileCount] files to component [$component] version [$version].")
 		
 		if (fileCount == 0 && failIfNoFiles) {
-			throw new UcdInvalidValueException("No files were found to add.")
+			throw new UcAdfInvalidValueException("No files were found to add.")
 		}
 	}
 
@@ -221,7 +221,7 @@ class UcdAddVersionFiles extends UcAdfAction {
 
 		Response response = target.request().post(Entity.entity(formDataMultiPart, formDataMultiPart.getMediaType()))
 		if (response.getStatus() != 204) {
-			throw new UcdInvalidValueException(response)
+			throw new UcAdfInvalidValueException(response)
 		}
 	}
 
@@ -302,7 +302,7 @@ class UcdAddVersionFiles extends UcAdfAction {
 	                mode |= 0001
 	                break
 	            default:
-					throw new UcdInvalidValueException("Invalid permission value [$posixFilePermission].")
+					throw new UcAdfInvalidValueException("Invalid permission value [$posixFilePermission].")
 	        }
 	    }
 

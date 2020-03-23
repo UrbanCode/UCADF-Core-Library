@@ -9,7 +9,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.environment.UcdEnvironment
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 class UcdDeleteEnvironment extends UcAdfAction {
 	/** The application name or ID. */
@@ -62,10 +62,10 @@ class UcdDeleteEnvironment extends UcAdfAction {
 			} else if (response.getStatus() == 404) {
 				logVerbose(response.readEntity(String.class))
 				if (failIfNotFound) {
-					throw new UcdInvalidValueException("Application [$application] environment [$environment] not found to delete.")
+					throw new UcAdfInvalidValueException("Application [$application] environment [$environment] not found to delete.")
 				}
 			} else {
-				throw new UcdInvalidValueException(response)
+				throw new UcAdfInvalidValueException(response)
 			}
 		}
 		

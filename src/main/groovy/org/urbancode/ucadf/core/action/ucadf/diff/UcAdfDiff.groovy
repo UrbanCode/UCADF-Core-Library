@@ -8,10 +8,10 @@ import org.urbancode.ucadf.core.action.ucd.component.UcdGetComponentProperties
 import org.urbancode.ucadf.core.action.ucd.componentProcess.UcdGetComponentProcesses
 import org.urbancode.ucadf.core.action.ucd.componentTemplateProcess.UcdGetComponentTemplateProcesses
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
+import org.urbancode.ucadf.core.model.ucadf.UcAdfSecureString
 import org.urbancode.ucadf.core.model.ucd.applicationProcess.UcdApplicationProcess
 import org.urbancode.ucadf.core.model.ucd.componentProcess.UcdComponentProcess
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
-import org.urbancode.ucadf.core.model.ucd.general.UcdSecureString
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
 import org.urbancode.ucadf.core.model.ucd.system.UcdSession
 
@@ -40,7 +40,7 @@ class UcAdfDiff extends UcAdfAction {
 	String toUcdUserId
 	
 	/** (Optional) UCD user password. */
-	UcdSecureString toUcdUserPw
+	UcAdfSecureString toUcdUserPw
    
 	// Private properties.
 	private UcdSession ucdSession1
@@ -96,7 +96,7 @@ class UcAdfDiff extends UcAdfAction {
 				break
 				
 			default:
-				throw new UcdInvalidValueException("Don't know how to process diff type [$type].")
+				throw new UcAdfInvalidValueException("Don't know how to process diff type [$type].")
 		}		
 	}
 	
@@ -230,7 +230,7 @@ class UcAdfDiff extends UcAdfAction {
 			println "< In [$set1Title] and not in [$set2Title]."
 			diff1.each { println "[$it]" }
 			if (failConditions.contains("<")) {
-				throw new UcdInvalidValueException("[$set1Title] has entries not in [$set2Title].")
+				throw new UcAdfInvalidValueException("[$set1Title] has entries not in [$set2Title].")
 			}
 		}
 		
@@ -238,7 +238,7 @@ class UcAdfDiff extends UcAdfAction {
 			println "> In [$set2Title] and not in [$set1Title]."
 			diff2.each { println "[$it]" }
 			if (failConditions.contains(">")) {
-				throw new UcdInvalidValueException("[$set2Title] has entries not in [$set1Title].")
+				throw new UcAdfInvalidValueException("[$set2Title] has entries not in [$set1Title].")
 			}
 		}
 	}

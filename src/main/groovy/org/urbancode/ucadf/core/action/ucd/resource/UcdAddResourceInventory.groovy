@@ -12,7 +12,7 @@ import org.urbancode.ucadf.core.action.ucd.component.UcdGetComponent
 import org.urbancode.ucadf.core.action.ucd.version.UcdGetVersion
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.component.UcdComponent
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.resource.UcdResource
 import org.urbancode.ucadf.core.model.ucd.version.UcdVersion
 
@@ -86,7 +86,7 @@ class UcdAddResourceInventory extends UcAdfAction {
 		
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() != 204) {	
-			throw new UcdInvalidValueException(response)
+			throw new UcAdfInvalidValueException(response)
 		}
 	}
 }

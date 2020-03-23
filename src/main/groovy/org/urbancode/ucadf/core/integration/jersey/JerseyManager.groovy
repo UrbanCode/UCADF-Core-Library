@@ -9,6 +9,7 @@ import javax.ws.rs.client.Client
 import javax.ws.rs.client.ClientBuilder
 
 import org.glassfish.jersey.client.ClientConfig
+import org.glassfish.jersey.client.HttpUrlConnectorProvider
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature
 import org.glassfish.jersey.filter.LoggingFilter
 import org.glassfish.jersey.media.multipart.MultiPartFeature
@@ -18,6 +19,9 @@ import groovy.util.logging.Slf4j
 
 @Slf4j
 class JerseyManager {
+	// The patch request type.
+	public final static String PATCH = "PATCH"
+	
 	/**
 	 * Get a configured client.
 	 * @param config The configuration.
@@ -66,7 +70,10 @@ class JerseyManager {
 		}
 
 		client.register(new LoggingFilter(new JerseyLogger(), true)).register(MultiPartFeature.class)
-		
+
+		// This allows for non-standard request methods such as PATCH.
+		client.property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true)
+
 		return client
 	}
 }

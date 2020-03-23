@@ -4,7 +4,7 @@
 package org.urbancode.ucadf.core.action.ucadf.general
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 class UcAdfExecuteCommand extends UcAdfAction {
 	/** The command list. One item for each command word, e.g. "ls", "-l" would be two items. */
@@ -60,7 +60,7 @@ class UcAdfExecuteCommand extends UcAdfAction {
 			}
 		}
 		if (exitValue && throwException) {
-			throw new UcdInvalidValueException("Command failed.")
+			throw new UcAdfInvalidValueException("Command failed.")
 		}
 
 		// Set the return object values.		

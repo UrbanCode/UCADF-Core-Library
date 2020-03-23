@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 class UcdRemoveTagsFromAgent extends UcAdfAction {
 	// Action properties.
@@ -41,7 +41,7 @@ class UcdRemoveTagsFromAgent extends UcAdfAction {
 				if (response.getStatus() == 204) {
 					logVerbose("Tag [$tag] removed from agent [$agent].")
 				} else {
-		            throw new UcdInvalidValueException(response)
+		            throw new UcAdfInvalidValueException(response)
 				}
 			} else {
 				logVerbose("Would remove tag [$tag] from agent [$agent].")

@@ -11,7 +11,7 @@ import org.urbancode.ucadf.core.action.ucd.application.UcdGetApplication
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.application.UcdApplication
 import org.urbancode.ucadf.core.model.ucd.applicationProcess.UcdApplicationProcess
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 
 class UcdGetApplicationProcesses extends UcAdfAction {
@@ -61,7 +61,7 @@ class UcdGetApplicationProcesses extends UcAdfAction {
 		if (response.getStatus() == 200) {
 			ucdApplicationProcesses = response.readEntity(new GenericType<List<UcdApplicationProcess>>(){})
 		} else {
-			throw new UcdInvalidValueException(response)
+			throw new UcAdfInvalidValueException(response)
 		}
 
 		return ucdApplicationProcesses

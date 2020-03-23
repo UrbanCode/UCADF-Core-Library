@@ -1,7 +1,7 @@
 /**
  * This class provides page control information for actions that support pages of returned rows.
  */
-package org.urbancode.ucadf.core.model.ucadf
+package org.urbancode.ucadf.core.model.ucadf.loop
 
 import javax.ws.rs.core.MultivaluedMap
 import javax.ws.rs.core.Response

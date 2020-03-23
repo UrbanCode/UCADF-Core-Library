@@ -8,7 +8,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.authenticationRealm.UcdAuthenticationRealm
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 class UcdGetAuthenticationRealm extends UcAdfAction {
 	// Action properties.
@@ -37,10 +37,10 @@ class UcdGetAuthenticationRealm extends UcAdfAction {
 		if (response.getStatus() == 200) {
 			ucdAuthenticationRealm = response.readEntity(UcdAuthenticationRealm)
 		} else {
-			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+			String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 			logVerbose(errMsg)
 			if ((response.getStatus() != 404 && response.getStatus() != 500) || failIfNotFound) {
-				throw new UcdInvalidValueException(errMsg)
+				throw new UcAdfInvalidValueException(errMsg)
 			}
 		}
 		

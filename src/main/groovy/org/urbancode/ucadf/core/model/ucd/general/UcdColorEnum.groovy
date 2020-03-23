@@ -3,7 +3,7 @@
  */
 package org.urbancode.ucadf.core.model.ucd.general
 
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 import com.fasterxml.jackson.annotation.JsonCreator
 
@@ -48,7 +48,7 @@ enum UcdColorEnum {
 		}
 		
 		if (!newEnum) {
-			throw new UcdInvalidValueException("Color enumeration [$value] is invalid.")
+			throw new UcAdfInvalidValueException("Color enumeration [$value] is invalid.")
 		}
 		
 		return newEnum

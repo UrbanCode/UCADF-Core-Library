@@ -16,7 +16,7 @@ import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.actionsrunner.UcAdfActionsRunner
 import org.urbancode.ucadf.core.model.ucd.componentTemplate.UcdComponentTemplate
 import org.urbancode.ucadf.core.model.ucd.componentTemplate.UcdComponentTemplateImport
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.importExport.UcdImportActionEnum
 import org.urbancode.ucadf.core.model.ucd.importExport.UcdImportTypeEnum
 import org.urbancode.ucadf.core.model.ucd.security.UcdSecuritySubtype
@@ -121,7 +121,7 @@ class UcdImportComponentTemplate extends UcAdfAction {
 		if (response.getStatus() != 200) {
 			String errorMsg = response.readEntity(String.class)
 			log.error("$errorMsg\n${errorMsg.replaceAll(/.*(Error importing.*?)&quot.*/, '$1')}")
-			throw new UcdInvalidValueException("Status: ${response.getStatus()} Unable to import component template. $target")
+			throw new UcAdfInvalidValueException("Status: ${response.getStatus()} Unable to import component template. $target")
 		}
 	}
 }

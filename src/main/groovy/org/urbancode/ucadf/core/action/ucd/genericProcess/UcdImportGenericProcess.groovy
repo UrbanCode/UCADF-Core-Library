@@ -12,7 +12,7 @@ import org.glassfish.jersey.media.multipart.FormDataBodyPart
 import org.glassfish.jersey.media.multipart.MultiPart
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.actionsrunner.UcAdfActionsRunner
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.genericProcess.UcdGenericProcess
 import org.urbancode.ucadf.core.model.ucd.genericProcess.UcdGenericProcessImport
 import org.urbancode.ucadf.core.model.ucd.importExport.UcdImportActionEnum
@@ -105,7 +105,7 @@ class UcdImportGenericProcess extends UcAdfAction {
 		if (response.getStatus() != 200) {
 			String errorMsg = response.readEntity(String.class)
 			log.error("$errorMsg\n${errorMsg.replaceAll(/.*(Error importing.*?)&quot.*/, '$1')}")
-			throw new UcdInvalidValueException("Status: ${response.getStatus()} Unable to import generic process. $target")
+			throw new UcAdfInvalidValueException("Status: ${response.getStatus()} Unable to import generic process. $target")
 		}
 	}
 	

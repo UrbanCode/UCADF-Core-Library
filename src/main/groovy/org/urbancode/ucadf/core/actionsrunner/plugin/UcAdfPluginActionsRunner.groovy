@@ -6,7 +6,7 @@ import org.urbancode.ucadf.core.actionsrunner.UcAdfActions
 import org.urbancode.ucadf.core.actionsrunner.UcAdfActionsRunner
 import org.urbancode.ucadf.core.model.ucd.applicationProcessRequest.UcdApplicationProcessRequestOutPropEnum
 import org.urbancode.ucadf.core.model.ucd.applicationProcessRequest.UcdApplicationProcessRequestStatusEnum
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.yaml.snakeyaml.TypeDescription
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
@@ -23,7 +23,7 @@ public class UcAdfPluginActionsRunner {
 		try {
 			// Get the information about the UCD plugin input/output properties files.
 			if ((args as String[]).length != 4) {
-				throw new UcdInvalidValueException("Must provide exactly four arguments: A UCADF packages directory name, package versions specification, input properties file name, and output properties file name.")
+				throw new UcAdfInvalidValueException("Must provide exactly four arguments: A UCADF packages directory name, package versions specification, input properties file name, and output properties file name.")
 			}
 
 			// The location of the downloaded packages.			
@@ -67,7 +67,7 @@ public class UcAdfPluginActionsRunner {
 		
 			// Validate enough information was provided to execute.		
 			if (!actionsText) {
-				throw new UcdInvalidValueException("No actionsText provided.")
+				throw new UcAdfInvalidValueException("No actionsText provided.")
 			}
 
 			// The output properties.
@@ -96,9 +96,9 @@ public class UcAdfPluginActionsRunner {
 					// Get the output properties from the action.
 					outProps = actionsRunner.getPropertyValue(UcAdfActionPropertyEnum.OUTPROPS.getPropertyName())
 				} catch (Exception e) {
-					if (e instanceof UcdInvalidValueException) {
+					if (e instanceof UcAdfInvalidValueException) {
 						// Throw with exception message and no stack trace.
-						throw new UcdInvalidValueException(e.getMessage())
+						throw new UcAdfInvalidValueException(e.getMessage())
 					} else {
 						// Rethrow an unknown exception to get a stack trace.
 						throw(e)

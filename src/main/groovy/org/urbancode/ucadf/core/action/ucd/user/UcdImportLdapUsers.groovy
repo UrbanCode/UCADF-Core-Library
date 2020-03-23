@@ -11,8 +11,8 @@ import javax.ws.rs.core.Response
 import org.urbancode.ucadf.core.action.integration.ldap.UcdGetLdapManager
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.integration.ldap.LdapManager
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
-import org.urbancode.ucadf.core.model.ucd.general.UcdSecureString
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.UcAdfSecureString
 
 class UcdImportLdapUsers extends UcAdfAction {
 	// Action properties.
@@ -23,7 +23,7 @@ class UcdImportLdapUsers extends UcAdfAction {
 	String authorizationRealm
 	
 	/** The connection password. */
-	UcdSecureString connectionPassword = new UcdSecureString()
+	UcAdfSecureString connectionPassword = new UcAdfSecureString()
 	
 	/** The list of user names. */
 	List<String> users = []
@@ -61,7 +61,7 @@ class UcdImportLdapUsers extends UcAdfAction {
 			if (response.getStatus() == 200) {
 				"User [$userName] imported."
 			} else {
-				throw new UcdInvalidValueException(response)
+				throw new UcAdfInvalidValueException(response)
 			}
 		}
 	}

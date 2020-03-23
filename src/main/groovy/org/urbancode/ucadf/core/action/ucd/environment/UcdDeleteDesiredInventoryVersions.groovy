@@ -11,7 +11,7 @@ import org.urbancode.ucadf.core.action.ucd.component.UcdGetComponent
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.component.UcdComponent
 import org.urbancode.ucadf.core.model.ucd.environment.UcdEnvironment
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 
 class UcdDeleteDesiredInventoryVersions extends UcAdfAction {
@@ -71,7 +71,7 @@ class UcdDeleteDesiredInventoryVersions extends UcAdfAction {
 			logVerbose("All desired inventory versions deleted.")
 		} else {
 			logError(response.readEntity(String.class))
-			throw new UcdInvalidValueException("Status: ${response.getStatus()} Unable to delete inventory. $target")
+			throw new UcAdfInvalidValueException("Status: ${response.getStatus()} Unable to delete inventory. $target")
 		}
 	}
 }

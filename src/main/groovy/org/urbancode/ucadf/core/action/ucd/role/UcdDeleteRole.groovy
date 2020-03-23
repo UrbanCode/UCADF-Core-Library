@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 class UcdDeleteRole extends UcAdfAction {
 	// Action properties.
@@ -43,10 +43,10 @@ class UcdDeleteRole extends UcAdfAction {
 				logVerbose("Role [$role] deleted.")
 				deleted = true
 			} else {
-				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+				String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 				logVerbose(errMsg)
 				if ((response.getStatus() != 404 && response.getStatus() != 500) || failIfNotFound) {
-					throw new UcdInvalidValueException(errMsg)
+					throw new UcAdfInvalidValueException(errMsg)
 				}
 			}
 		} else {

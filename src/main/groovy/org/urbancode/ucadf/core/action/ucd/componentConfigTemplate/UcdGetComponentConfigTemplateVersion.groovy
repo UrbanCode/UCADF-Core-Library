@@ -10,7 +10,7 @@ import org.urbancode.ucadf.core.action.ucd.component.UcdGetComponent
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.component.UcdComponent
 import org.urbancode.ucadf.core.model.ucd.component.UcdComponentConfigTemplateVersion
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 
 class UcdGetComponentConfigTemplateVersion extends UcAdfAction {
@@ -62,10 +62,10 @@ class UcdGetComponentConfigTemplateVersion extends UcAdfAction {
 		if (response.getStatus() == 200) {
 			configFileTemplateVersion = response.readEntity(new GenericType<UcdComponentConfigTemplateVersion>(){})
 		} else {
-			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+			String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 			logVerbose(errMsg)
 			if (response.getStatus() != 404 || failIfNotFound) {
-				throw new UcdInvalidValueException(errMsg)
+				throw new UcAdfInvalidValueException(errMsg)
 			}
 		}
 		

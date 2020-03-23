@@ -9,7 +9,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.agentPool.UcdAgentPool
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 class UcdGetAgentPools extends UcAdfAction {
 	// Action properties.
@@ -56,7 +56,7 @@ class UcdGetAgentPools extends UcAdfAction {
 				ucdReturnAgentPools = ucdAgentPools
 			}
 		} else {
-            throw new UcdInvalidValueException(response)
+            throw new UcAdfInvalidValueException(response)
 		}
 		
 		return ucdReturnAgentPools

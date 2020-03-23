@@ -7,7 +7,7 @@ import org.urbancode.ucadf.core.action.ucd.applicationProcessRequest.UcdGetAppli
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.applicationProcessRequest.UcdApplicationProcessRequest
 import org.urbancode.ucadf.core.model.ucd.componentProcessRequest.UcdComponentProcessRequestTask
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.processRequest.UcdProcessRequestResponseStatusEnum
 import org.urbancode.ucadf.core.model.ucd.processRequest.UcdProcessRequestTraceTypeEnum
 import org.urbancode.ucadf.core.model.ucd.task.UcdTaskStatusEnum
@@ -87,11 +87,11 @@ class UcdWaitForProcessRequestTask extends UcAdfAction {
             }
             
             if (ucdApplicationProcessRequest.getState() == UcdProcessRequestResponseStatusEnum.CLOSED) {
-                throw new UcdInvalidValueException("Application process [$requestId] ended before task information was available.")
+                throw new UcAdfInvalidValueException("Application process [$requestId] ended before task information was available.")
             }
 
             if (remainingSecs < 1) {
-                throw new UcdInvalidValueException("Timed out waiting for process task.")
+                throw new UcAdfInvalidValueException("Timed out waiting for process task.")
             }
             
             logVerbose("Waiting a maximum of [$remainingSecs] more seconds for process task [$taskPath]. Next check in [$waitIntervalSecs] seconds.")

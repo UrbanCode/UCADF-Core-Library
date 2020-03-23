@@ -11,8 +11,8 @@ import javax.ws.rs.core.Response
 import org.urbancode.ucadf.core.action.ucd.group.UcdAddLdapGroups
 import org.urbancode.ucadf.core.action.ucd.group.UcdGetGroup
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
-import org.urbancode.ucadf.core.model.ucd.general.UcdSecureString
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.UcAdfSecureString
 import org.urbancode.ucadf.core.model.ucd.group.UcdGroup
 import org.urbancode.ucadf.core.model.ucd.system.UcdSession
 import org.urbancode.ucadf.core.model.ucd.team.UcdTeam
@@ -44,7 +44,7 @@ class UcdChangeTeamMembers extends UcAdfAction {
 	String authenticationRealm = ""	
 	
 	/** The connection password. */
-	UcdSecureString connectionPassword = new UcdSecureString()
+	UcAdfSecureString connectionPassword = new UcAdfSecureString()
 
 	/**
 	 * Runs the action.	
@@ -56,7 +56,7 @@ class UcdChangeTeamMembers extends UcAdfAction {
 
 		// TODO: Need to implement remove groups/users.
 		if (removeGroups.size() > 0 || removeUsers.size() > 0) {
-			throw new UcdInvalidValueException("Remove groups/users has not been implemented yet.")
+			throw new UcAdfInvalidValueException("Remove groups/users has not been implemented yet.")
 		}
 		
 		// Process each team role.
@@ -71,7 +71,7 @@ class UcdChangeTeamMembers extends UcAdfAction {
 			])
 			
 			if (!ucdTeam) {
-				throw new UcdInvalidValueException("Team not found.")
+				throw new UcAdfInvalidValueException("Team not found.")
 			}
 
 			// Add the groups to the team role.		
@@ -121,7 +121,7 @@ class UcdChangeTeamMembers extends UcAdfAction {
 		if (response.getStatus() == 204) {
 			logVerbose("Group added to team.")
 		} else {
-            throw new UcdInvalidValueException(response)
+            throw new UcAdfInvalidValueException(response)
 		}
 	}
 	
@@ -142,7 +142,7 @@ class UcdChangeTeamMembers extends UcAdfAction {
 		if (response.getStatus() == 204) {
 			logVerbose("User added to team.")
 		} else {
-            throw new UcdInvalidValueException(response)
+            throw new UcAdfInvalidValueException(response)
 		}
 	}
 	
@@ -180,7 +180,7 @@ class UcdChangeTeamMembers extends UcAdfAction {
 				])
 				
 				if (!ucdGroup) {
-					throw new UcdInvalidValueException("Group [$groupName] is not valid.")
+					throw new UcAdfInvalidValueException("Group [$groupName] is not valid.")
 				}
 			}
 		}

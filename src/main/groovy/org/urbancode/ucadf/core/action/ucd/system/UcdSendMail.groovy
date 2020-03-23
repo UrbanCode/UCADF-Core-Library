@@ -16,7 +16,7 @@ import javax.ws.rs.core.MediaType
 import org.urbancode.ucadf.core.action.ucd.team.UcdGetTeamUsers
 import org.urbancode.ucadf.core.action.ucd.user.UcdGetUser
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.general.UcdSecureString
+import org.urbancode.ucadf.core.model.ucadf.UcAdfSecureString
 import org.urbancode.ucadf.core.model.ucd.system.UcdSystemConfiguration
 import org.urbancode.ucadf.core.model.ucd.team.UcdTeamRole
 import org.urbancode.ucadf.core.model.ucd.user.UcdUser
@@ -60,10 +60,10 @@ class UcdSendMail extends UcAdfAction {
 	List<String> excludeUsers = []
 	
 	/** (Optional) The SMTP email user ID. */
-	UcdSecureString emailUserId = new UcdSecureString()
+	UcAdfSecureString emailUserId = new UcAdfSecureString()
 	
 	/** (Optional) The SMTP email password. */
-	UcdSecureString emailUserPw = new UcdSecureString()
+	UcAdfSecureString emailUserPw = new UcAdfSecureString()
 
 	// Private properties.
 	private emailUserIdStr

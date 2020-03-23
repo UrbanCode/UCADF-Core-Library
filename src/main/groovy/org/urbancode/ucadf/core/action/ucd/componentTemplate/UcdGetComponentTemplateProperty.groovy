@@ -5,7 +5,7 @@ package org.urbancode.ucadf.core.action.ucd.componentTemplate
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.componentTemplate.UcdComponentTemplate
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
 
 class UcdGetComponentTemplateProperty extends UcAdfAction {
@@ -54,7 +54,7 @@ class UcdGetComponentTemplateProperty extends UcAdfAction {
 		}
 
 		if (!ucdProperty && failIfNotFound) {
-			throw new UcdInvalidValueException("Component template [$componentTemplate] property [$property] not found.")
+			throw new UcAdfInvalidValueException("Component template [$componentTemplate] property [$property] not found.")
 		}
 
 		// Return either the property value or the property.

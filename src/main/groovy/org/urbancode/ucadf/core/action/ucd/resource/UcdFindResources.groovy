@@ -8,7 +8,7 @@ import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.filterField.UcdFilterField
 import org.urbancode.ucadf.core.model.ucd.filterField.UcdFilterFieldClassEnum
 import org.urbancode.ucadf.core.model.ucd.filterField.UcdFilterFieldTypeEnum
@@ -118,7 +118,7 @@ class UcdFindResources extends UcAdfAction {
 			if (response.getStatus() == 200) {
 				ucdResourceTree = response.readEntity(UcdResourceTree.class)
 			} else {
-				throw new UcdInvalidValueException(response)
+				throw new UcAdfInvalidValueException(response)
 			}
 			
 			for (ucdChildResourceTree in ucdResourceTree.getRecords()) {

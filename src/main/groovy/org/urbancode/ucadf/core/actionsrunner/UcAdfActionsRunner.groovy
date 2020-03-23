@@ -7,7 +7,7 @@ import java.util.regex.Pattern
 
 import org.urbancode.ucadf.core.action.ucadf.general.UcAdfSetActionProperties
 import org.urbancode.ucadf.core.action.ucadf.general.UcAdfWhen
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.system.UcdSession
 import org.yaml.snakeyaml.TypeDescription
 import org.yaml.snakeyaml.Yaml
@@ -117,10 +117,10 @@ class UcAdfActionsRunner {
 				String packageName, packageVersion
 				(packageName, packageVersion) = packageVersionSpec.split(":")
 				if (!packageName) {
-					throw new UcdInvalidValueException("Package name is blank in [$packageVersionSpec].")
+					throw new UcAdfInvalidValueException("Package name is blank in [$packageVersionSpec].")
 				}
 				if (!packageVersion) {
-					throw new UcdInvalidValueException("Package version is blank in [$packageVersionSpec]")
+					throw new UcAdfInvalidValueException("Package version is blank in [$packageVersionSpec]")
 				}
 	
 				String packageVersionDirectory = "$packagesDir/$packageName/$packageVersion"
@@ -295,7 +295,7 @@ class UcAdfActionsRunner {
 					UcAdfAction
 				)
 			} catch (Exception e) {
-				throw new UcdInvalidValueException(e.getMessage() + "\n" + actionMap)
+				throw new UcAdfInvalidValueException(e.getMessage() + "\n" + actionMap)
 			}
 	
 			// If there's a when property value then evaluate it to determine if the action should be run.
@@ -534,14 +534,14 @@ class UcAdfActionsRunner {
 				} else if (propertyFileName.toLowerCase() ==~ /.*\.(properties)$/) {
 					derivedFileType = UcAdfActionsFileTypeEnum.PROPERTIES
 				} else {
-					throw new UcdInvalidValueException("Unable to automatically determine the type of file by the file extension of file [$propertyFileName].")
+					throw new UcAdfInvalidValueException("Unable to automatically determine the type of file by the file extension of file [$propertyFileName].")
 				}
 			}		
 
 			if (!propertiesFile.exists()) {
 				Boolean failNotFound = propertyFileDef.getFailNotFound()
 				if (failNotFound) {
-					throw new UcdInvalidValueException("Property file [$propertyFileName] not found.")
+					throw new UcAdfInvalidValueException("Property file [$propertyFileName] not found.")
 				} else {
 					log.info "Property file [$propertyFileName] not found. failNotFound=${failNotFound}."
 					continue
@@ -568,7 +568,7 @@ class UcAdfActionsRunner {
 							// Set the runner property values from the actions property values.
 							setPropertyValues(actions.getPropertyValues())
 						} catch (Exception e) {
-							throw new UcdInvalidValueException(e.getMessage())
+							throw new UcAdfInvalidValueException(e.getMessage())
 						}
 						break
 						
@@ -584,15 +584,15 @@ class UcAdfActionsRunner {
 							  setPropertyValue(k, v)
 							}
 						} catch (Exception e) {
-							throw new UcdInvalidValueException(e.getMessage())
+							throw new UcAdfInvalidValueException(e.getMessage())
 						}
 						break
 						
 					default:
-						throw new UcdInvalidValueException("Unknown file type [$derivedFileType].")
+						throw new UcAdfInvalidValueException("Unknown file type [$derivedFileType].")
 				}
 			} catch (Exception e) {
-				throw new UcdInvalidValueException(e.getMessage())
+				throw new UcAdfInvalidValueException(e.getMessage())
 			}
 		}
 	}
@@ -610,7 +610,7 @@ class UcAdfActionsRunner {
 
 		if (propertyValues.containsKey(propertyName) && finalPropertyNames.contains(propertyName)) {
 			debugMessage("Skipping setting final property name [$propertyName] that has already been set.")
-			throw new UcdInvalidValueException("Attempt to set a new value for final property [$propertyName].")
+			throw new UcAdfInvalidValueException("Attempt to set a new value for final property [$propertyName].")
 		} else {
 			// If the existing property value is a Map and the property value being provided is a Map then merge them.
 			if (propertyValue instanceof Map && propertyValues.containsKey(propertyName) && propertyValues.get(propertyName) instanceof Map) {
@@ -706,14 +706,14 @@ class UcAdfActionsRunner {
 				} else if (key.isNumber()) {
 					returnObject = (returnObject as List)[(key as Integer)]
 				} else {
-					throw new UcdInvalidValueException("List index value of [$key] is not an index number.")
+					throw new UcAdfInvalidValueException("List index value of [$key] is not an index number.")
 				}
 			} else {
 				if ((returnObject instanceof Map && returnObject.containsKey(key)) || returnObject.hasProperty(key)) {
 					returnObject = returnObject[key]
 				} else {
 					if ('u'.equals(replaceType)) {
-						throw new UcdInvalidValueException('Property ${u:' + propertyName + '} not defined.')
+						throw new UcAdfInvalidValueException('Property ${u:' + propertyName + '} not defined.')
 					} else {
 						returnObject = ""
 						break
@@ -884,7 +884,7 @@ class UcAdfActionsRunner {
 		debugMessage("Begin Eval [$evalParm] ${evalParm.getClass().getSimpleName()}")
 		
 		if (!(evalParm instanceof String)) {
-			throw new UcdInvalidValueException("The Eval parameter [$evalParm] must be of type String not [${evalParm.getClass().getSimpleName()}")
+			throw new UcAdfInvalidValueException("The Eval parameter [$evalParm] must be of type String not [${evalParm.getClass().getSimpleName()}")
 		}
 
 		returnObject = Eval.me(evalParm)
@@ -959,7 +959,7 @@ class UcAdfActionsRunner {
 		
 		// If wasn't able to load the action class from any package then the action name wasn't found.
 		if (!actionClass) {
-			throw new UcdInvalidValueException("Unable to find action class for action [$actionName] in available actions.")
+			throw new UcAdfInvalidValueException("Unable to find action class for action [$actionName] in available actions.")
 		}
 		
 		return actionClass

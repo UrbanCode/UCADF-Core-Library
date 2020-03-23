@@ -10,12 +10,12 @@ import javax.ws.rs.core.Response
 import org.urbancode.ucadf.core.action.ucd.component.UcdGetComponent
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.component.UcdComponent
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.loop.UcAdfPageLoopControl
 import org.urbancode.ucadf.core.model.ucd.filterField.UcdFilterField
 import org.urbancode.ucadf.core.model.ucd.filterField.UcdFilterFieldClassEnum
 import org.urbancode.ucadf.core.model.ucd.filterField.UcdFilterFieldTypeEnum
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
-import org.urbancode.ucadf.core.model.ucadf.UcAdfPageLoopControl
 import org.urbancode.ucadf.core.model.ucd.version.UcdVersion
 
 class UcdGetVersions extends UcAdfAction {
@@ -139,7 +139,7 @@ class UcdGetVersions extends UcAdfAction {
 			// Update the page control information.
 			ucAdfPageControl.processResponse(response)
 		} else {
-			throw new UcdInvalidValueException(response)
+			throw new UcAdfInvalidValueException(response)
 		}
 
 		return ucdVersions

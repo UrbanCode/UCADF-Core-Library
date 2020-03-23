@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 import groovy.json.JsonBuilder
 
@@ -53,7 +53,7 @@ class UcdCreateRole extends UcAdfAction {
 			logVerbose("Role [$name] created.")
 			created = true
 		} else {
-			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+			String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 			logVerbose(errMsg)
 			
 			Boolean alreadyExists = false
@@ -65,7 +65,7 @@ class UcdCreateRole extends UcAdfAction {
 			}
 			
 			if (!alreadyExists || (alreadyExists && failIfExists)) {
-				throw new UcdInvalidValueException(errMsg)
+				throw new UcAdfInvalidValueException(errMsg)
 			}
 		}
 		

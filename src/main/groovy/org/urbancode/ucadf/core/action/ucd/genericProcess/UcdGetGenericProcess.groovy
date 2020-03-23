@@ -7,7 +7,7 @@ import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.genericProcess.UcdGenericProcess
 
@@ -52,7 +52,7 @@ class UcdGetGenericProcess extends UcAdfAction {
 				processId = ucdFindGenericProcess.getId()
 			} else {
 				if (failIfNotFound) {
-					throw new UcdInvalidValueException("Generic process [$process] not found.")
+					throw new UcAdfInvalidValueException("Generic process [$process] not found.")
 				}
 			}
 		}
@@ -68,14 +68,14 @@ class UcdGetGenericProcess extends UcAdfAction {
 			if (response.getStatus() == 200) {
 				ucdGenericProcess = response.readEntity(UcdGenericProcess.class)
 			} else {
-				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+				String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 				logVerbose(errMsg)
 				if (response.getStatus() == 404 || response.getStatus() == 403) {
 					if (failIfNotFound) {
-						throw new UcdInvalidValueException(errMsg)
+						throw new UcAdfInvalidValueException(errMsg)
 					}
 				} else {
-					throw new UcdInvalidValueException(errMsg)
+					throw new UcAdfInvalidValueException(errMsg)
 				}
 			}
 		}

@@ -9,7 +9,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.authorizationRealm.UcdAuthorizationRealm
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 class UcdGetAuthorizationRealms extends UcAdfAction {
 	/**
@@ -30,7 +30,7 @@ class UcdGetAuthorizationRealms extends UcAdfAction {
 		if (response.getStatus() == 200) {
 			ucdAuthorizationRealms = response.readEntity(new GenericType<List<UcdAuthorizationRealm>>(){})
 		} else {
-            throw new UcdInvalidValueException(response)
+            throw new UcAdfInvalidValueException(response)
 		}
 				
 		return ucdAuthorizationRealms

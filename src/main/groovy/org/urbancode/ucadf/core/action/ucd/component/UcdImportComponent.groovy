@@ -16,7 +16,7 @@ import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.actionsrunner.UcAdfActionsRunner
 import org.urbancode.ucadf.core.model.ucd.component.UcdComponent
 import org.urbancode.ucadf.core.model.ucd.component.UcdComponentImport
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.importExport.UcdImportActionEnum
 import org.urbancode.ucadf.core.model.ucd.importExport.UcdImportTypeEnum
 import org.urbancode.ucadf.core.model.ucd.security.UcdSecuritySubtype
@@ -130,7 +130,7 @@ class UcdImportComponent extends UcAdfAction {
 		if (response.getStatus() != 200) {
 			String errorMsg = response.readEntity(String.class)
 			log.error("$errorMsg\n${errorMsg.replaceAll(/.*(Error importing.*?)&quot.*/, '$1')}")
-			throw new UcdInvalidValueException("Status: ${response.getStatus()} Unable to import component. $target")
+			throw new UcAdfInvalidValueException("Status: ${response.getStatus()} Unable to import component. $target")
 		}
 
         // Work around a 6.2 component template property inheritance problem.        
@@ -152,7 +152,7 @@ class UcdImportComponent extends UcAdfAction {
 	
 	        response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 	        if (response.getStatus() != 200) {
-				throw new UcdInvalidValueException(response)
+				throw new UcAdfInvalidValueException(response)
 	        }
 	    }
 	}

@@ -13,7 +13,7 @@ import org.urbancode.ucadf.core.action.ucd.role.UcdGetRoles
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.application.UcdApplicationImport
 import org.urbancode.ucadf.core.model.ucd.applicationProcess.UcdApplicationProcess
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.importExport.UcdExport
 import org.urbancode.ucadf.core.model.ucd.role.UcdRole
 import org.urbancode.ucadf.core.model.ucd.role.UcdRolesMap
@@ -115,7 +115,7 @@ class UcdExportApplication extends UcAdfAction {
 		if (response.getStatus() == 200) {
 			ucdApplicationImport = response.readEntity(UcdApplicationImport.class)
 		} else {
-			throw new UcdInvalidValueException(response)
+			throw new UcAdfInvalidValueException(response)
 		}
 
 		// Write the exported application to a file.

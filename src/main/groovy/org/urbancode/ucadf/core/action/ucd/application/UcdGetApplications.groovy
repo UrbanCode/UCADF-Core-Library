@@ -9,7 +9,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.application.UcdApplication
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 class UcdGetApplications extends UcAdfAction {
 	// Action properties.
@@ -33,7 +33,7 @@ class UcdGetApplications extends UcAdfAction {
 		if (response.getStatus() == 200) {
 			ucdApplications = response.readEntity(new GenericType<List<UcdApplication>>(){})
 		} else {
-            throw new UcdInvalidValueException(response)
+            throw new UcAdfInvalidValueException(response)
 		}
 		
 		List<UcdApplication> ucdReturnApplications = []

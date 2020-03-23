@@ -7,8 +7,8 @@ import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucadf.UcAdfPageLoopControl
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.loop.UcAdfPageLoopControl
 import org.urbancode.ucadf.core.model.ucd.filterField.UcdFilterField
 import org.urbancode.ucadf.core.model.ucd.filterField.UcdFilterFieldClassEnum
 import org.urbancode.ucadf.core.model.ucd.filterField.UcdFilterFieldTypeEnum
@@ -104,7 +104,7 @@ class UcdGetResourceInventory extends UcAdfAction {
 			UcdResourceInventoryTable ucdResourceInventoryTable = response.readEntity(UcdResourceInventoryTable.class)
 			ucdResourceInventoryEntries = ucdResourceInventoryTable.getRecords()
 		} else {
-			throw new UcdInvalidValueException(response)
+			throw new UcAdfInvalidValueException(response)
 		}
 
 		// Return the specified collection type.

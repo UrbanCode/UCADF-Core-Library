@@ -5,18 +5,21 @@ package org.urbancode.ucadf.core.model.ucd.exception
 
 import javax.ws.rs.core.Response
 
-class UcdInvalidValueException extends UcdHandledException {
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfHandledException
+
+@Deprecated // Use UcAdfHandledException.
+class UcAdfInvalidValueException extends UcAdfHandledException {
 	// Constructors.
-	UcdInvalidValueException(final String message) {
+	UcAdfInvalidValueException(final String message) {
 		super(message)
 	}
 	
-	UcdInvalidValueException(final Exception e) {
+	UcAdfInvalidValueException(final Exception e) {
 		this(e.getMessage())
 	}
 
 	// A web response exception.
-	UcdInvalidValueException(final Response response) {
+	UcAdfInvalidValueException(final Response response) {
 		this(getResponseErrorMessage(response))
 	}
 }

@@ -4,7 +4,7 @@
 package org.urbancode.ucadf.core.action.ucd.snapshot
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 import groovy.util.logging.Slf4j
 
@@ -48,7 +48,7 @@ class UcdSnapshotHasStatuses extends UcAdfAction {
 		}
 		
 		if (failIfMissingStatus && !hasStatuses) {
-			throw new UcdInvalidValueException("Snapshot is missing status(es).")
+			throw new UcAdfInvalidValueException("Snapshot is missing status(es).")
 		}
 		
 		return hasStatuses

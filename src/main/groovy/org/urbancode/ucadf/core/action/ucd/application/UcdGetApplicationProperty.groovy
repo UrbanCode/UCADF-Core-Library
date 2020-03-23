@@ -8,7 +8,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.action.ucd.environment.UcdGetEnvironmentProperty.ReturnAsEnum
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
 
 class UcdGetApplicationProperty extends UcAdfAction {
@@ -59,10 +59,10 @@ class UcdGetApplicationProperty extends UcAdfAction {
 			if (response.getStatus() == 200) {
 				returnProperty = response.readEntity(String.class)
 			} else {
-				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+				String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 				logVerbose(errMsg)
 				if (response.getStatus() != 404 || failIfNotFound) {
-					throw new UcdInvalidValueException(errMsg)
+					throw new UcAdfInvalidValueException(errMsg)
 				}
 			}
 		} else {

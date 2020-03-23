@@ -6,7 +6,7 @@ package org.urbancode.ucadf.core.action.ucd.resource
 import org.urbancode.ucadf.core.action.ucd.component.UcdGetComponent
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.component.UcdComponent
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.resource.UcdResource
 
 class UcdCreateComponentResource extends UcAdfAction {
@@ -52,7 +52,7 @@ class UcdCreateComponentResource extends UcAdfAction {
 		])
 		
 		if (!ucdComponent) {
-			throw new UcdInvalidValueException("Component [$component] not found.")
+			throw new UcAdfInvalidValueException("Component [$component] not found.")
 		}
 
 		String roleId = ucdComponent.getResourceRole().get("id")

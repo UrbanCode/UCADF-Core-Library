@@ -12,7 +12,7 @@ import org.urbancode.ucadf.core.action.ucd.agent.UcdGetAgents
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.agent.UcdAgent
 import org.urbancode.ucadf.core.model.ucd.agentPool.UcdAgentPool
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 import groovy.json.JsonBuilder
 
@@ -56,7 +56,7 @@ class UcdCreateAgentPool extends UcAdfAction {
 
 		if (ucdAgentPool) {
 			if (failIfExists) {
-				throw new UcdInvalidValueException("Agent pool [$name] already exists.")
+				throw new UcAdfInvalidValueException("Agent pool [$name] already exists.")
 			} else {
 				logVerbose("Agent pool [$name] already exists.")
 			}
@@ -79,7 +79,7 @@ class UcdCreateAgentPool extends UcAdfAction {
 				])
 				
 				if (ucdAgents.size() < 1) {
-					throw new UcdInvalidValueException("No agents found with tag [$tag].")
+					throw new UcAdfInvalidValueException("No agents found with tag [$tag].")
 				}
 			
 				ucdAgents.each { 
@@ -104,7 +104,7 @@ class UcdCreateAgentPool extends UcAdfAction {
 				logVerbose("Agent pool [$name] created.")
 				created = true
 			} else {
-				throw new UcdInvalidValueException(response)
+				throw new UcAdfInvalidValueException(response)
 			}
 		}
 		

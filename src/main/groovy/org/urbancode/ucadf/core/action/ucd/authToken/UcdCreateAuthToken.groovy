@@ -13,7 +13,7 @@ import javax.ws.rs.core.Response
 import org.urbancode.ucadf.core.action.ucd.user.UcdGetUser
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.authToken.UcdAuthToken
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.user.UcdUser
 
 import groovy.json.JsonBuilder
@@ -72,7 +72,7 @@ class UcdCreateAuthToken extends UcAdfAction {
         // Create a user token if there aren't already tokens for the user.
         if ((skipIfUserHasToken || failIfExists) && ucdAuthTokens.size() > 0) {
 			if (failIfExists) {
-				throw new UcdInvalidValueException("Tokens already exist for user [$user].")
+				throw new UcAdfInvalidValueException("Tokens already exist for user [$user].")
 			} else {
 				logVerbose("Tokens already exist for user [$user].")
 			}
@@ -117,7 +117,7 @@ class UcdCreateAuthToken extends UcAdfAction {
 			
 				logVerbose("User [$user] authentication token created.")
 			} else {
-				throw new UcdInvalidValueException(response)
+				throw new UcAdfInvalidValueException(response)
 			}
 			
 			tokenReturn.setCreated(true)

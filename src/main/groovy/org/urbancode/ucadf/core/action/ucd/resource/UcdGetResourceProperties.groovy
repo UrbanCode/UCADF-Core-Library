@@ -8,7 +8,7 @@ import javax.ws.rs.core.GenericType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
 
 class UcdGetResourceProperties extends UcAdfAction {
@@ -53,7 +53,7 @@ class UcdGetResourceProperties extends UcAdfAction {
 			ucdProperties = response.readEntity(new GenericType<List<UcdProperty>>(){})
 		} else {
 			if (response.getStatus() != 404 || failIfNotFound) {
-				throw new UcdInvalidValueException(response)
+				throw new UcAdfInvalidValueException(response)
 			}
 		}
 		

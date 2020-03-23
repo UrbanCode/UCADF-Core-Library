@@ -5,7 +5,7 @@ package org.urbancode.ucadf.core.model.ucd.task
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonValue
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 enum UcdTaskResponseEnum {
 	PASSED("passed"),
@@ -26,7 +26,7 @@ enum UcdTaskResponseEnum {
 		}
 		
 		if (!newEnum) {
-			throw new UcdInvalidValueException("Task response enumeration [$value] is invalid.")
+			throw new UcAdfInvalidValueException("Task response enumeration [$value] is invalid.")
 		}
 		
 		return newEnum

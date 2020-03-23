@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response
 import org.urbancode.ucadf.core.action.ucd.snapshot.UcdDeleteSnapshot
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.application.UcdApplication
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.snapshot.UcdSnapshot
 
 class UcdDeleteApplication extends UcAdfAction {
@@ -77,7 +77,7 @@ class UcdDeleteApplication extends UcAdfAction {
 					logVerbose("Application [$application] deleted.")
 					deleted = true
 				} else {
-					throw new UcdInvalidValueException(response)
+					throw new UcAdfInvalidValueException(response)
 				}
 			} else {
 				logVerbose("Would delete application [$application].")

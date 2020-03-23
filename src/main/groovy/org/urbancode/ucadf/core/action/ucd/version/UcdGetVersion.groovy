@@ -7,7 +7,7 @@ import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.version.UcdVersion
 
@@ -46,7 +46,7 @@ class UcdGetVersion extends UcAdfAction {
 
 		if (!UcdObject.isUUID(version)) {
 			if (!component) {
-				throw new UcdInvalidValueException("A component name must be specified if the version specified is not a UUID.")
+				throw new UcAdfInvalidValueException("A component name must be specified if the version specified is not a UUID.")
 			}
 			
 			// Work around 7.0 bug where it converts a version name with 4 hyphens to a UUID.
@@ -73,10 +73,10 @@ class UcdGetVersion extends UcAdfAction {
 				if (response.getStatus() == 200) {
 					versionId = response.readEntity(String.class)
 				} else {
-					String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+					String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 					logVerbose(errMsg)
 					if (response.getStatus() != 400 || (!errMsg ==~ /.*could not be resolved.*/) || failIfNotFound) {
-						throw new UcdInvalidValueException(errMsg)
+						throw new UcAdfInvalidValueException(errMsg)
 					}
 				}
 			}
@@ -91,10 +91,10 @@ class UcdGetVersion extends UcAdfAction {
 		if (response.getStatus() == 200) {
 			ucdVersion = response.readEntity(UcdVersion.class)
 		} else {
-			String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+			String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 			logVerbose(errMsg)
 			if (response.getStatus() != 404 || failIfNotFound) {
-				throw new UcdInvalidValueException(errMsg)
+				throw new UcAdfInvalidValueException(errMsg)
 			}
 		}
 

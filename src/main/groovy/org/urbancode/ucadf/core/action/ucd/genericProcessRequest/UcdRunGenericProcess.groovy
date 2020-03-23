@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.action.ucd.genericProcess.UcdGetGenericProcess
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.genericProcess.UcdGenericProcess
 import org.urbancode.ucadf.core.model.ucd.genericProcessRequest.UcdGenericProcessRequest
 import org.urbancode.ucadf.core.model.ucd.processRequest.UcdProcessRequestResponseResultEnum
@@ -101,7 +101,7 @@ class UcdRunGenericProcess extends UcAdfAction {
 				String errMsg = response.readEntity(String.class)
 				logVerbose(errMsg)
 				if (throwException) {
-					throw new UcdInvalidValueException("${response.getStatus()} $errMsg")
+					throw new UcAdfInvalidValueException("${response.getStatus()} $errMsg")
 				}
 				
 				UcdGenericProcessRequest ucdGenericProcessRequest = new UcdGenericProcessRequest()
@@ -129,7 +129,7 @@ class UcdRunGenericProcess extends UcAdfAction {
 					String errMsg = response.readEntity(String.class)
 					logVerbose(errMsg)
 					if (throwException) {
-						throw new UcdInvalidValueException("${response.getStatus()} $errMsg")
+						throw new UcAdfInvalidValueException("${response.getStatus()} $errMsg")
 					}
 				
 					ucdGenericProcessRequest.setResult(UcdProcessRequestResponseResultEnum.FAILEDTOSTART)
@@ -165,7 +165,7 @@ class UcdRunGenericProcess extends UcAdfAction {
 						break
 					} else if (evaluateGenericProcessRequest.getResult() == UcdProcessRequestResponseResultEnum.FAULTED || evaluateGenericProcessRequest.getResult() == UcdProcessRequestResponseResultEnum.FAILEDTOSTART) {
 						if (throwException) {
-							throw new UcdInvalidValueException("Generic process [$requestId] failed.")
+							throw new UcAdfInvalidValueException("Generic process [$requestId] failed.")
 						}
 						
 						ucdGenericProcessRequest.setResult(evaluateGenericProcessRequest.getResult())
@@ -175,7 +175,7 @@ class UcdRunGenericProcess extends UcAdfAction {
 		
 					remainingSecs -= waitIntervalSecs
 					if (remainingSecs <= 0) {
-						throw new UcdInvalidValueException("Generic process [$requestId] wait time exceeded [$maxWaitSecs] seconds.")
+						throw new UcAdfInvalidValueException("Generic process [$requestId] wait time exceeded [$maxWaitSecs] seconds.")
 					}
 					
 					Thread.sleep(waitIntervalSecs * 1000)

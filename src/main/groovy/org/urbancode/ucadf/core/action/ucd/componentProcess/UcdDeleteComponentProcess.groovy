@@ -9,7 +9,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.componentProcess.UcdComponentProcess
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 
 class UcdDeleteComponentProcess extends UcAdfAction {
@@ -51,7 +51,7 @@ class UcdDeleteComponentProcess extends UcAdfAction {
 				processId = ucdComponentProcess.getId()
 			} else {
 				 if (failIfNotFound) {
-					 throw new UcdInvalidValueException("Component [$component] process [$process] not found.")
+					 throw new UcAdfInvalidValueException("Component [$component] process [$process] not found.")
 				 }
 			}
 			
@@ -67,10 +67,10 @@ class UcdDeleteComponentProcess extends UcAdfAction {
 				logVerbose("Component [$component] process [$process] deleted.")
 				deleted = true
 			} else {
-				String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+				String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 				logVerbose(errMsg)
 				if (response.getStatus() != 404 || failIfNotFound) {
-					throw new UcdInvalidValueException(errMsg)
+					throw new UcAdfInvalidValueException(errMsg)
 				}
 			}
 		}

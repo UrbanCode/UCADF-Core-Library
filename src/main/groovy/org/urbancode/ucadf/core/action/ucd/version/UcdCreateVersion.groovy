@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.version.UcdVersion
 import org.urbancode.ucadf.core.model.ucd.version.UcdVersionTypeEnum
 
@@ -54,7 +54,7 @@ class UcdCreateVersion extends UcAdfAction {
 		if (ucdVersion) {
 			logVerbose("Component [$component] version [$name] already exists.")
 			if (failIfExists) {
-				throw new UcdInvalidValueException("Component [$component] version [$name] already exists.")
+				throw new UcAdfInvalidValueException("Component [$component] version [$name] already exists.")
 			}
 		} else {
 			logVerbose("Creating version component [$component] version [$name].")
@@ -71,7 +71,7 @@ class UcdCreateVersion extends UcAdfAction {
 				ucdVersion = response.readEntity(UcdVersion.class)
 				created = true
 			} else {
-				throw new UcdInvalidValueException(response)
+				throw new UcAdfInvalidValueException(response)
 			}
 			
 			logVerbose("Component [$component] version [$name] id [${ucdVersion.getId()}] created.")

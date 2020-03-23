@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
 
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -58,7 +58,7 @@ class UcdSetEnvironmentProperties extends UcAdfAction {
 			if (response.getStatus() == 200) {
 				logVerbose("Property [${ucdProperty.getName()}] set.")
 			} else {
-	            throw new UcdInvalidValueException(response)
+	            throw new UcAdfInvalidValueException(response)
 			}
 		}
 	}

@@ -1,15 +1,15 @@
 /**
  * This class represents an unhandled exception.
  */
-package org.urbancode.ucadf.core.model.ucd.exception
+package org.urbancode.ucadf.core.model.ucadf.exception
 
 import javax.ws.rs.core.Response
 
-class UcdHandledException extends Exception {
+class UcAdfHandledException extends Exception {
 	private String message
 	
 	// Constructors.
-	UcdHandledException(final String message) {
+	UcAdfHandledException(final String message) {
 		super(message, null, true, true)
 		this.message = message
 	}

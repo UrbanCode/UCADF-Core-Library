@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.action.ucd.security.UcdGetSecurityTypePermissions
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 import groovy.json.JsonBuilder
 
@@ -68,7 +68,7 @@ class UcdRemoveRolePermissions extends UcAdfAction {
 			if (response.getStatus() == 200) {
 				logVerbose("Role [$role] subtype [$subtype] permission [$permission] removed.")
 			} else {
-				throw new UcdInvalidValueException(response)
+				throw new UcAdfInvalidValueException(response)
 			}
 		}
 	}

@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.plugin.UcdAutomationPlugin
 
 class UcdDeleteAutomationPlugin extends UcAdfAction {
@@ -63,10 +63,10 @@ class UcdDeleteAutomationPlugin extends UcAdfAction {
 						deleted = true
 						break
 					} else if (response.status == 404) {
-						String errMsg = UcdInvalidValueException.getResponseErrorMessage(response)
+						String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 						logVerbose(errMsg)
 						if (failIfNotFound) {
-							throw new UcdInvalidValueException(errMsg)
+							throw new UcAdfInvalidValueException(errMsg)
 						}
 						break
 					} else {
@@ -76,7 +76,7 @@ class UcdDeleteAutomationPlugin extends UcAdfAction {
 							logVerbose("Attempt $iAttempt failed. Waiting to try again.")
 							Thread.sleep(2000)
 						} else {
-							throw new UcdInvalidValueException(response)
+							throw new UcAdfInvalidValueException(response)
 						}
 					}
 				}

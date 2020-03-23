@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response
 import org.urbancode.ucadf.core.action.ucd.security.UcdGetSecuritySubtype
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.component.UcdComponent
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.security.UcdSecuritySubtype
 import org.urbancode.ucadf.core.model.ucd.security.UcdSecurityTypeEnum
@@ -80,7 +80,7 @@ class UcdAddComponentToTeams extends UcAdfAction {
         if (response.getStatus() == 204) {
             logVerbose("Component added to team.")
         } else {
-            throw new UcdInvalidValueException(response)
+            throw new UcAdfInvalidValueException(response)
         }
 	}
 
@@ -122,7 +122,7 @@ class UcdAddComponentToTeams extends UcAdfAction {
 				
 				Response response = removeTargetWithParams.request(MediaType.APPLICATION_JSON).delete()
 				if (response.getStatus() != 204) {
-					throw new UcdInvalidValueException(response)
+					throw new UcAdfInvalidValueException(response)
 				}
 			}
 		}

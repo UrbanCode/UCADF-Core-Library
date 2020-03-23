@@ -9,9 +9,9 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
-import org.urbancode.ucadf.core.model.ucd.general.UcdSecureString
+import org.urbancode.ucadf.core.model.ucadf.UcAdfSecureString
 import org.urbancode.ucadf.core.model.ucd.user.UcdUser
 
 import groovy.json.JsonBuilder
@@ -23,7 +23,7 @@ class UcdSetUserPassword extends UcAdfAction {
 	String user
 	
 	/** The password. */
-	UcdSecureString password
+	UcAdfSecureString password
 	
 	/**
 	 * Runs the action.	
@@ -61,7 +61,7 @@ class UcdSetUserPassword extends UcAdfAction {
 		if (response.getStatus() == 200) {
 			logVerbose("User [$user} password set.")
 		} else {
-			throw new UcdInvalidValueException(response)
+			throw new UcAdfInvalidValueException(response)
 		}
 	}
 }

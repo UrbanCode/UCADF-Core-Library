@@ -3,13 +3,16 @@
  */
 package org.urbancode.ucadf.core.model.ucd.exception
 
-class UcdNotFoundException extends UcdHandledException {
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfHandledException
+
+@Deprecated // Use UcAdfHandledException.
+class UcAdfNotFoundException extends UcAdfHandledException {
 	// Constructors.
-	UcdNotFoundException(final String message) {
+	UcAdfNotFoundException(final String message) {
 		super(message)
 	}
 	
-	UcdNotFoundException(final Exception e) {
+	UcAdfNotFoundException(final Exception e) {
 		this(e.getMessage())
 	}
 }

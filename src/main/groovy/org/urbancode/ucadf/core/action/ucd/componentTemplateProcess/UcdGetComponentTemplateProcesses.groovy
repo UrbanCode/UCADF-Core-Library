@@ -11,7 +11,7 @@ import org.urbancode.ucadf.core.action.ucd.componentTemplate.UcdGetComponentTemp
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucd.componentProcess.UcdComponentProcess
 import org.urbancode.ucadf.core.model.ucd.componentTemplate.UcdComponentTemplate
-import org.urbancode.ucadf.core.model.ucd.exception.UcdInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 
 class UcdGetComponentTemplateProcesses extends UcAdfAction {
@@ -51,7 +51,7 @@ class UcdGetComponentTemplateProcesses extends UcAdfAction {
 		if (response.getStatus() == 200) {
 			ucdComponentProcesses = (response.readEntity(new GenericType<List<UcdComponentProcess>>(){})).findAll { it.getPath() ==~ /^componentTemplates.*/ }
 		} else {
-            throw new UcdInvalidValueException(response)
+            throw new UcAdfInvalidValueException(response)
 		}
 
 		return ucdComponentProcesses
