@@ -13,7 +13,7 @@ class UcdPropDefHttpSelect extends UcdPropDef {
 	/** The user name. */
 	String httpUsername
 	
-	/** The user password. *?
+	/** The user password. */
 	String httpPassword
 	
 	/** The user encrypted password. */

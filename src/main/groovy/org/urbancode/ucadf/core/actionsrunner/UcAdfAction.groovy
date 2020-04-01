@@ -2,11 +2,11 @@ package org.urbancode.ucadf.core.actionsrunner
 
 import org.urbancode.ucadf.core.model.ucadf.UcAdfSecureString
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
+import org.urbancode.ucadf.core.model.ucadf.objectmapper.UcAdfObjectMapper
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.system.UcdSession
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo
-import com.fasterxml.jackson.databind.ObjectMapper
 
 import groovy.util.logging.Slf4j
 
@@ -192,12 +192,7 @@ abstract class UcAdfAction extends UcdObject {
 					}
 				}
 				
-				String outputStr
-				if (propValue instanceof UcAdfSecureString) {
-					outputStr = "***"
-				} else {
-					outputStr = new ObjectMapper().writer().writeValueAsString(propValue)
-				}
+				String outputStr = new UcAdfObjectMapper().writer().writeValueAsString(propValue)
 				
 				println "-> $propName=[$outputStr]"
 			}

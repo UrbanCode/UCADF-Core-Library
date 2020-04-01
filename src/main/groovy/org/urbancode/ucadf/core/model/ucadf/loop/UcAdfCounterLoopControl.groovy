@@ -3,12 +3,12 @@
  */
 package org.urbancode.ucadf.core.model.ucadf.loop
 
-import org.urbancode.ucadf.core.model.ucd.general.UcdObject
+import org.urbancode.ucadf.core.model.ucadf.UcAdfObject
 
 import groovy.util.logging.Slf4j
 
 @Slf4j
-class UcAdfCounterLoopControl extends UcdObject {
+class UcAdfCounterLoopControl extends UcAdfObject {
 	/** The default loop control property name. */
 	public static LOOPCONTROLPROPERTYNAME = "counterLoopControl"
 	

@@ -48,7 +48,16 @@ class UcdAgentRelay extends UcdSecurityTypeObject {
 	
 	/** The extended security. */
 	UcdExtendedSecurity extendedSecurity
+
+	/** The security resource ID. */
+	String securityResourceId
 	
+	/** The communication version. */
+	String communicationVersion
+	
+	/** TODO: What is this? */
+	Object security
+		
 	// Constructors.	
 	UcdAgentRelay() {
 	}

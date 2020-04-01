@@ -62,6 +62,14 @@ class UcdSystemConfiguration extends UcdObject {
 	String defaultLocale
 	String defaultSnapshotLockType
 	Boolean envCompPropsOverrideEnvProps
+	Boolean safeEditEnabled
+	Boolean allowProcessLocking
+	Boolean requireProcessLocking
+	Boolean maintenanceModeEnabled
+	Long keepMeLoggedInHours
+	Boolean deleteEnvResources
+	Boolean vcCompressionUpgradeEnabled
+	Boolean vcCompressionUpgradeCompleted
 	
 	// Constructors.
 	UcdSystemConfiguration() {

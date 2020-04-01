@@ -72,6 +72,9 @@ class UcdApplicationProcessRequest extends UcdObject {
 	
 	/** The entry. TODO: What is this? */
 	Map entry
+	
+	/** TODO: What's this? */
+	Long warningCount
 
 	// Constructors.	
 	UcdApplicationProcessRequest() {

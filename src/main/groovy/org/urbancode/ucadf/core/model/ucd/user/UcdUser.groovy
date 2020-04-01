@@ -47,6 +47,9 @@ class UcdUser extends UcdObject {
 	/** The list of associated groups. */
 	List<UcdGroup> groups
 
+	/** The last login date. */
+	Long lastLoginDate
+	
 	// Constructors.	
 	UcdUser() {
 	}

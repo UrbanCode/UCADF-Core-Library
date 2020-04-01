@@ -6,7 +6,7 @@ package org.urbancode.ucadf.core.model.ucadf
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import org.urbancode.ucadf.core.model.ucadf.objectmapper.UcAdfObjectMapper
 
 abstract class UcAdfObject implements Serializable {
 	/**
@@ -15,7 +15,7 @@ abstract class UcAdfObject implements Serializable {
 	 * @return The pretty print formatted string.
 	 */
 	public static String toJsonPrettyString(final Object object) {
-		return new ObjectMapper().writer().withDefaultPrettyPrinter().writeValueAsString(object)
+		return new UcAdfObjectMapper().writer().withDefaultPrettyPrinter().writeValueAsString(object)
 	}
 	
 	/**
@@ -32,7 +32,7 @@ abstract class UcAdfObject implements Serializable {
 	 * @return The formatted string.
 	 */
 	public static String toJsonString(final Object object) {
-		return new ObjectMapper().writer().writeValueAsString(object)
+		return new UcAdfObjectMapper().writer().writeValueAsString(object)
 	}
 
 	/**

@@ -13,6 +13,9 @@ class UcdSnapshotVersions extends UcdComponent {
 	/** The desired versions. */
 	List<UcdVersion> desiredVersions
 	
+	/** Flag that indicates children. */
+	Boolean children
+	
 	// Constructors.	
 	UcdSnapshotVersions() {
 	}

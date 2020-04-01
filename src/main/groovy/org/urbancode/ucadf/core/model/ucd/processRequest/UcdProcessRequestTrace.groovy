@@ -79,6 +79,15 @@ class UcdProcessRequestTrace extends UcdObject {
 	// Added this to read the workflow step properties.
 	List<UcdProperty> stepProperties
 	List<UcdProperty> stepOutputProps
+
+	/** TODO: What's this? */
+	Long warningCount
+	
+	/** TODO: What's this? */
+	Object warningMessages
+
+	/** TODO: What's this? */
+	Object draft
 	
 	// Constructors.	
 	UcdProcessRequestTrace() {

@@ -11,6 +11,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 class UcdWorkflowApplicationProcessRequest extends UcdApplicationProcessRequest implements UcdWorkflowProcessRequest {
 	String processRequestType = TYPE_APPLICATION
 
+	/** TODO: What's this? */
+	Boolean executable
+	
 	// Constructors.	
 	UcdWorkflowApplicationProcessRequest() {
 	}
