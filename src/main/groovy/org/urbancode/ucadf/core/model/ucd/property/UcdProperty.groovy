@@ -27,6 +27,9 @@ class UcdProperty extends UcdObject {
 	/** The flag that indicates inherited. */
 	Boolean inherited = false
 
+	/** TODO: What is this? */
+	Object index
+	
 	// Constructors.	
 	UcdProperty() {
 	}

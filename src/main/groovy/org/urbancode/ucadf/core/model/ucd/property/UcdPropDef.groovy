@@ -67,6 +67,9 @@ abstract class UcdPropDef extends UcdObject {
 	/** The flag that indicates inherited. */
 	Boolean inherited
 
+	/** The index. */
+	Long index
+	
 	/**
 	 * A workaround to fix HTTP property definitions exported from an older version and imported to a new version.
 	 * @param application The application name or ID.

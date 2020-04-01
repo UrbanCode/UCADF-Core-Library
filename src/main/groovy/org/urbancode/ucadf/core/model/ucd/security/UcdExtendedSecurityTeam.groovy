@@ -5,6 +5,7 @@ package org.urbancode.ucadf.core.model.ucd.security
 
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 
+import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 

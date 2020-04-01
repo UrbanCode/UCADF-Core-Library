@@ -6,12 +6,12 @@ package org.urbancode.ucadf.core.model.ucadf.loop
 import javax.ws.rs.core.MultivaluedMap
 import javax.ws.rs.core.Response
 
-import org.urbancode.ucadf.core.model.ucd.general.UcdObject
+import org.urbancode.ucadf.core.model.ucadf.UcAdfObject
 
 import groovy.util.logging.Slf4j
 
 @Slf4j
-class UcAdfPageLoopControl extends UcdObject {
+class UcAdfPageLoopControl extends UcAdfObject {
 	/** The default loop control property name. */
 	public static LOOPCONTROLPROPERTYNAME = "pageLoopControl"
 	

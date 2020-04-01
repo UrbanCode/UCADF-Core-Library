@@ -55,6 +55,9 @@ class UcdPropSheet extends UcdObject {
 	/** The security resource ID. */
 	String securityResourceId
 
+	/** TODO: What's this? */
+	Object propSheetDef
+	
 	UcdPropSheet() {
 	}
 }

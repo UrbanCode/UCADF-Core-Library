@@ -41,7 +41,10 @@ class UcdComponentProcessImport {
 	
 	/** The configuration action type. TODO: What is this? Enumeration? */
 	String configActionType
-	
+
+	/** The flag to indicate deleted. */
+	Boolean deleted
+		
 	// Constructors.
 	UcdComponentProcessImport() {
 	}

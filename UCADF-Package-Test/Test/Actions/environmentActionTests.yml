@@ -24,6 +24,41 @@ actions:
         description: "Test environment"
         failIfExists: false
 
+  # Create an environment of each color.
+  - action: UcAdfItemsLoop
+    items:
+      - RED
+      - ORANGE
+      - YELLOW
+      - GREEN
+      - TEAL
+      - BLUE
+      - DARKRED
+      - DARKORANGE
+      - DARKYELLOW
+      - DARKGREEN
+      - DARKTEAL
+      - DARKBLUE
+      - BLUE2
+      - LIGHTPURPLE
+      - LIGHTPINK
+      - TAUPE
+      - GRAY
+      - GRAY2
+      - DARKBLUE2
+      - PURPLE
+      - PINK
+      - DARKTAUPE
+      - DARKGRAY
+      - DARKGRAY2
+    actions:
+      - action: UcdCreateEnvironment
+        application: "${u:coreTestApp1}"
+        name: "${u:coreTestEnv1} ${u:item}"
+        color: "${u:item}"
+        description: "This is ${u:item}"
+        failIfExists: false
+
   # Add team security to a specified environment.
   - action: UcdAddEnvironmentToTeams
     application: "${u:coreTestApp1}"

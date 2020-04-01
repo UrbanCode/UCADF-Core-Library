@@ -83,6 +83,9 @@ class UcdComponentTemplate extends UcdSecurityTypeObject {
 	/** The extended security. */
 	UcdExtendedSecurity extendedSecurity
 	
+	/** The import configuration strategy. */
+	String importConfigurationStrategy
+	
 	// Constructors.	
 	UcdComponentTemplate() {
 	}

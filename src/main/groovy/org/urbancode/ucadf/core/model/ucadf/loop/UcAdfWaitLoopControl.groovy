@@ -3,12 +3,12 @@
  */
 package org.urbancode.ucadf.core.model.ucadf.loop
 
-import org.urbancode.ucadf.core.model.ucd.general.UcdObject
+import org.urbancode.ucadf.core.model.ucadf.UcAdfObject
 
 import groovy.util.logging.Slf4j
 
 @Slf4j
-class UcAdfWaitLoopControl extends UcdObject {
+class UcAdfWaitLoopControl extends UcAdfObject {
 	/** The default loop control property name. */
 	public static LOOPCONTROLPROPERTYNAME = "waitLoopControl"
 	

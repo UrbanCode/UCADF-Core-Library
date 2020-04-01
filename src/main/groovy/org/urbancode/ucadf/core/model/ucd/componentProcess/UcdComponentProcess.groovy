@@ -41,7 +41,10 @@ class UcdComponentProcess extends UcdObject {
 	
 	/** The path. */
 	String path
-	
+
+	/** The flag that indicates deleted. */
+	Boolean deleted
+		
 	// Constructors.	
 	UcdComponentProcess() {
 	}

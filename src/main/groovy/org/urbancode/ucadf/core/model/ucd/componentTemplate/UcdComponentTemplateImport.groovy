@@ -50,4 +50,7 @@ class UcdComponentTemplateImport extends UcdImport {
 	
 	/** The security resource ID. */
 	String securityResourceId
+	
+	/** The source configuration plugin name. */
+	String sourceConfigPluginName
 }

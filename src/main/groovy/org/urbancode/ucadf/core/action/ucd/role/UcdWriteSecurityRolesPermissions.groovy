@@ -13,7 +13,6 @@ import org.urbancode.ucadf.core.model.ucd.role.UcdRolesMap
 import org.urbancode.ucadf.core.model.ucd.security.UcdSecurityPermissionProperties
 import org.urbancode.ucadf.core.model.ucd.security.UcdSecuritySubtype
 import org.urbancode.ucadf.core.model.ucd.security.UcdSecuritySubtypeMap
-import org.urbancode.ucadf.core.model.ucd.system.UcdSession
 
 import com.fasterxml.jackson.databind.ObjectMapper
 
@@ -27,6 +26,9 @@ class UcdWriteSecurityRolesPermissions extends UcAdfAction {
 	/** The remove others option should be written to the actions file. Default is false. */
 	Boolean removeOthers = false
 
+	/** The failIfNotFound value to be written to the actions file. Default is true. */
+	Boolean failIfNotFound = true
+	
 	// Private properties.
 	private List<Map> securityPermissions = []
 	private UcdRolesMap ucdRolesMap = [:]
@@ -151,6 +153,11 @@ class UcdWriteSecurityRolesPermissions extends UcAdfAction {
 				returnAs: UcdGetSecurityTypePermissions.ReturnAsEnum.MAPBYID
 			])
 
+			Map<String, Map> securityTypePermissionsMapByName = actionsRunner.runAction([
+				action: UcdGetSecurityTypePermissions.getSimpleName(),
+				returnAs: UcdGetSecurityTypePermissions.ReturnAsEnum.MAPBYNAME
+			])
+
 			UcdRolePermissionMap ucdRolePermissionMap = ucdRole.getRolePermissionMap(securityTypePermissionsMapById)
 			
 			for (type in ucdRolePermissionMap.getTypes()) {
@@ -167,124 +174,35 @@ class UcdWriteSecurityRolesPermissions extends UcAdfAction {
 							type: type,
 							subtype: subtype,
 							removeOthers: removeOthers,
+							failIfNotFound: failIfNotFound,
 							permissions: ucdRolePermissionMap.getSubtypePermissions(type, subtype)
 						]
 					)
-				
-					// When exporting 6.1 we add actions from newer UC versions to the roles for backward compatibility.
-					if (ucdSession.isUcdVersion(UcdSession.UCDVERSION_61)) {
-						addSecuritySubtypesFor61(
-							ucdRolePermissionMap,
-							role,
-							type,
-							subtype
-						)
-					}
 					
-					// When exporting 6.2 we add actions from newer UC versions to the roles for backward compatibility.
-					if (ucdSession.isUcdVersion(UcdSession.UCDVERSION_62)) {
-						addSecuritySubtypesFor62(
-							ucdRolePermissionMap,
-							role,
-							type,
-							subtype
-						)
+					// When an export is done from an older version we want to add any permissions to it that don't exist in that version
+					// but may exist in a newer version and that needs to be set to true by default to maintain the same behavior.
+					for (permission in ucdRolePermissionMap.getSubtypePermissions(type, subtype)) {
+						for (newPermission in UcdSecurityPermissionProperties.permissionsToAdd(permission)) {
+							// Only add the new permission if it's not a permission that's known to the version being exported.
+							println "Adding a permission that doesn't exist in the UCD version being exported but may existing in a new UCD version."
+							if (!securityTypePermissionsMapByName.get(type)?.get(newPermission)) {
+								addSecurityPermissions(
+									[
+										action: UcdAddRolePermissions.getSimpleName(),
+										role: role,
+										type: type,
+										subtype: subtype,
+										removeOthers: removeOthers,
+										failIfNotFound: failIfNotFound,
+										permissions: [ newPermission ]
+									]
+								)
+							}
+						}
 					}
 				}
 			}
 		}
-	}
-	
-	// Add create role permission actions for UCD 6.1.
-	private addSecuritySubtypesFor61(
-		final UcdRolePermissionMap ucdRolePermissionMap,
-		final String role,
-		final String type,
-		final String subtype) {
-		
-		// When exporting 6.1 we add actions from newer UC versions to the roles for backward compatibility.
-		ucdRolePermissionMap.getSubtypePermissions(type, subtype).each {
-			// "Create *" for certain types we need to add the "Create * From Templates" action
-			String addPermissionName = "$it From Template"
-			if (UcdSecurityPermissionProperties.ACTIONNAMESNOTIN61.contains(addPermissionName)) {
-				addSecurityPermissions(
-					[
-						action: UcdAddRolePermissions.getSimpleName(),
-						role: role,
-						type: type,
-						subtype: subtype,
-						removeOthers: false,
-						permissions: [ addPermissionName ]
-					]
-				)
-			}
-			
-			// "View Resources" we need to add the "Execute on Resources" action for 6.2+ compatibility.
-			if (UcdSecurityPermissionProperties.PERMISSION_VIEWRESOURCES.equals(it)) {
-				addSecurityPermissions(
-					[
-						action: UcdAddRolePermissions.getSimpleName(),
-						role: role,
-						type: type,
-						subtype: subtype,
-						removeOthers: false,
-						permissions: [ UcdSecurityPermissionProperties.PERMISSION_EXECUTEONRESOURCES ]
-					]
-				)
-			}
-			
-			// "View Agents" we need to add the "Execute on Agents" action for 6.2+ compatibility.
-			if (UcdSecurityPermissionProperties.PERMISSION_VIEWAGENTS.equals(it)) {
-				addSecurityPermissions(
-					[
-						action: UcdAddRolePermissions.getSimpleName(),
-						role: role,
-						type: type,
-						subtype: subtype,
-						removeOthers: false,
-						permissions: [ UcdSecurityPermissionProperties.PERMISSION_EXECUTEONAGENTS ]
-					]
-				)
-			}
-			
-			// "Manage Snapshots" we need to add the "Delete Snapshots" action for 7.0+ compatibility.
-			if (UcdSecurityPermissionProperties.PERMISSION_MANAGESNAPSHOTS.equals(it)) {
-				addSecurityPermissions(
-					[
-						action: UcdAddRolePermissions.getSimpleName(),
-						role: role,
-						type: type,
-						subtype: subtype,
-						removeOthers: false,
-						permissions: [ UcdSecurityPermissionProperties.PERMISSION_DELETESNAPSHOTS ]
-					]
-				)
-			}
-		}
-	}	
-
-	// Add create role permission actions for UCD 6.2.
-	private addSecuritySubtypesFor62(
-		final UcdRolePermissionMap ucdRolePermissionMap,
-		final String role,
-		final String type,
-		final String subtype) {
-		
-        ucdRolePermissionMap.getSubtypePermissions(type, subtype).each {
-			// "Manage Snapshots" we need to add the "Delete Snapshots" action for 7.0+ compatibility.
-			if (UcdSecurityPermissionProperties.PERMISSION_MANAGESNAPSHOTS.equals(it)) {
-				addSecurityPermissions(
-					[
-						action: UcdAddRolePermissions.getSimpleName(), 
-						role: role, 
-						type: type, 
-						subtype: subtype, 
-						removeOthers: false, 
-						permissions: [ UcdSecurityPermissionProperties.PERMISSION_DELETESNAPSHOTS ]	
-					]
-				)
-			}
-        }
 	}
 	
 	// Add security permissions to the list.

@@ -17,4 +17,7 @@ class UcdGroup extends UcdObject {
 
 	/** The flag that indicates the group is enabled. */	
 	Boolean enabled
+	
+	/** TODO: What's this? */
+	Boolean isUserInGroup
 }
