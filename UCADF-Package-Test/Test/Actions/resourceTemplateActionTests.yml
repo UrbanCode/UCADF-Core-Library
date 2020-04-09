@@ -1,0 +1,70 @@
+# ===============================================================================
+# This actions file runs resource template action tests.
+# ===============================================================================
+propertyFiles:
+  - fileName: "UCADF-Package-Test/Test/UcAdfCoreTestProperties.yml"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.properties"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.secure.properties"
+  
+actions:
+  # TODO: Need to add additional actions and tests for resource templates.
+  # #==============================================================================          
+  # # Run the tests.
+  # #==============================================================================          
+  # # Create an resource template.
+  # # Try to create twice to make sure it works if it already exists.
+  # - action: UcAdfCounterLoop
+    # actionInfo: false
+    # counterBegin: 1 
+    # counterEnd: 2 
+    # actions:
+      # - action: UcdCreateResourceTemplate
+        # name: "${u:coreTestResourceTemplate1}"
+        # description: "Test resource template."
+        # failIfExists: false
+    
+  # # Add team security to a specified resource.
+  # - action: UcdAddResourceTemplateToTeams
+    # resourceTemplate: "${u:coreTestResourceTemplate1}"
+    # teams:
+      # - team: "${u:coreTestTeam1}"
+    
+  # # Get the resource template.
+  # - action: UcdGetResourceTemplate
+    # resourceTemplate: "${u:coreTestResourceTemplate1}"
+    # actionReturnPropertyName: resourceTemplate
+  
+  # - action: UcAdfComment
+    # comment: "Resource template %s"
+    # values:
+      # - ${u:resourceTemplate}
+    
+  # # Create an resource template.
+  # - action: UcdCreateResourceTemplate
+    # name: "${u:coreTestResourceTemplate2}"
+    # description: "Test resource template."
+    # failIfExists: false
+    
+  # # Get the list of resource templates.
+  # - action: UcdGetResourceTemplates
+    # actionReturnPropertyName: resourceTemplates
+    
+  # # Show each resource template.
+  # - action: UcAdfItemsLoop
+    # items: ${u:resourceTemplates}
+    # actions:
+      # - action: UcAdfComment
+        # comment: "Resource template %s"
+        # values:
+          # - ${u:item}
+
+  # # Create an resource template to delete.
+  # - action: UcdCreateResourceTemplate
+    # name: "${u:coreTestResourceTemplateDelete}"
+    # description: "Test resource."
+    # failIfExists: false
+    
+  # # Delete an resource template.
+  # - action: UcdDeleteResourceTemplate
+    # resourceTemplate: "${u:coreTestResourceTemplateDelete}"
+    # failIfNotFound: true

@@ -21,6 +21,12 @@ class UcdCreateApplication extends UcAdfAction {
 	/** (Optional) The application description. */	
 	String description = ""
 	
+	/** (Optional) The notification scheme. */
+	String notificationScheme = ""
+	
+	/** The flag that indicates enforce complete snapshots. Default is false. */
+	Boolean enforceCompleteSnapshots = false
+	
 	/** The flag that indicates fail if the application already exists. Default is true. */
 	Boolean failIfExists = true
 	
@@ -39,7 +45,9 @@ class UcdCreateApplication extends UcAdfAction {
 		// Initialize the request.
 		Map requestMap = [
 			name: name,
-			description: description
+			description: description,
+			enforceCompleteSnapshots: enforceCompleteSnapshots,
+			notificationScheme: notificationScheme
 		]
 
 		JsonBuilder jsonBuilder = new JsonBuilder(requestMap)

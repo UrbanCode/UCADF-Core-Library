@@ -486,9 +486,18 @@ ucadfclient -f UCADF-Package-Test/Test/Actions/allActionTests.yml -DUCADF_STORE=
 |:------- |:------- |:------ |
 | 7.0.1.2.1008304 | ucd-7.0.1.2-PH09559-DeletedTypesShowingAsAssignable<br>ucd-7.0.1.2_PH11030_deletedResourceTypesSeemlessCreation | All tests run and passed. |
 | 7.0.4.2.1038002 | None | All tests run and passed. |
+| 7.0.5.2.1050384 | None | All tests run and passed. |
 
 # Using Notepad++ to Edit YAML
 The open source Notepad++ application is one option for edition YAML file. One nice feature is that you can comment out a block of YAML lines with Ctrl+K and uncomment a block with Ctrl+Shift+K.
+
+# UrbanCode Deploy WADLs
+The RESTful APIs used by the UCADF-Core library are defined by the UrbanCode Deploy WADLs available here:<br>
+https://instance/cli/application.wadl<br>
+https://instance/cli-internal/application.wadl<br>
+https://instance/rest/application.wadl<br>
+https://instance/security/application.wadl<br>
+https://instance/property/application.wadl
 
 # License
 This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details

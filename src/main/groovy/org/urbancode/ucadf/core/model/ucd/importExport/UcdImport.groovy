@@ -5,7 +5,6 @@ package org.urbancode.ucadf.core.model.ucd.importExport
 
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.genericProcess.UcdGenericProcessImport
-import org.urbancode.ucadf.core.model.ucd.security.UcdExtendedSecurityTeam
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -14,15 +13,6 @@ import groovy.util.logging.Slf4j
 
 @Slf4j
 abstract class UcdImport extends UcdObject {
-	/** The name. */
-	String name
-	
-	/** The description. */
-	String description
-	
-	/** The team mappings. */
-	List<UcdExtendedSecurityTeam> teamMappings
-
 	// Constructors.	
 	UcdImport() {
 	}

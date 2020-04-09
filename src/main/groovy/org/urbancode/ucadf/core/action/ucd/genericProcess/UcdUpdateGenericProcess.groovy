@@ -8,11 +8,13 @@ import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
+import org.urbancode.ucadf.core.action.ucd.notificationScheme.UcdGetNotificationScheme
 import org.urbancode.ucadf.core.action.ucd.resource.UcdGetResource
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.genericProcess.UcdGenericProcess
+import org.urbancode.ucadf.core.model.ucd.notificationScheme.UcdNotificationScheme
 import org.urbancode.ucadf.core.model.ucd.resource.UcdResource
 
 import groovy.json.JsonBuilder
@@ -74,8 +76,13 @@ class UcdUpdateGenericProcess extends UcAdfAction {
 		String notificationSchemeId = notificationScheme
 		if (notificationScheme) {
 			if (!UcdObject.isUUID(notificationScheme)) {
-				// TODO: Need to have notification scheme lookup.
-				throw new UcAdfInvalidValueException("Ability to specify notification scheme name not implemented yet.")
+				UcdNotificationScheme ucdNotificationScheme = actionsRunner.runAction([
+					action: UcdGetNotificationScheme.getSimpleName(),
+					actionInfo: false,
+					notificationScheme: notificationScheme,
+					failIfNotFound: true
+				])
+				notificationSchemeId = ucdNotificationScheme.getId()
 			}
 		}
 
