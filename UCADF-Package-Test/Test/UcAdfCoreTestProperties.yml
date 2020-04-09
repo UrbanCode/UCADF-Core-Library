@@ -36,6 +36,16 @@ propertyValues:
   coreTestAppProcess1: "UCADFCORETEST-AppProcess1"
   coreTestAppProcess2: "UCADFCORETEST-AppProcess2"
   coreTestAppProcessDelete: "UCADFCORETEST-AppProcessDelete"
+ 
+  # Application templates for CRUD tests.
+  coreTestAppTemplate1: "UCADFCORETEST-AppTemplate1"
+  coreTestAppTemplate2: "UCADFCORETEST-AppTemplate2"
+  coreTestAppTemplateDelete: "UCADFCORETEST-AppTemplateDelete"
+  
+  # Environment templates for CRUD tests.
+  coreTestEnvTemplate1: "UCADFCORETEST-EnvTemplate1"
+  coreTestEnvTemplate2: "UCADFCORETEST-EnvTemplate2"
+  coreTestEnvTemplateDelete: "UCADFCORETEST-EnvTemplateDelete"
   
   # Component tags.
   coreTestCompTagPrefix: "UCADFCORETEST-CompTag"
@@ -94,6 +104,11 @@ propertyValues:
   
   # Locks.
   coreTestLock1: "UCADFCORETEST-Lock1"
+  
+  # Notification schemes for CRUD tests.
+  coreTestNotificationScheme1: "UCADFCORETEST-NotificationScheme1"
+  coreTestNotificationScheme2: "UCADFCORETEST-NotificationScheme2"
+  coreTestNotificationSchemeDelete: "UCADFCORETEST-NotificationSchemeDelete"
   
   # Resources.
   coreTestGroupResource1: "UCADFCORETEST-GroupResource1"

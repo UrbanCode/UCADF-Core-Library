@@ -8,13 +8,16 @@ import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
+import org.urbancode.ucadf.core.action.ucd.notificationScheme.UcdGetNotificationScheme
 import org.urbancode.ucadf.core.action.ucd.resource.UcdGetResource
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.genericProcess.UcdGenericProcess
+import org.urbancode.ucadf.core.model.ucd.notificationScheme.UcdNotificationScheme
 import org.urbancode.ucadf.core.model.ucd.resource.UcdResource
 import org.urbancode.ucadf.core.model.ucd.system.UcdSession
+
 import groovy.json.JsonBuilder
 
 class UcdCreateGenericProcess extends UcAdfAction {
@@ -81,12 +84,17 @@ class UcdCreateGenericProcess extends UcAdfAction {
 			defaultResourceIds.add(defaultResourceId)
 		}
 		
-		// If an defaultResource ID was provided then use it. Otherwise get the defaultResource information to get the ID.
+		// If notification scheme ID was provided then use it. Otherwise, look up the ID.
 		String notificationSchemeId = notificationScheme
 		if (notificationScheme) {
 			if (!UcdObject.isUUID(notificationScheme)) {
-				// TODO: Need to have notification scheme lookup.
-				throw new UcAdfInvalidValueException("Ability to specify notification scheme name not implemented yet.")
+				UcdNotificationScheme ucdNotificationScheme = actionsRunner.runAction([
+					action: UcdGetNotificationScheme.getSimpleName(),
+					actionInfo: false,
+					notificationScheme: notificationScheme,
+					failIfNotFound: true
+				])
+				notificationSchemeId = ucdNotificationScheme.getId()
 			}
 		}
 

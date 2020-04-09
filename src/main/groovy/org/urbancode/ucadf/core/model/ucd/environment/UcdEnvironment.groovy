@@ -40,7 +40,7 @@ class UcdEnvironment extends UcdSecurityTypeObject {
 	/** The flag that indicates the environment is active. */
 	Boolean active
 	
-	/** The flag to indicat the environment is deleted. */
+	/** The flag to indicate the environment is deleted. */
 	Boolean deleted
 	
 	/** The cleanup days to keep. */

@@ -53,6 +53,9 @@ actions:
     fileName: "${u:testActionsDir}/applicationActionTests.yml"
     
   - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/applicationTemplateActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
     fileName: "${u:testActionsDir}/applicationProcessActionTests.yml"
     
   - action: UcAdfRunActionsFromFile
@@ -89,6 +92,9 @@ actions:
     fileName: "${u:testActionsDir}/environmentActionTests.yml"
     
   - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/environmentTemplateActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
     fileName: "${u:testActionsDir}/genericProcessActionTests.yml"
     
   - action: UcAdfRunActionsFromFile
@@ -99,10 +105,16 @@ actions:
   - action: UcAdfRunActionsFromFile
     fileName: "${u:testActionsDir}/lockActionTests.yml"
 
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/notificationSchemeActionTests.yml"
+
   # TODO: Need plugin action tests.
   
   - action: UcAdfRunActionsFromFile
     fileName: "${u:testActionsDir}/resourceActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/resourceTemplateActionTests.yml"
     
   - action: UcAdfRunActionsFromFile
     fileName: "${u:testActionsDir}/roleActionTests.yml"

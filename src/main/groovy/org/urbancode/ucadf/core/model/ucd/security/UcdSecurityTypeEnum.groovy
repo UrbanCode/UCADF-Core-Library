@@ -13,11 +13,11 @@ import org.urbancode.ucadf.core.model.ucd.cloud.UcdCloudConnection
 import org.urbancode.ucadf.core.model.ucd.component.UcdComponent
 import org.urbancode.ucadf.core.model.ucd.componentTemplate.UcdComponentTemplate
 import org.urbancode.ucadf.core.model.ucd.environment.UcdEnvironment
-import org.urbancode.ucadf.core.model.ucd.environment.UcdEnvironmentTemplate
+import org.urbancode.ucadf.core.model.ucd.environmentTemplate.UcdEnvironmentTemplate
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.genericProcess.UcdGenericProcess
 import org.urbancode.ucadf.core.model.ucd.resource.UcdResource
-import org.urbancode.ucadf.core.model.ucd.resource.UcdResourceTemplate
+import org.urbancode.ucadf.core.model.ucd.resourceTemplate.UcdResourceTemplate
 import org.urbancode.ucadf.core.model.ucd.system.UcdServerConfiguration
 import org.urbancode.ucadf.core.model.ucd.system.UcdWebUI
 

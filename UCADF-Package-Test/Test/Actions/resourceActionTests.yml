@@ -388,14 +388,6 @@ actions:
     resource: "${u:coreTestTopResource}/MoveTo"
     name: "MoveTo2"
 
-  # TBD - Add test after resource template actions have been developed.
-  # # Create a resource from a template.
-  # - action: UcdCreateResourceFromTemplate
-    # parent: ""
-    # resource: "${u:coreTestTopResource}/${u:coreTestGroupResource1}-from-${u:coreTestResourceTemplate1}"
-    # template: "${u:coreTestResourceTemplate1}"
-    # failIfExists: false
-
   # Find resources.
   - action: UcdFindResources
     parent: "${u:coreTestTopResource}"

@@ -10,6 +10,7 @@ import org.urbancode.ucadf.core.model.ucd.environment.UcdEnvironmentImport
 import org.urbancode.ucadf.core.model.ucd.genericProcess.UcdGenericProcessImport
 import org.urbancode.ucadf.core.model.ucd.importExport.UcdImport
 import org.urbancode.ucadf.core.model.ucd.property.UcdPropSheet
+import org.urbancode.ucadf.core.model.ucd.security.UcdExtendedSecurityTeam
 import org.urbancode.ucadf.core.model.ucd.status.UcdStatus
 import org.urbancode.ucadf.core.model.ucd.system.UcdSession
 import org.urbancode.ucadf.core.model.ucd.tag.UcdTag
@@ -18,6 +19,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class UcdApplicationImport extends UcdImport {
+	/** The name. */
+	String name
+	
+	/** The description. */
+	String description
+	
+	/** The team mappings. */
+	List<UcdExtendedSecurityTeam> teamMappings
+
 	/** The application processes to import. */
 	List<UcdApplicationProcessImport> processes
 	

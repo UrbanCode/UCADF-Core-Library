@@ -8,6 +8,7 @@ import org.urbancode.ucadf.core.model.ucd.componentTemplate.UcdComponentTemplate
 import org.urbancode.ucadf.core.model.ucd.genericProcess.UcdGenericProcessImport
 import org.urbancode.ucadf.core.model.ucd.importExport.UcdImport
 import org.urbancode.ucadf.core.model.ucd.property.UcdPropDef
+import org.urbancode.ucadf.core.model.ucd.security.UcdExtendedSecurityTeam
 import org.urbancode.ucadf.core.model.ucd.tag.UcdTag
 import org.urbancode.ucadf.core.model.ucd.version.UcdVersionTypeEnum
 
@@ -15,6 +16,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class UcdComponentImport extends UcdImport {
+	/** The name. */
+	String name
+	
+	/** The description. */
+	String description
+	
+	/** The team mappings. */
+	List<UcdExtendedSecurityTeam> teamMappings
+
 	/** The list of component processes. */
 	List<UcdComponentProcessImport> processes
 	

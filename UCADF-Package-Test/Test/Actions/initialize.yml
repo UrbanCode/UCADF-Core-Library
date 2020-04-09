@@ -49,6 +49,17 @@ actions:
         application: "${u:item/name}"
         commit: "${u:ucAdfCommit}"
 
+  # Delete the test application templates.    
+  - action: UcdGetApplicationTemplates
+    match: "^UCADFCORETEST.*"
+  - action: UcAdfItemsLoop
+    actionInfo: false
+    items: ${u:actionReturn}
+    actions:
+      - action: UcdDeleteApplicationTemplate
+        applicationTemplate: "${u:item/name}"
+        commit: "${u:ucAdfCommit}"
+  
   # Delete the test components.    
   - action: UcdGetComponents
     match: "^UCADFCORETEST.*"
