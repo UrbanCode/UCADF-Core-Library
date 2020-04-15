@@ -10,7 +10,9 @@ import org.urbancode.ucadf.core.model.ucd.property.UcdPropSheetDef
 import org.urbancode.ucadf.core.model.ucd.security.UcdExtendedSecurity
 import org.urbancode.ucadf.core.model.ucd.security.UcdSecurityPermissionProperties
 
-//@JsonIgnoreProperties(ignoreUnknown = true)
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 class UcdResourceTemplate extends UcdSecurityTypeObject {
 	/** The resource ID. */
 	String id

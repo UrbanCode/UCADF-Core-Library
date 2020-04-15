@@ -6,11 +6,13 @@ package org.urbancode.ucadf.core.action.ucd.applicationTemplate
 import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.Response
 
+import org.urbancode.ucadf.core.action.ucadf.general.UcAdfUpdatePropertiesFile
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.applicationTemplate.UcdApplicationTemplate
 import org.urbancode.ucadf.core.model.ucd.applicationTemplate.UcdApplicationTemplateImport
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
+import org.urbancode.ucadf.core.model.ucd.importExport.UcdExport
 
 class UcdExportApplicationTemplate extends UcAdfAction {
 	// Action properties.
@@ -25,7 +27,7 @@ class UcdExportApplicationTemplate extends UcAdfAction {
 	 * @return The application template export object.
 	 */
 	@Override
-	public UcdApplicationTemplateImport run() {
+	public UcdExport run() {
 		// Validate the action properties.
 		validatePropsExist()
 
@@ -55,6 +57,9 @@ class UcdExportApplicationTemplate extends UcAdfAction {
 			throw new UcAdfInvalidValueException(response)
 		}
 		
+		// The export object to return.
+		UcdExport ucdExport = new UcdExport(ucdApplicationTemplateImport)
+
 		// Optionally save to file.
 		if (fileName) {
 			logVerbose("Saving export to file [$fileName].")
@@ -66,8 +71,21 @@ class UcdExportApplicationTemplate extends UcAdfAction {
 			
 			// Write the export file.
 			exportFile.write(ucdApplicationTemplateImport.toJsonString())
+			
+			// Write the keystore names and UCD version to the application template properties file.		
+			String propertiesFileName = fileName.replaceAll(/\..*?$/, "") + ".properties"
+			
+			logVerbose("Saving application template [$applicationTemplate] export properties to file [$propertiesFileName].")
+			actionsRunner.runAction([
+				action: UcAdfUpdatePropertiesFile.getSimpleName(),
+				fileName: propertiesFileName,
+			    propertyValues: [
+					keystoreNames: ucdExport.getKeystoreNames().join(","),
+					ucdVersion: ucdSession.getUcdVersion()
+				]
+			])
 		}
-		
-		return ucdApplicationTemplateImport
+
+		return ucdExport
 	}
 }
