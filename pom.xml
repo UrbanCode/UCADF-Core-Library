@@ -8,7 +8,7 @@
 	<name>UCADF-Core-Library</name>
 	<groupId>org.urbancode.ucadf.core</groupId>
 	<artifactId>UCADF-Core-Library</artifactId>
-	<version>1.0.0</version>
+	<version>7.0.5.2-SNAPSHOT</version>
 
 	<url>http://maven.apache.org</url>
 	

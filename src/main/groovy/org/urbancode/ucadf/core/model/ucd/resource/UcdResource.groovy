@@ -5,10 +5,10 @@ package org.urbancode.ucadf.core.model.ucd.resource
 
 import java.util.regex.Matcher
 
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.agent.UcdAgent
 import org.urbancode.ucadf.core.model.ucd.agent.UcdAgentStatusEnum
 import org.urbancode.ucadf.core.model.ucd.agentPool.UcdAgentPool
-import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdSecurityTypeObject
 import org.urbancode.ucadf.core.model.ucd.property.UcdPropSheet
 import org.urbancode.ucadf.core.model.ucd.security.UcdExtendedSecurity
@@ -67,13 +67,15 @@ class UcdResource extends UcdSecurityTypeObject {
 	/** The flag to indicate inherit team. */
 	Boolean inheritTeam
 
-	/** The role map. */
-	Map role
+	/** The resource role. */
+	UcdResourceRole role
 	
 	/** The role properties map. */
+	// TODO: Needs stronger type.
 	Map roleProperties
 	
 	/** The list of resource roles. */
+	// TODO: Needs stronger type.
 	List resourceRoles
 
 	/** The status. */	
@@ -103,7 +105,8 @@ class UcdResource extends UcdSecurityTypeObject {
 	/** The associated agent pool. */
 	UcdAgentPool agentPool
 
-	/** This is returned by get agent resources. TODO: What is it? **/
+	/** This is returned by get agent resources. **/
+	// TODO: What is this.
 	UcdResource resource
 	
 	// Constructors.

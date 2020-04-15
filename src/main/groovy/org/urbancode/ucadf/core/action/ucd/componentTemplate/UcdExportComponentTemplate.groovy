@@ -6,10 +6,11 @@ package org.urbancode.ucadf.core.action.ucd.componentTemplate
 import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.Response
 
+import org.urbancode.ucadf.core.action.ucadf.general.UcAdfUpdatePropertiesFile
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.componentTemplate.UcdComponentTemplate
 import org.urbancode.ucadf.core.model.ucd.componentTemplate.UcdComponentTemplateImport
-import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.importExport.UcdExport
 
@@ -55,20 +56,35 @@ class UcdExportComponentTemplate extends UcAdfAction {
 		} else {
 			throw new UcAdfInvalidValueException(response)
 		}
-		
-		// Optionally save to file.
+
+		// The export object to return.
+		UcdExport ucdExport = new UcdExport(ucdComponentTemplateImport)
+
+		// Optionally write the export files.
 		if (fileName) {
 			logVerbose("Saving export to file [$fileName].")
 			
-			File exportFile = new File(fileName)
-			
 			// Create the file's target directory.
+			File exportFile = new File(fileName)
 			exportFile.getParentFile()?.mkdirs()
 			
 			// Write the export file.
 			exportFile.write(ucdComponentTemplateImport.toJsonString())
-		}
 		
-		return new UcdExport(ucdComponentTemplateImport)
+			// Write the keystore names and UCD version to the component template properties file.		
+			String propertiesFileName = fileName.replaceAll(/\..*?$/, "") + ".properties"
+			
+			logVerbose("Saving component template [$componentTemplate] export properties to file [$propertiesFileName].")
+			actionsRunner.runAction([
+				action: UcAdfUpdatePropertiesFile.getSimpleName(),
+				fileName: propertiesFileName,
+			    propertyValues: [
+					keystoreNames: ucdExport.getKeystoreNames().join(","),
+					ucdVersion: ucdSession.getUcdVersion()
+				]
+			])
+		}
+
+		return ucdExport
 	}
 }

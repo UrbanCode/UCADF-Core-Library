@@ -11,9 +11,9 @@ import org.urbancode.ucadf.core.action.ucd.applicationProcess.UcdGetApplicationP
 import org.urbancode.ucadf.core.action.ucd.applicationProcess.UcdUpdateApplicationProcess
 import org.urbancode.ucadf.core.action.ucd.role.UcdGetRoles
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.application.UcdApplicationImport
 import org.urbancode.ucadf.core.model.ucd.applicationProcess.UcdApplicationProcess
-import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.importExport.UcdExport
 import org.urbancode.ucadf.core.model.ucd.role.UcdRole
 import org.urbancode.ucadf.core.model.ucd.role.UcdRolesMap
@@ -37,27 +37,6 @@ class UcdExportApplication extends UcAdfAction {
 		validatePropsExist()
 
 		logVerbose("\n=== Exporting application [$application] from [${ucdSession.getUcdUrl()}] ===")
-
-		// Initialize the temporary working directories.
-		String actionsFileName = ""
-		String propertiesFileName = ""
-		File exportFile
-		File actionsFile
-		File propertiesFile
-		
-		if (fileName) {
-			exportFile = new File(fileName)
-			
-			actionsFileName = fileName.replaceAll(/\..*?$/, "") + ".actions.json"
-			actionsFile = new File(actionsFileName)
-			
-			propertiesFileName = fileName.replaceAll(/\..*?$/, "") + ".properties"
-			propertiesFile = new File(propertiesFileName)
-			
-			for (file in [ exportFile, actionsFile ]) {
-				file.getParentFile()?.mkdirs()
-			}
-		}
 
 		// Get the actions to set the application process required roles after the import.
 		List<UcdRole> ucdRoles = actionsRunner.runAction([
@@ -93,17 +72,6 @@ class UcdExportApplication extends UcAdfAction {
 			}
 		}
 
-		// Write the supplemental actions file.
-		if (fileName) {
-			logVerbose("Saving application [$application] export actions to file [$actionsFileName].")
-			ObjectMapper mapper = new ObjectMapper()
-			actionsFile.write(
-				mapper.writer().withDefaultPrettyPrinter().writeValueAsString(
-					[ actions: actions ]
-				)
-			)
-		}
-		
 		UcdApplicationImport ucdApplicationImport
 		
 		// Get the application export text.
@@ -118,16 +86,33 @@ class UcdExportApplication extends UcAdfAction {
 			throw new UcAdfInvalidValueException(response)
 		}
 
-		// Write the exported application to a file.
+		// The export object to return.
+		UcdExport ucdExport = new UcdExport(ucdApplicationImport)
+		
+		// Optionally write the export files.
 		if (fileName) {
+			// Initialize the export directory.
+			File exportFile = new File(fileName)
+			exportFile.getParentFile()?.mkdirs()
+			
+			// Write the supplemental actions file.
+			String actionsFileName = fileName.replaceAll(/\..*?$/, "") + ".actions.json"
+			File actionsFile = new File(actionsFileName)
+
+			logVerbose("Saving application [$application] export actions to file [$actionsFileName].")
+			ObjectMapper mapper = new ObjectMapper()
+			actionsFile.write(
+				mapper.writer().withDefaultPrettyPrinter().writeValueAsString(
+					[ actions: actions ]
+				)
+			)
+		
 			logVerbose("Saving application [$application] export to file [$fileName].")
 			exportFile.write(ucdApplicationImport.toJsonString())
-		}
 		
-		UcdExport ucdExport = new UcdExport(ucdApplicationImport)
-
-		// Write the keystore names and UCD version to the application properties file.		
-		if (propertiesFileName) {
+			// Write the keystore names and UCD version to the application properties file.		
+			String propertiesFileName = fileName.replaceAll(/\..*?$/, "") + ".properties"
+			
 			logVerbose("Saving application [$application] export properties to file [$propertiesFileName].")
 			actionsRunner.runAction([
 				action: UcAdfUpdatePropertiesFile.getSimpleName(),
@@ -138,6 +123,7 @@ class UcdExportApplication extends UcAdfAction {
 				]
 			])
 		}
+		
 		return ucdExport
 	}
 }

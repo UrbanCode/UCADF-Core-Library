@@ -7,9 +7,6 @@ import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucadf.loop.UcAdfWaitLoopControl
 
 class UcAdfWaitLoop extends UcAdfLoop {
-	/** The number of seconds to wait before retrying. */	
-	Integer waitIntervalSecs
-	
 	/** The maximum number of seconds to wait before failing. */
 	Integer maxWaitSecs
 	
