@@ -36,7 +36,7 @@ class UcdAddAgentPoolToTeams extends UcAdfAction {
 			String team = teamSecurity.getTeam()
 			String subtype = teamSecurity.getSubtype()
 					
-			logVerbose("Add agent pool [$pool] to team [$team]subtype [$subtype].")
+			logVerbose("Add agent pool [$pool] to team [$team] subtype [$subtype].")
 	
 			// Get the subtype ID.
 			String subtypeId = subtype
@@ -44,7 +44,7 @@ class UcdAddAgentPoolToTeams extends UcAdfAction {
 				UcdSecuritySubtype ucdSecuritySubtype = actionsRunner.runAction([
 					action: UcdGetSecuritySubtype.getSimpleName(),
 					actionInfo: false,
-					type: UcdSecurityTypeEnum.AGENTPOOL,
+					actionVerbose: false,
 					subtype: subtype
 				])
 
@@ -59,7 +59,7 @@ class UcdAddAgentPoolToTeams extends UcAdfAction {
 
 			Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(""))
 			if (response.getStatus() == 204) {
-				logVerbose("Agent pool [$pool] added to team [$team]subtype [$subtype].")
+				logVerbose("Agent pool [$pool] added to team [$team] subtype [$subtype].")
 			} else {
 				throw new UcAdfInvalidValueException(response)
 			}

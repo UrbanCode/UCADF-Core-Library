@@ -48,7 +48,7 @@ class UcdAddAgentToTeams extends UcAdfAction {
 				UcdSecuritySubtype ucdSecuritySubtype = actionsRunner.runAction([
 					action: UcdGetSecuritySubtype.getSimpleName(),
 					actionInfo: false,
-					type: UcdSecurityTypeEnum.AGENT,
+					actionVerbose: false,
 					subtype: subtype
 				])
 				
@@ -63,7 +63,7 @@ class UcdAddAgentToTeams extends UcAdfAction {
 			
 			Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(""))
 			if (response.getStatus() == 204) {
-				logVerbose("Agent [$agent] added to team [$team]subtype [$subtype].")
+				logVerbose("Agent [$agent] added to team [$team] subtype [$subtype].")
 			} else {
 	            throw new UcAdfInvalidValueException(response)
 			}

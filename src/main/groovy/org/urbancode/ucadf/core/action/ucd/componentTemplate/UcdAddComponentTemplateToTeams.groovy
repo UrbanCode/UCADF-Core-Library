@@ -42,6 +42,8 @@ class UcdAddComponentTemplateToTeams extends UcAdfAction {
 			if (subtype && UcdObject.isUUID(subtype)) {
 				UcdSecuritySubtype ucdSecuritySubtype = actionsRunner.runAction([
 					action: UcdGetSecuritySubtype.getSimpleName(),
+					actionInfo: false,
+					actionVerbose: false,
 					subtype: subtype
 				])
 				

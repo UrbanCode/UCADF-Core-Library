@@ -42,6 +42,8 @@ class UcdAddApplicationToTeams extends UcAdfAction {
 			if (subtype && UcdObject.isUUID(subtype)) {
 				UcdSecuritySubtype ucdSecuritySubtype = actionsRunner.runAction([
 					action: UcdGetSecuritySubtype.getSimpleName(),
+					actionInfo: false,
+					actionVerbose: false,
 					subtype: subtype
 				])
 				
@@ -57,7 +59,7 @@ class UcdAddApplicationToTeams extends UcAdfAction {
 			
 			Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(""))
 			if (response.getStatus() == 204) {
-				logVerbose("Application [$application] added to team [$team]subtype [$subtype].")
+				logVerbose("Application [$application] added to team [$team] subtype [$subtype].")
 			} else {
 				throw new UcAdfInvalidValueException(response)
 			}
