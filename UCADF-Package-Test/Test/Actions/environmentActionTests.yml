@@ -241,6 +241,12 @@ actions:
         values:
           - ${u:item}
     
+  # Delete redundant desired inventory versions.
+  - action: UcdDeleteRedundantDesiredInventoryVersions
+    application: "${u:coreTestApp1}"
+    environment: "${u:coreTestEnv1}"
+    component: "${u:coreTestComp1}"
+    
   # Delete desired inventory versions.
   - action: UcdDeleteDesiredInventoryVersions
     application: "${u:coreTestApp1}"

@@ -51,7 +51,10 @@ class UcdFindResources extends UcAdfAction {
 			
 			List<UcdResource> ucdTopResources = actionsRunner.runAction([
 				action: UcdGetChildResources.getSimpleName(),
-				resource: parent
+				actionInfo: false,
+				actionVerbose: false,
+				resource: parent,
+				failIfNotFound: failIfNotFound
 			])
 			
 			for (ucdTopResource in ucdTopResources) {
@@ -61,11 +64,17 @@ class UcdFindResources extends UcAdfAction {
 			// Get the parent resoure to get the full path.
 			UcdResource parentResource = actionsRunner.runAction([
 				action: UcdGetResource.getSimpleName(),
-				resource: parent
+				actionInfo: false,
+				actionVerbose: false,
+				resource: parent,
+				failIfNotFound: failIfNotFound
 			])
-			parentPath = "${parentResource.getPath()}/"
 			
-			findResources(parent, 0)
+			if (parentResource) {
+				parentPath = "${parentResource.getPath()}/"
+				
+				findResources(parent, 0)
+			}
 		}
 
 		logVerbose("Found ${ucdResources.size()} resources.")
@@ -82,6 +91,7 @@ class UcdFindResources extends UcAdfAction {
 		UcdResource ucdParentResource = actionsRunner.runAction([
 			action: UcdGetResource.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			resource: parent,
 			failIfNotFound: failIfNotFound
 		])
