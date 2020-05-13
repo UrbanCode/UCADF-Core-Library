@@ -63,6 +63,7 @@ class UcdRunGenericProcess extends UcAdfAction {
 		UcdGenericProcess ucdGenericProcess = actionsRunner.runAction([
 			action: UcdGetGenericProcess.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			process: process,
 			failIfNotFound: true
 		])
@@ -155,6 +156,7 @@ class UcdRunGenericProcess extends UcAdfAction {
 					UcdGenericProcessRequest evaluateGenericProcessRequest = actionsRunner.runAction([
 						action: UcdGetGenericProcessRequest.getSimpleName(),
 						actionInfo: false,
+						actionVerbose: false,
 						requestId: requestId
 					])
 

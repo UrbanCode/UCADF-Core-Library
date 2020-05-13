@@ -40,7 +40,8 @@ class UcdExportApplication extends UcAdfAction {
 
 		// Get the actions to set the application process required roles after the import.
 		List<UcdRole> ucdRoles = actionsRunner.runAction([
-			action: UcdGetRoles.getSimpleName()
+			action: UcdGetRoles.getSimpleName(),
+			actionInfo: false
 		])
 
 		// Convert the roles list to a ID map.
@@ -50,6 +51,7 @@ class UcdExportApplication extends UcAdfAction {
 
 		List<UcdApplicationProcess> ucdApplicationProcesses = actionsRunner.runAction([
 			action: UcdGetApplicationProcesses.getSimpleName(),
+			actionInfo: false,
 			application: application,
 			full: false
 		])
@@ -116,6 +118,7 @@ class UcdExportApplication extends UcAdfAction {
 			logVerbose("Saving application [$application] export properties to file [$propertiesFileName].")
 			actionsRunner.runAction([
 				action: UcAdfUpdatePropertiesFile.getSimpleName(),
+				actionInfo: false,
 				fileName: propertiesFileName,
 			    propertyValues: [
 					keystoreNames: ucdExport.getKeystoreNames().join(","),

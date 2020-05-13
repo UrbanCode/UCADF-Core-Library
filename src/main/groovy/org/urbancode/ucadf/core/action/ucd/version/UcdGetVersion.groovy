@@ -55,6 +55,7 @@ class UcdGetVersion extends UcAdfAction {
 				List<UcdVersion> ucdVersions = actionsRunner.runAction([
 					action: UcdGetComponentVersions.getSimpleName(),
 					actionInfo: false,
+					actionVerbose: false,
 					component: component,
 					match: /^$version$/,
 					numResults: 1,

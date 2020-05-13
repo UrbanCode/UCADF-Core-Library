@@ -47,6 +47,8 @@ class UcdCreateComponentTag extends UcAdfAction {
 		// Get the tag if it exists.
 		UcdTag ucdTag = actionsRunner.runAction([
 			action: UcdGetComponentTag.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			tag: name,
 			failIfNotFound: false
 		])
@@ -62,6 +64,8 @@ class UcdCreateComponentTag extends UcAdfAction {
 		
 			UcdComponent ucdComponent = actionsRunner.runAction([
 				action: UcdGetComponent.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				component: component,
 				failIfNotFound: true
 			])
@@ -92,6 +96,8 @@ class UcdCreateComponentTag extends UcAdfAction {
 			// Remove the tag from where it was temporarily created.
 			actionsRunner.runAction([
 				action: UcdRemoveTagsFromComponent.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				component: ucdComponent.getName(),
 				tags: [ name ]
 			])

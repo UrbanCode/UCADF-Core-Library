@@ -45,6 +45,8 @@ class UcdAddEnvironmentConditions extends UcAdfAction {
 		// Get the environment information.
 		UcdEnvironment ucdEnvironment = actionsRunner.runAction([
 			action: UcdGetEnvironment.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			application: application,
 			environment: environment,
 			withDetails: true

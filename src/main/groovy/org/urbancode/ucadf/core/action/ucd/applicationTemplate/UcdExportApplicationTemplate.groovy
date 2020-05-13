@@ -38,6 +38,7 @@ class UcdExportApplicationTemplate extends UcAdfAction {
 		if (!UcdObject.isUUID(applicationTemplate)) {
 			UcdApplicationTemplate ucdApplicationTemplate = actionsRunner.runAction([
 				action: UcdGetApplicationTemplate.getSimpleName(),
+				actionInfo: false,
 				applicationTemplate: applicationTemplate,
 				failIfNotFound: true
 			])
@@ -78,6 +79,7 @@ class UcdExportApplicationTemplate extends UcAdfAction {
 			logVerbose("Saving application template [$applicationTemplate] export properties to file [$propertiesFileName].")
 			actionsRunner.runAction([
 				action: UcAdfUpdatePropertiesFile.getSimpleName(),
+				actionInfo: false,
 				fileName: propertiesFileName,
 			    propertyValues: [
 					keystoreNames: ucdExport.getKeystoreNames().join(","),

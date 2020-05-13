@@ -39,6 +39,8 @@ class UcdDeleteUser extends UcAdfAction {
 			// Don't leave any abandoned auth tokens.
 			actionsRunner.runAction([
 				action: UcdDeleteAuthTokens.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: actionVerbose,
 				user: user
 			])
 

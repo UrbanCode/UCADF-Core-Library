@@ -38,6 +38,8 @@ class UcdExportComponentTemplate extends UcAdfAction {
 		if (!UcdObject.isUUID(componentTemplate)) {
 			UcdComponentTemplate ucdComponentTemplate = actionsRunner.runAction([
 				action: UcdGetComponentTemplate.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				componentTemplate: componentTemplate,
 				failIfNotFound: true
 			])
@@ -77,6 +79,7 @@ class UcdExportComponentTemplate extends UcAdfAction {
 			logVerbose("Saving component template [$componentTemplate] export properties to file [$propertiesFileName].")
 			actionsRunner.runAction([
 				action: UcAdfUpdatePropertiesFile.getSimpleName(),
+				actionInfo: false,
 				fileName: propertiesFileName,
 			    propertyValues: [
 					keystoreNames: ucdExport.getKeystoreNames().join(","),

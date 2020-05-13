@@ -10,6 +10,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.action.ucd.componentTemplate.UcdGetComponentTemplate
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
+import org.urbancode.ucadf.core.model.ucd.component.UcdComponentTypeEnum
 import org.urbancode.ucadf.core.model.ucd.componentTemplate.UcdComponentTemplate
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
@@ -22,31 +23,37 @@ class UcdCreateComponent extends UcAdfAction {
 	/** The component name. */
 	String name
 	
-	/** (Optional) The description. */
+	/** The component type. Default is STANDARD. */
+	UcdComponentTypeEnum componentType = UcdComponentTypeEnum.STANDARD
+
+	/** The description. Default is blank. */
 	String description = ""
-	
+
 	/** The flag that indicates if automatic imports are to be done. Default is false. */
 	Boolean importAutomatically = false
 	
-	/** The flag that indicates if VFS should be used. Default is true. */
+	/** The flag that indicates if VFS should be used for a STANDARD component type. Default is true. */
 	Boolean useVfs = true
-	
-	/** (Optional) The version type. Default is full. */
+
+	/** Ignore qualifies for a ZOS component type. Default is 0. */
+	Long ignoreQualifiers = 0
+		
+	/** The version type. Default is FULL. */
 	UcdVersionTypeEnum defaultVersionType = UcdVersionTypeEnum.FULL
 	
-	/** (Optional) The cleanup days to keep. Default is 0. */
+	/** The cleanup days to keep. Default is 0. */
 	Long cleanupDaysToKeep = 0
 	
-	/** (Optional) The cleanup cound to keep. Default is 0. */
+	/** The cleanup cound to keep. Default is 0. */
 	Long cleanupCountToKeep = 0
 	
-	/** (Optional) The component template name or ID. */
+	/** The component template name or ID. Default is blank. */
 	String template = ""
 	
-	/** (Optional) The component template version. */
+	/** The component template version. Default is blank. */
 	String templateVersion = ""
 
-	/** (Optional) The sourrce configuration plugin-specific property values. */
+	/** The sourrce configuration plugin-specific property values. Default is empty. */
 	Map<String, String> properties = [:]
 	
 	/** The flag that indicates fail if the component already exists. Default is true. */
@@ -70,6 +77,8 @@ class UcdCreateComponent extends UcAdfAction {
 		if (template && !UcdObject.isUUID(template)) {
 			UcdComponentTemplate ucdComponentTemplate = actionsRunner.runAction([
 				action: UcdGetComponentTemplate.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				componentTemplate: template
 			])
 			
@@ -77,19 +86,28 @@ class UcdCreateComponent extends UcAdfAction {
 		}
 
 		Map requestMap = [
+			componentType: componentType,
 			defaultVersionType: defaultVersionType,
 			description: description,
 			importAutomatically: importAutomatically,
 			name: name,
-			properties: properties,
-			useVfs: useVfs
+			properties: properties
 		]
 
+		// Additional values for STANDARD compnent type.
+		if (componentType == UcdComponentTypeEnum.STANDARD) {
+			requestMap.put("useVfs", useVfs)
+		}
+
+		// Additional values for ZOS component type.
+		if (componentType == UcdComponentTypeEnum.ZOS) {
+			requestMap.put("ignoreQualifiers", ignoreQualifiers)
+		}
+		
 		if (cleanupCountToKeep != 0)  { requestMap.put("cleanupCountToKeep", cleanupCountToKeep) }
 		if (cleanupDaysToKeep != 0)  { requestMap.put("cleanupDaysToKeep", cleanupDaysToKeep) }
 		if (templateId) { requestMap.put("templateId", templateId) }
 		if (templateVersion) { requestMap.put("templateVersion", templateVersion) }
-
 
 		JsonBuilder jsonBuilder = new JsonBuilder(requestMap)
 		logDebug("jsonBuilder=$jsonBuilder")

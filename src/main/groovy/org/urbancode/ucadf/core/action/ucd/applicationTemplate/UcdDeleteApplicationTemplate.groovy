@@ -44,6 +44,7 @@ class UcdDeleteApplicationTemplate extends UcAdfAction {
 			} else {
 				UcdApplicationTemplate ucdApplicationTemplate = actionsRunner.runAction([
 					action: UcdGetApplicationTemplate.getSimpleName(),
+					actionInfo: false,
 					applicationTemplate: applicationTemplate,
 					failIfNotFound: failIfNotFound
 				])

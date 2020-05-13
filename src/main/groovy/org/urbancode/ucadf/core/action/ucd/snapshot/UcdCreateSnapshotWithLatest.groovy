@@ -40,6 +40,7 @@ class UcdCreateSnapshotWithLatest extends UcAdfAction {
 		List<UcdComponent> ucdComponents = actionsRunner.runAction([
 			action: UcdGetComponentsInApplication.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			application: application
 		])
 
@@ -49,6 +50,7 @@ class UcdCreateSnapshotWithLatest extends UcAdfAction {
 			UcdVersion ucdVersion = actionsRunner.runAction([
 				action: UcdGetComponentLatestVersion.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				component: ucdComponent.getName(),
 				failIfNotFound: false
 			])
@@ -66,6 +68,8 @@ class UcdCreateSnapshotWithLatest extends UcAdfAction {
 		// Create the snapshot with the versions.
 		created = actionsRunner.runAction([
 			action: UcdCreateSnapshot.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: actionVerbose,
 			application: application,
 			name: name,
 			description: description,

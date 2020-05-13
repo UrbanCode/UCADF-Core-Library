@@ -126,6 +126,7 @@ class UcdSendMail extends UcAdfAction {
 			UcdUser ucdUser = actionsRunner.runAction([
 				action: UcdGetUser.getSimpleName(),
 				actionInfo: actionInfo,
+				actionVerbose: actionVerbose,
 				user: user,
 				failIfNotFound: false
 			])
@@ -143,7 +144,8 @@ class UcdSendMail extends UcAdfAction {
 		for (teamRole in teamRoles) {
 			List<UcdUser> ucdUsers = actionsRunner.runAction([
 				action: UcdGetTeamUsers.getSimpleName(),
-				actionInfo: actionInfo,
+				actionInfo: false,
+				actionVerbose: false,
 				team: teamRole.getTeam(),
 				role: teamRole.getRole()
 			])
@@ -179,7 +181,8 @@ class UcdSendMail extends UcAdfAction {
 		// Get the UrbanCode system configuration.
 		UcdSystemConfiguration ucdSystemConfiguration = actionsRunner.runAction([
 			action: UcdGetSystemConfiguration.getSimpleName(),
-			actionInfo: actionInfo
+			actionInfo: actionInfo,
+			actionVerbose: actionVerbose
 		])
 
 		String mailHost = ucdSystemConfiguration.getDeployMailHost()

@@ -97,6 +97,8 @@ class UcdWaitForApplicationProcessRequest extends UcAdfAction {
 				break
 			}
 
+			logVerbose("Waiting a maximum of [$remainingSecs] more seconds for process to complete. Next check in [$waitIntervalSecs] seconds.")
+			
 			Thread.sleep(waitIntervalSecs * 1000)
 		}
 				

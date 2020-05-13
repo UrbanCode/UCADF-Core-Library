@@ -105,6 +105,7 @@ class UcdCreateLdapAuthenticationRealm extends UcAdfAction {
 		for (authorizationRealm in authorizationRealms) {
 			UcdAuthorizationRealm ucdAuthorizationRealm = actionsRunner.runAction([
 				action: UcdGetAuthorizationRealm.getSimpleName(),
+				actionInfo: false,
 				realm: authorizationRealm,
 				failIfNotFound: true
 			])

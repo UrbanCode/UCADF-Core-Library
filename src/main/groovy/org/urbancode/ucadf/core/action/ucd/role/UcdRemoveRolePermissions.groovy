@@ -48,6 +48,7 @@ class UcdRemoveRolePermissions extends UcAdfAction {
 			Map<String, Map<String, String>> securityTypePermissionsMapByName = actionsRunner.runAction([
 				action: UcdGetSecurityTypePermissions.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				returnAs: UcdGetSecurityTypePermissions.ReturnAsEnum.MAPBYNAME
 			])
 			String permissionId = securityTypePermissionsMapByName[type][permission]

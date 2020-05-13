@@ -43,7 +43,8 @@ class UcdGetSecuritySubtypes extends UcAdfAction {
 			// Get the list of security types.
 			List<UcdSecurityType> ucdSecurityTypes = actionsRunner.runAction([
 				action: UcdGetSecurityTypes.getSimpleName(),
-				actionInfo: false
+				actionInfo: false,
+				actionVerbose: false
 			])
 
 			// Add all of the security subtypes to the list.				

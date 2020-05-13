@@ -23,6 +23,7 @@ class UcdDumpResourceTreeProperties extends UcAdfAction {
 		UcdResource ucdResource = actionsRunner.runAction([
 			action: UcdGetResource.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			resource: resource,
 			failIfNotFound: true
 		])

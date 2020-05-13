@@ -27,6 +27,8 @@ class UcdGetComponentTemplateProperties extends UcAdfAction {
 		
 		UcdComponentTemplate ucdComponentTemplate = actionsRunner.runAction([
 			action: UcdGetComponentTemplate.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			componentTemplate: componentTemplate,
 			failIfNotFound: true
 		])

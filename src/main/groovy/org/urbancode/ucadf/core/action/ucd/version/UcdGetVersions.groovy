@@ -40,14 +40,20 @@ class UcdGetVersions extends UcAdfAction {
 		
 		String value
 		
-		SORTTYPE(final String sortType) {
+		SORTTYPE(final String value) {
 			this.value = value
 		}
 	}	
 	
 	// Action properties.
-	/** The component name or ID. */
+	/** The component name or ID. Blank by default. */
 	String component = ""
+	
+	/** The version name or ID. Blank (all) by default. */
+	String name = ""
+	
+	/** The version name filter type. Default is eq. */
+	UcdFilterFieldTypeEnum nameFilterType = UcdFilterFieldTypeEnum.eq
 	
 	/** The name of the property that has the page control information. */
 	String pageControlPropertyName = UcAdfPageLoopControl.LOOPCONTROLPROPERTYNAME
@@ -84,13 +90,15 @@ class UcdGetVersions extends UcAdfAction {
 		// Construct the query fields.
 		List<UcdFilterField> filterFields = []
 
+		// Add a component filter.
 		if (component) {
-			// If an component ID was provided then use it. Otherwise get the component information to get the ID.
+			// If a component ID was provided then use it. Otherwise get the component information to get the ID.
 			String componentId = component
 			if (!UcdObject.isUUID(component)) {
 				UcdComponent ucdComponent = actionsRunner.runAction([
 					action: UcdGetComponent.getSimpleName(),
 					actionInfo: false,
+					actionVerbose: false,
 					component: component,
 					failIfNotFound: true
 				])
@@ -107,6 +115,19 @@ class UcdGetVersions extends UcAdfAction {
 			)
 		}
 
+		// Add a version filter.
+		if (name) {
+			// Add the version name filter field.
+			filterFields.add(
+				new UcdFilterField(
+					"name",
+					name,
+					nameFilterType
+				)
+			)
+		}
+
+		// Add an active-only filter.
 		filterFields.add(
 			new UcdFilterField(
 				"active",

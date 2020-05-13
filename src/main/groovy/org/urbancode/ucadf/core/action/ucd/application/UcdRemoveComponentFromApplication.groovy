@@ -39,6 +39,7 @@ class UcdRemoveComponentFromApplication extends UcAdfAction {
 		
 		UcdApplication ucdApplication = actionsRunner.runAction([
 			action: UcdGetApplication.getSimpleName(),
+			actionInfo: false,
 			application: application,
 			failIfNotFound: failIfNotFound
 		])

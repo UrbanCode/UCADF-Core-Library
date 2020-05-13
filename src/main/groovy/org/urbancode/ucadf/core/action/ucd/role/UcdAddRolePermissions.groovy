@@ -46,6 +46,7 @@ class UcdAddRolePermissions extends UcAdfAction {
 		UcdRole ucdRole = actionsRunner.runAction([
 			action: UcdGetRole.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			role: role
 		])
 
@@ -53,6 +54,7 @@ class UcdAddRolePermissions extends UcAdfAction {
 		Map<String, Map> securityTypePermissionsMapById = actionsRunner.runAction([
 			action: UcdGetSecurityTypePermissions.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			returnAs: UcdGetSecurityTypePermissions.ReturnAsEnum.MAPBYID
 		])
 
@@ -80,6 +82,7 @@ class UcdAddRolePermissions extends UcAdfAction {
 			Map<String, Map<String, String>> securityTypeActionsMapByName = actionsRunner.runAction([
 				action: UcdGetSecurityTypePermissions.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				returnAs: UcdGetSecurityTypePermissions.ReturnAsEnum.MAPBYNAME
 			])
 			String permissionId = securityTypeActionsMapByName[type][permission]
@@ -109,6 +112,7 @@ class UcdAddRolePermissions extends UcAdfAction {
 					// Remove the permission.
 					actionsRunner.runAction([
 						action: UcdRemoveRolePermissions.getSimpleName(),
+						actionInfo: false,
 						role: role,
 						type: type,
 						subtype: subtype,

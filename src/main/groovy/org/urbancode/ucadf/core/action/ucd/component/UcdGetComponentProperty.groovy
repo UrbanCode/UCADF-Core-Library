@@ -68,6 +68,8 @@ class UcdGetComponentProperty extends UcAdfAction {
 			// Only way found to get a single property is to get all the properties then find the matching one.
 			List<UcdProperty> ucdProperties = actionsRunner.runAction([
 				action: UcdGetComponentProperties.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				component: component
 			])
 

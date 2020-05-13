@@ -38,6 +38,8 @@ class UcdDeleteGenericProcess extends UcAdfAction {
 		if (commit) {
 			UcdGenericProcess ucdGenericProcess = actionsRunner.runAction([
 				action: UcdGetGenericProcess.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				process: process,
 				failIfNotFound: failIfNotFound
 			])

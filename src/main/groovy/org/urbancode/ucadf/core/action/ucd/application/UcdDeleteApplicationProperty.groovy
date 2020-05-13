@@ -46,6 +46,7 @@ class UcdDeleteApplicationProperty extends UcAdfAction {
 			if (!UcdObject.isUUID(application)) {
 				UcdApplication ucdApplication = actionsRunner.runAction([
 					action: UcdGetApplication.getSimpleName(),
+					actionInfo: false,
 					application: application,
 					failIfNotFound: true
 				])
@@ -55,6 +56,7 @@ class UcdDeleteApplicationProperty extends UcAdfAction {
 			// Get the propSheet so we can get the current version number from it.
 			UcdPropSheet ucdPropSheet = actionsRunner.runAction([
 				action: UcdGetApplicationPropSheet.getSimpleName(),
+				actionInfo: false,
 				application: applicationId
 			])
 	

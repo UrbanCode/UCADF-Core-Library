@@ -48,18 +48,21 @@ class UcdAddResourceInventory extends UcAdfAction {
 		UcdResource ucdResource = actionsRunner.runAction([
 			action: UcdGetResource.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			resource: resource
 		])
 		
 		UcdComponent ucdComponent = actionsRunner.runAction([
 			action: UcdGetComponent.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			component: component
 		])
 
 		UcdVersion ucdVersion = actionsRunner.runAction([
 			action: UcdGetVersion.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			component: component,
 			version: version
 		])

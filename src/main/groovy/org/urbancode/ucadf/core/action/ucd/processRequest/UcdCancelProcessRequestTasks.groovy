@@ -45,6 +45,8 @@ class UcdCancelProcessRequestTasks extends UcAdfAction {
         // Get the process tasks information.
 		UcdProcessRequestTask ucdProcessRequestTask = actionsRunner.runAction([
 			action: UcdFindProcessRequestTask.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			requestId: requestId,
 			type: type,
             taskPath: taskPath,
@@ -57,6 +59,8 @@ class UcdCancelProcessRequestTasks extends UcAdfAction {
 
 			actionsRunner.runAction([
 				action: UcdProvideTaskResponse.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				taskId: ucdProcessRequestTask.getId(),
 				passFail: UcdTaskResponseEnum.FAILED, 
 				comment: "Terminating Task", 

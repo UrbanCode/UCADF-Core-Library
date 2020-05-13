@@ -44,6 +44,8 @@ class UcdDeleteComponentTemplate extends UcAdfAction {
 			} else {
 				UcdComponentTemplate ucdComponentTemplate = actionsRunner.runAction([
 					action: UcdGetComponentTemplate.getSimpleName(),
+					actionInfo: false,
+					actionVerbose: false,
 					componentTemplate: componentTemplate,
 					failIfNotFound: failIfNotFound
 				])

@@ -27,6 +27,8 @@ class UcdGetEnvironmentSnapshot extends UcAdfAction {
 		// Get the snapshot name currently associated with an environment
 		UcdEnvironment ucdEnvironment = actionsRunner.runAction([
 			action: UcdGetEnvironment.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			application: application,
 			environment: environment,
 			withDetails: true,

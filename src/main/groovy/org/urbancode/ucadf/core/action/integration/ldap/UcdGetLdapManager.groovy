@@ -48,6 +48,7 @@ class UcdGetLdapManager extends UcAdfAction {
 			UcdAuthenticationRealm ucdAuthenticationRealm = actionsRunner.runAction([
 				action: UcdGetAuthenticationRealm.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				realm: authenticationRealm
 			])
 	
@@ -55,6 +56,7 @@ class UcdGetLdapManager extends UcAdfAction {
 			UcdAuthorizationRealm ucdAuthorizationRealm = actionsRunner.runAction([
 				action: UcdGetAuthorizationRealm.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				realm: authorizationRealm
 			])
 		

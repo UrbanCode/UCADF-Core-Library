@@ -103,6 +103,7 @@ class UcdDeleteUnusedAgents extends UcAdfAction {
 			// Delete the agent.
 			actionsRunner.runAction([
 				action: UcdDeleteAgent.getSimpleName(),
+				actionInfo: false,
 				agent: ucdAgent.getName()
 			])
 		}

@@ -67,6 +67,7 @@ class UcdDownloadVersionFiles extends UcAdfAction {
 			UcdComponent ucdComponent = actionsRunner.runAction([
 				action: UcdGetComponent.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				component: component,
 				failIfNotFound: failIfNotFound
 			])
@@ -79,6 +80,7 @@ class UcdDownloadVersionFiles extends UcAdfAction {
 					UcdVersion ucdLatestVersion = actionsRunner.runAction([
 						action: UcdGetComponentLatestVersion.getSimpleName(),
 						actionInfo: false,
+						actionVerbose: false,
 						component: component,
 						failIfNotFound: failIfNotFound
 					])
@@ -90,6 +92,7 @@ class UcdDownloadVersionFiles extends UcAdfAction {
 				ucdVersion = actionsRunner.runAction([
 					action: UcdGetVersion.getSimpleName(),
 					actionInfo: false,
+					actionVerbose: false,
 					component: component,
 					version: useVersion,
 					failIfNotFound: failIfNotFound
@@ -137,6 +140,8 @@ class UcdDownloadVersionFiles extends UcAdfAction {
 				if (extractDirName) {
 					actionsRunner.runAction([
 						action: UcAdfExtractFile.getSimpleName(),
+						actionInfo: false,
+						actionVerbose: actionVerbose,
 						fileName: artifactsFile.getAbsolutePath(),
 						extractDirName: extractDirName,
 						skipIfExtractDirExists: skipIfExtractDirExists,

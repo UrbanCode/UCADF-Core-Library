@@ -167,6 +167,7 @@ class UcdRunApplicationProcess extends UcAdfAction {
 				ucdApplicationProcessRequestStatus = actionsRunner.runAction([
 					action: UcdWaitForApplicationProcessRequest.getSimpleName(),
 					actionInfo: false,
+					actionVerbose: actionVerbose,
 					requestId: requestId,
 					waitIntervalSecs: waitIntervalSecs,
 					maxWaitSecs: maxWaitSecs,

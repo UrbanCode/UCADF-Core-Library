@@ -86,6 +86,8 @@ class UcdImportComponentTemplate extends UcAdfAction {
 		// Determine whether to do an upgrade or an import action.
 		UcdComponentTemplate ucdComponentTemplate = actionsRunner.runAction([
 			action: UcdGetComponentTemplate.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			componentTemplate: componentTemplate,
 			failIfNotFound: false
 		])

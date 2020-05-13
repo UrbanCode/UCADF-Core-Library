@@ -35,6 +35,7 @@ class UcdSnapshotHasStatuses extends UcAdfAction {
 		List<String> currentStatuses = actionsRunner.runAction([
 			action: UcdGetSnapshotStatuses.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			application: application,
 			snapshot: snapshot,
 			returnAs: UcdGetSnapshotStatuses.ReturnAsEnum.NAMES

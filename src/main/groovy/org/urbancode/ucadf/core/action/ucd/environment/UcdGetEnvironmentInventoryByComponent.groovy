@@ -35,6 +35,8 @@ class UcdGetEnvironmentInventoryByComponent extends UcAdfAction {
 		// Get the environment information in order to get the environment ID.		
 		UcdEnvironment ucdEnvironment = actionsRunner.runAction([
 			action: UcdGetEnvironment.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			application: application,
 			environment: environment,
 			failIfNotFound: true

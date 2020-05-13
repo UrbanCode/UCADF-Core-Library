@@ -89,6 +89,7 @@ class UcdImportApplication extends UcAdfAction {
 		// Validate the application upgrade options.
 		UcdApplication ucdApplication = actionsRunner.runAction([
 			action: UcdGetApplication.getSimpleName(),
+			actionInfo: false,
 			application: application,
 			failIfNotFound: false
 		])
@@ -132,6 +133,7 @@ class UcdImportApplication extends UcAdfAction {
 
 				UcdComponentTemplate ucdComponentTemplate = actionsRunner.runAction([
 					action: UcdGetComponentTemplate.getSimpleName(),
+					actionInfo: false,
 					componentTemplate: componentTemplate,
 					failIfNotFound: true
 				])
@@ -200,6 +202,7 @@ class UcdImportApplication extends UcAdfAction {
 			for (UcdComponentImport savedComponent in savedComponents) {
 				actionsRunner.runAction([
 					action: UcdAddComponentToApplication.getSimpleName(),
+					actionInfo: false,
 					application: application,
 					component: savedComponent.getName()
 				])

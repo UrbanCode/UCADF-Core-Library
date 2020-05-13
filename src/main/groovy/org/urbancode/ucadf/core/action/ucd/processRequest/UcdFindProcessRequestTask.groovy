@@ -54,6 +54,7 @@ class UcdFindProcessRequestTask extends UcAdfAction {
 		UcdApplicationProcessRequest ucdApplicationProcessRequest = actionsRunner.runAction([
 			action: UcdGetApplicationProcessRequest.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			requestId: requestId,
 			failIfNotFound: failIfNotFound
 		])
@@ -112,6 +113,7 @@ class UcdFindProcessRequestTask extends UcAdfAction {
 					ucdProcessRequestTrace = actionsRunner.runAction([
 						action: UcdGetComponentProcessRequest.getSimpleName(),
 						actionInfo: false,
+						actionVerbose: false,
 						requestId: ucdProcessRequestTrace.getComponentProcessRequestId()
 					])
 	            }

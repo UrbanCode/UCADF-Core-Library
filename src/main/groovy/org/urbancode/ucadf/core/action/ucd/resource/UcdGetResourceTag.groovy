@@ -8,6 +8,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
+import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.tag.UcdTag
 
 class UcdGetResourceTag extends UcAdfAction {
@@ -31,8 +32,14 @@ class UcdGetResourceTag extends UcAdfAction {
 		
 		logVerbose("Getting resource tag [$tag].")
 	
-		WebTarget target = ucdSession.getUcdWebTarget().path("/rest/tag/type/Resource/name/{tag}")
+		WebTarget target
+		if (UcdObject.isUUID(tag)) {
+			target = ucdSession.getUcdWebTarget().path("/rest/tag/{tagId}")
+				.resolveTemplate("tagId", tag)
+		} else {
+			target = ucdSession.getUcdWebTarget().path("/rest/tag/type/Resource/name/{tag}")
 			.resolveTemplate("tag", tag)
+		}
 		logDebug("target=$target")
 		
 		Response response = target.request().get()

@@ -10,11 +10,13 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.action.ucd.applicationTemplate.UcdGetApplicationTemplate
 import org.urbancode.ucadf.core.action.ucd.component.UcdGetComponent
+import org.urbancode.ucadf.core.action.ucd.security.UcdGetSecurityTeamMappings
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.applicationTemplate.UcdApplicationTemplate
 import org.urbancode.ucadf.core.model.ucd.component.UcdComponent
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
+import org.urbancode.ucadf.core.model.ucd.team.UcdTeamSecurity
 
 import groovy.json.JsonBuilder
 
@@ -38,6 +40,9 @@ class UcdCreateApplicationFromTemplate extends UcAdfAction {
 	/** The list of component names or IDs. */
 	List<String> components = []
 		
+	/** The list of teams/subtypes to add. */
+	List<UcdTeamSecurity> teams = []
+
 	/** The flag that indicates fail if the application already exists. Default is true. */
 	Boolean failIfExists = true
 	
@@ -53,9 +58,20 @@ class UcdCreateApplicationFromTemplate extends UcAdfAction {
 		
 		logVerbose("Creating application [$name] from template [$applicationTemplate].")
 
+		// If teams were specified then derive the team mappings.
+		List<Map<String, String>> teamMappings = []
+		if (teams.size() > 0) {
+			teamMappings = actionsRunner.runAction([
+				action: UcdGetSecurityTeamMappings.getSimpleName(),
+				actionInfo: false,
+				teams: teams
+			])
+		}
+		
 		// Get the application template information.
 		UcdApplicationTemplate ucdApplicationTemplate = actionsRunner.runAction([
 			action: UcdGetApplicationTemplate.getSimpleName(),
+			actionInfo: false,
 			applicationTemplate: applicationTemplate,
 			failIfNotFound: true
 		])
@@ -67,6 +83,7 @@ class UcdCreateApplicationFromTemplate extends UcAdfAction {
 			if (!UcdObject.isUUID(component)) {
 				UcdComponent ucdComponent = actionsRunner.runAction([
 					action: UcdGetComponent.getSimpleName(),
+					actionInfo: false,
 					component: component,
 					failIfNotFound: true
 				])
@@ -81,7 +98,7 @@ class UcdCreateApplicationFromTemplate extends UcAdfAction {
 			description: description,
 			enforceCompleteSnapshots: enforceCompleteSnapshots,
 			existingComponentIds: componentIds,
-			teamMappings: [],
+			teamMappings: teamMappings,
 			templateId: ucdApplicationTemplate.getId(),
 			templateProperties: [],
 			templateVersion: templateVersion

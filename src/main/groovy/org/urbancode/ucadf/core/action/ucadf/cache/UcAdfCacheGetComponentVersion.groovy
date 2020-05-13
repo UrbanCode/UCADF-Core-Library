@@ -39,6 +39,7 @@ class UcAdfCacheGetComponentVersion extends UcAdfAction {
 		// Download the cache component version artifacts file.
 		Boolean downloaded = actionsRunner.runAction([
 			action: UcdDownloadVersionFiles.getSimpleName(),
+			actionInfo: false,
 			component: component,
 			version: version,
 			fileName: artifactsFile.getPath(),

@@ -34,6 +34,7 @@ class UcdAddApplicationProcessRequestLinks extends UcAdfAction {
 		// Add the link properties to the application process request.		
 		actionsRunner.runAction([
 			action: UcdSetApplicationProcessRequestProperties.getSimpleName(),
+			actionInfo: false,
 			requestId: requestId,
 			properties: ucdProperties
 		])

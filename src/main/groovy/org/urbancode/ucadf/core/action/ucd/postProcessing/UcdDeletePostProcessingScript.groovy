@@ -45,6 +45,8 @@ class UcdDeletePostProcessingScript extends UcAdfAction {
 			} else {
 				UcdPostProcessingScript ucdPostProcessingScript = actionsRunner.runAction([
 					action: UcdGetPostProcessingScript.getSimpleName(),
+					actionInfo: false,
+					actionVerbose: false,
 					script: script,
 					failIfNotFound: failIfNotFound
 				])

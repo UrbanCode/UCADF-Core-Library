@@ -8,6 +8,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
+import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.tag.UcdTag
 
 class UcdGetAgentTag extends UcAdfAction {
@@ -28,9 +29,16 @@ class UcdGetAgentTag extends UcAdfAction {
 
 		UcdTag ucdTag
 		
-		WebTarget target = ucdSession.getUcdWebTarget().path("/rest/tag/type/Agent/name/{tag}")
-			.resolveTemplate("tag", tag)
-			
+		WebTarget target
+		if (UcdObject.isUUID(tag)) {
+			target = ucdSession.getUcdWebTarget().path("/rest/tag/{tagId}")
+				.resolveTemplate("tagId", tag)
+		} else {
+			target = ucdSession.getUcdWebTarget().path("/rest/tag/type/Agent/name/{tag}")
+				.resolveTemplate("tag", tag)
+		}	
+		logDebug("target=$target")
+		
 		Response response = target.request().get()
 		if (response.getStatus() == 200) {
 			ucdTag = response.readEntity(UcdTag.class)

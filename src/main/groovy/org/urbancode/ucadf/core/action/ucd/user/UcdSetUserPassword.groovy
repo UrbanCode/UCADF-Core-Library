@@ -40,6 +40,8 @@ class UcdSetUserPassword extends UcAdfAction {
 		if (!UcdObject.isUUID(user)) {
 			UcdUser ucdUser = actionsRunner.runAction([
 				action: UcdGetUser.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				user: user,
 				failIfNotFound: true
 			])

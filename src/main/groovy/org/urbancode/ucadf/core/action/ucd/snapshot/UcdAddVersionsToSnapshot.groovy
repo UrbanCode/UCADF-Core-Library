@@ -10,9 +10,6 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
-import org.urbancode.ucadf.core.model.ucd.snapshot.UcdSnapshot
-import org.urbancode.ucadf.core.model.ucd.version.UcdVersion
-import groovy.util.logging.Slf4j;
 
 class UcdAddVersionsToSnapshot extends UcAdfAction {
 	// Action properties.
@@ -22,8 +19,8 @@ class UcdAddVersionsToSnapshot extends UcAdfAction {
 	/** The snapshot name or ID. */
 	String snapshot
 	
-	/** The list of versions. */
-	List<UcdVersion> versions
+	/** The list of version maps, e.g. [ { "comp1" : "version1"}, {"comp2" : "version2" } ] */
+	List<Map<String, String>> versions = []
 
 	/**
 	 * Runs the action.	
@@ -35,23 +32,22 @@ class UcdAddVersionsToSnapshot extends UcAdfAction {
 
 		logVerbose("Adding versions to application [$application] snapshot [$snapshot].")
 
-		for (ucdVersion in versions) {
-			String component = ucdVersion.getComponent()
-			String version = ucdVersion.getName()
-			
-			logVerbose("Add component [$component] version [$version] to application [$application] snapshot [$snapshot]")
-			WebTarget target = ucdSession.getUcdWebTarget().path("/cli/snapshot/addVersionToSnapshot")
-				.queryParam("snapshot", snapshot)
-				.queryParam("application", application)
-				.queryParam("version", version)
-				.queryParam("component", component)
-			logDebug("target=$target")
-			
-			Response response = target.request(MediaType.WILDCARD).accept(MediaType.APPLICATION_JSON).put(Entity.text(""))
-			if (response.getStatus() == 204) {
-				logVerbose("Component [$component] version [$version] added to snapshot [$snapshot].")
-			} else {
-				throw new UcAdfInvalidValueException(response)
+		for (versionItem in versions) {
+			versionItem.each { component, version ->
+				logVerbose("Add component [$component] version [$version] to application [$application] snapshot [$snapshot]")
+				WebTarget target = ucdSession.getUcdWebTarget().path("/cli/snapshot/addVersionToSnapshot")
+					.queryParam("snapshot", snapshot)
+					.queryParam("application", application)
+					.queryParam("version", version)
+					.queryParam("component", component)
+				logDebug("target=$target")
+				
+				Response response = target.request(MediaType.WILDCARD).accept(MediaType.APPLICATION_JSON).put(Entity.text(""))
+				if (response.getStatus() == 204) {
+					logVerbose("Component [$component] version [$version] added to snapshot [$snapshot].")
+				} else {
+					throw new UcAdfInvalidValueException(response)
+				}
 			}
 		}
 	}

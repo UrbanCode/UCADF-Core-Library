@@ -30,7 +30,10 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 
 	/** (Optional) The name of a group to synchronize. */
 	String group = ""
-	
+
+	/** (Optional) The regular expression used to exclude groups. */
+	String groupExcludeRegex = ""
+		
 	/** (Optional) The regular expression used to match team names. */
 	String teamRegex = ""
 
@@ -51,6 +54,8 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 		// Initialize the LDAP manager.
 		ldapManager = actionsRunner.runAction([
 			action: UcdGetLdapManager.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			authenticationRealm: authenticationRealm,
 			authorizationRealm: authorizationRealm,
 			connectionPassword: connectionPassword.toString()
@@ -61,6 +66,7 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 			UcdGroup ucdGroup = actionsRunner.runAction([
 				action: UcdGetGroup.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				group: group,
 				failIfNotFound: true
 			])
@@ -77,9 +83,11 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 		logVerbose("Synchronizing all UrbanCode group members. teamRegex [$teamRegex].")
 
 		// Get the names of the groups associated with UrbanCode team roles.
-		Set ucdTeamGroupNames = new TreeSet()
+		Set<String> ucdTeamGroupNames = new TreeSet()
 		List<UcdTeam> ucdTeams = actionsRunner.runAction([
-			action: UcdGetTeams.getSimpleName()
+			action: UcdGetTeams.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false
 		])
 
 		for (UcdTeam ucdTeamResult in ucdTeams) {
@@ -89,6 +97,8 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 			
 			UcdTeam ucdTeam = actionsRunner.runAction([
 				action: UcdGetTeam.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				team: ucdTeamResult.getId(),
 				failIfNotFound: true
 			])
@@ -103,13 +113,15 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 
 		// Process each of the group names.
 		for (groupName in ucdTeamGroupNames) {
-			if (groupName ==~ /^P_.*/) {
-				logVerbose("Skipping synchronizing group [$groupName] that has a P_ prefix and that can be large.")
+			if (groupExcludeRegex && groupName.matches(groupExcludeRegex)) {
+				logVerbose("Skipping synchronizing group [$groupName] that has a matches [$groupExcludeRegex].")
 				continue
 			}
 		
 			UcdGroup ucdGroup = actionsRunner.runAction([
 				action: UcdGetGroup.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				group: groupName,
 				failIfNotFound: true
 			])
@@ -143,6 +155,7 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 			List<UcdUser> ucdGroupMembers = actionsRunner.runAction([
 				action: UcdGetGroupMembers.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				group: ucdGroup.getId()
 			])
 
@@ -160,6 +173,7 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 						UcdUser ucdUser = actionsRunner.runAction([
 							action: UcdGetUser.getSimpleName(),
 							actionInfo: false,
+							actionVerbose: false,
 							user: ldapUserName,
 							failIfNotFound: false
 						])
@@ -171,6 +185,7 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 							} else {
 								actionsRunner.runAction([
 									action: UcdImportLdapUsers.getSimpleName(),
+									actionInfo: false,
 									authenticationRealm: authenticationRealm,
 									authorizationRealm: authorizationRealm,
 									connectionPassword: connectionPassword,
@@ -180,6 +195,7 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 								ucdUser = actionsRunner.runAction([
 									action: UcdGetUser.getSimpleName(),
 									actionInfo: false,
+									actionVerbose: false,
 									user: ldapUserName,
 									failIfNotFound: false
 								])
@@ -190,6 +206,7 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 						if (ucdUser) {
 							actionsRunner.runAction([
 								action: UcdAddGroupMember.getSimpleName(),
+								actionInfo: false,
 								group: ucdGroup.getId(),
 								user: ucdUser.getId()
 							])
@@ -203,6 +220,7 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 						UcdUser ucdUser = actionsRunner.runAction([
 							action: UcdGetUser.getSimpleName(),
 							actionInfo: false,
+							actionVerbose: false,
 							user: ucdUserMap[ ucdUserName ],
 							failIfNotFound: false
 						])
@@ -210,6 +228,7 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 						if (ucdUser) {
 							actionsRunner.runAction([
 								action: UcdRemoveGroupMember.getSimpleName(),
+								actionInfo: false,
 								group: ucdGroup.getId(),
 								user: ucdUser.getId()
 							])

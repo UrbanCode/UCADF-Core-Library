@@ -69,6 +69,8 @@ class UcdGetEnvironmentProperty extends UcAdfAction {
 			// Only way found to get a single property is to get all the properties then find the matching one.
 			List<UcdProperty> ucdProperties = actionsRunner.runAction([
 				action: UcdGetEnvironmentProperties.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				application: application,
 				environment: environment
 			])

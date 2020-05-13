@@ -48,6 +48,8 @@ class UcdAddLdapGroups extends UcAdfAction {
 		// Initialize the LDAP manager.
 		ldapManager = actionsRunner.runAction([
 			action: UcdGetLdapManager.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			authenticationRealm: authenticationRealm,
 			authorizationRealm: authorizationRealm,
 			connectionPassword: connectionPassword.toString()
@@ -65,6 +67,7 @@ class UcdAddLdapGroups extends UcAdfAction {
 			UcdGroup ucdGroup = actionsRunner.runAction([
 				action: UcdGetGroup.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				group: groupName,
 				failIfNotFound: false
 			])
@@ -90,6 +93,7 @@ class UcdAddLdapGroups extends UcAdfAction {
 							// Attempt to import the user.
 							actionsRunner.runAction([
 								action: UcdImportLdapUsers.getSimpleName(),
+								actionInfo: false,
 								authenticationRealm: authenticationRealm,
 								authorizationRealm: authorizationRealm,
 								connectionPassword: connectionPassword,
@@ -99,6 +103,8 @@ class UcdAddLdapGroups extends UcAdfAction {
 							// User import worked so quit.
 							UcdUser ucdUser = actionsRunner.runAction([
 								action: UcdGetUser.getSimpleName(),
+								actionInfo: false,
+								actionVerbose: false,
 								user: userId,
 								failIfNotFound: false
 							])
@@ -116,6 +122,7 @@ class UcdAddLdapGroups extends UcAdfAction {
 					ucdGroup = actionsRunner.runAction([
 						action: UcdGetGroup.getSimpleName(),
 						actionInfo: false,
+						actionVerbose: false,
 						group: groupName,
 						failIfNotFound: true
 					])
@@ -123,6 +130,7 @@ class UcdAddLdapGroups extends UcAdfAction {
 					// Synchronize the group's members.
 					actionsRunner.runAction([
 						action: UcdSyncLdapGroupMembers.getSimpleName(),
+						actionInfo: false,
 						authenticationRealm: authenticationRealm,
 						authorizationRealm: authorizationRealm,
 						connectionPassword: connectionPassword,

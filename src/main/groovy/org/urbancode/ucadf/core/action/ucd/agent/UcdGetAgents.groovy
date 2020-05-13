@@ -39,6 +39,7 @@ class UcdGetAgents extends UcAdfAction {
 			// Validate the agent tag exists and get the tag ID.
 			UcdTag tag = actionsRunner.runAction([
 				action: UcdGetAgentTag.getSimpleName(),
+				actionInfo: false,
 				tag: tag,
 				failIfNotFound: true
 			])

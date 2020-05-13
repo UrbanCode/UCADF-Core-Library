@@ -54,7 +54,9 @@ class UcdWriteSecurityRolesPermissions extends UcAdfAction {
 
 		// Get the list of roles.
 		ucdRoles = actionsRunner.runAction([
-			action: UcdGetRoles.getSimpleName()
+			action: UcdGetRoles.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false
 		])
 
 		// Convert the roles list to a name map.
@@ -104,7 +106,9 @@ class UcdWriteSecurityRolesPermissions extends UcAdfAction {
 		
 		// Get the list of the security subtypes.
 		List<UcdSecuritySubtype> ucdSecuritySubtypes = actionsRunner.runAction([
-			action: UcdGetSecuritySubtypes.getSimpleName()
+			action: UcdGetSecuritySubtypes.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false
 		])
 
 		// Get a map of security subtypes that have a matching name.
@@ -145,16 +149,22 @@ class UcdWriteSecurityRolesPermissions extends UcAdfAction {
 		for (role in ucdRolesMap.keySet()) {
 			UcdRole ucdRole = actionsRunner.runAction([
 				action: UcdGetRole.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				role: role
 			])
 
 			Map<String, Map> securityTypePermissionsMapById = actionsRunner.runAction([
 				action: UcdGetSecurityTypePermissions.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				returnAs: UcdGetSecurityTypePermissions.ReturnAsEnum.MAPBYID
 			])
 
 			Map<String, Map> securityTypePermissionsMapByName = actionsRunner.runAction([
 				action: UcdGetSecurityTypePermissions.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				returnAs: UcdGetSecurityTypePermissions.ReturnAsEnum.MAPBYNAME
 			])
 

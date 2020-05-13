@@ -67,6 +67,7 @@ class UcdGetNextSnapshotVersionNumber extends UcAdfAction {
 			nextSnapshotVersionNumber = actionsRunner.runAction([
 				action: UcAdfGetNextVersionNumber.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: actionVerbose,
 				versionPattern: versionPattern,
 				versions: versions
 			])

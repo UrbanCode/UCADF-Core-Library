@@ -41,7 +41,9 @@ class UcdGetGenericProcess extends UcAdfAction {
 		} else {
 			// No API found to get a single template by name so have to get the map of all templates then select the one from it
 			List<UcdGenericProcess> ucdGenericProcesss = actionsRunner.runAction([
-				action: UcdGetGenericProcesses.getSimpleName()
+				action: UcdGetGenericProcesses.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 			])
 	
 			UcdGenericProcess ucdFindGenericProcess = ucdGenericProcesss.find {

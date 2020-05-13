@@ -18,13 +18,13 @@ import org.urbancode.ucadf.core.model.ucd.resource.UcdResourceTree
 import groovy.json.JsonBuilder
 
 class UcdFindResources extends UcAdfAction {
-	/** The resource parent path or ID. Example: parent="/" and depth=1 will get top-level resources */
+	/** The resource parent path or ID. Example: parent="/" and depth=1 will get top-level resources. Example: parent=/foo/bar and depth=3 will get /foo/bar/dog. */
 	String parent
 
 	/** The filter fields. */	
 	List<UcdFilterField> filterFields = []
 	
-	/** The number of levels beneath the parent. */
+	/** The number of levels deep in the resource path. Default is 0 (any depth). */
 	Integer depth = 0
 	
 	/** The flag that indicates fail if the parent resource is not found. Default is true. */
@@ -45,9 +45,9 @@ class UcdFindResources extends UcAdfAction {
 		logVerbose("Finding resources in [$parent] resource tree.")
 		
 		// Process top-level resource differently.		
-		if ("".equals(parent) || "/".equals(parent)) {
+		if ("".equals(parent) || UcdResource.PATHDELIMITER.equals(parent)) {
 			// Default the parent path to the root.
-			parentPath = "/"
+			parentPath = UcdResource.PATHDELIMITER
 			
 			List<UcdResource> ucdTopResources = actionsRunner.runAction([
 				action: UcdGetChildResources.getSimpleName(),
@@ -58,7 +58,7 @@ class UcdFindResources extends UcAdfAction {
 			])
 			
 			for (ucdTopResource in ucdTopResources) {
-				findResources(ucdTopResource.getPath(), 1)
+				findResources(ucdTopResource.getPath())
 			}
 		} else {
 			// Get the parent resoure to get the full path.
@@ -73,7 +73,7 @@ class UcdFindResources extends UcAdfAction {
 			if (parentResource) {
 				parentPath = "${parentResource.getPath()}/"
 				
-				findResources(parent, 0)
+				findResources(parent)
 			}
 		}
 
@@ -83,10 +83,7 @@ class UcdFindResources extends UcAdfAction {
 	}
 
 	// Find the resources for the specified parent.	
-	public findResources(
-		final String parent,
-		final Integer startDepth) {
-		
+	public findResources(final String parent) {
 		// Get the parent resource to get the resource ID to use for the find.			
 		UcdResource ucdParentResource = actionsRunner.runAction([
 			action: UcdGetResource.getSimpleName(),
@@ -132,21 +129,15 @@ class UcdFindResources extends UcAdfAction {
 			}
 			
 			for (ucdChildResourceTree in ucdResourceTree.getRecords()) {
-				processResourceTree(
-					ucdChildResourceTree,
-					startDepth
-				)
+				processResourceTree(ucdChildResourceTree)
 			}
 		}
 	}
 		
 	// Recursive method to traverse child resources in a resource tree collection.	
-	private processResourceTree(
-		final UcdResourceTree ucdResourceTree,
-		final Integer currentDepth) {
-
+	private processResourceTree(final UcdResourceTree ucdResourceTree) {
 		// Add the resource tree entry.
-		if (depth == 0 || depth == currentDepth) {
+		if (depth == 0 || depth == ucdResourceTree.getPath().split('/').size() - 1) {
 			ucdResources.add(ucdResourceTree)
 		}
 		
@@ -154,10 +145,7 @@ class UcdFindResources extends UcAdfAction {
 		for (childUcdResource in ucdResourceTree.getChildren()) {
 			// The UCD find resource will also return resources that are prefixed with the same path as that being searched. These must be filtered out.
 			if ("${childUcdResource.getPath()}/".startsWith(parentPath) || parentPath.startsWith("${childUcdResource.getPath()}/")) {
-				processResourceTree(
-					childUcdResource,
-					new Integer(currentDepth +  1)
-				)
+				processResourceTree(childUcdResource)
 			}
 		}
 	}

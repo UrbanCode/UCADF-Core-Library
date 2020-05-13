@@ -39,7 +39,8 @@ class UcdGetNotificationScheme extends UcAdfAction {
 			// No API found to get a single notification scheme by name so have to get the list of all notification schemes then select the one from it.
 			List<UcdNotificationScheme> ucdNotificationSchemes = actionsRunner.runAction([
 				action: UcdGetNotificationSchemes.getSimpleName(),
-				actionInfo: false
+				actionInfo: false,
+				actionVerbose: false
 			])
 	
 			UcdNotificationScheme ucdFindNotificationScheme = ucdNotificationSchemes.find {

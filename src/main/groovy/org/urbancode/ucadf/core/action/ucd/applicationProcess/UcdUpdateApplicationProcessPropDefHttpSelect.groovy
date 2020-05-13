@@ -9,14 +9,13 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.applicationProcess.UcdApplicationProcess
-import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucadf.UcAdfSecureString
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
+import org.urbancode.ucadf.core.model.ucd.applicationProcess.UcdApplicationProcess
 import org.urbancode.ucadf.core.model.ucd.property.UcdPropDefHttpSelect
 
 import groovy.json.JsonBuilder
 
-// TODO: Need to determine updating application process property definitions should be done differently, i.e. with just a single UcdUpdateApplicationPropcessPropDef action instead of specific for type.
 class UcdUpdateApplicationProcessPropDefHttpSelect extends UcAdfAction {
 	// Action properties.
 	/** The application name or ID. */

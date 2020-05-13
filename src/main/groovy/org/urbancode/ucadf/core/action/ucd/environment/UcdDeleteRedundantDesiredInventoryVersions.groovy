@@ -40,6 +40,8 @@ class UcdDeleteRedundantDesiredInventoryVersions extends UcAdfAction {
 		if (!UcdObject.isUUID(environment)) {
 			UcdEnvironment ucdEnvironment = actionsRunner.runAction([
 				action: UcdGetEnvironment.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				application: application,
 				environment: environment,
 				failIfNotFound: true
@@ -53,6 +55,8 @@ class UcdDeleteRedundantDesiredInventoryVersions extends UcAdfAction {
 		if (!UcdObject.isUUID(component)) {
 			UcdComponent ucdComponent = actionsRunner.runAction([
 				action: UcdGetComponent.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				component: component,
 				failIfNotFound: true
 			])

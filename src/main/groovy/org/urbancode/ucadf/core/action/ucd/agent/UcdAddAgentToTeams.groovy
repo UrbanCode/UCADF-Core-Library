@@ -80,6 +80,7 @@ class UcdAddAgentToTeams extends UcAdfAction {
 		// Get the agent information.
 		UcdAgent ucdAgent = actionsRunner.runAction([
 			action: UcdGetAgent.getSimpleName(),
+			actionInfo: false,
 			agent: agent,
 			failIfNotFound: true
 		])

@@ -48,6 +48,7 @@ class UcdCreateComponentResource extends UcAdfAction {
 		UcdComponent ucdComponent = actionsRunner.runAction([
 			action: UcdGetComponent.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			component: component
 		])
 		

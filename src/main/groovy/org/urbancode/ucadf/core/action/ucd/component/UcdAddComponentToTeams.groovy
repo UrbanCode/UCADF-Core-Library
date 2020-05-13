@@ -93,6 +93,8 @@ class UcdAddComponentToTeams extends UcAdfAction {
 		// Get the component information.		
 		UcdComponent ucdComponent = actionsRunner.runAction([
 			action: UcdGetComponent.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			component: component,
 			failIfNotFound: true
 		])

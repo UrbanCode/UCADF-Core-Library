@@ -34,6 +34,8 @@ class UcdAddTagsToComponent extends UcAdfAction {
 			// Validate the component tag exists so that it's not automatically created.
 			UcdTag ucdTag = actionsRunner.runAction([
 				action: UcdGetComponentTag.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				tag: tag
 			])
 	

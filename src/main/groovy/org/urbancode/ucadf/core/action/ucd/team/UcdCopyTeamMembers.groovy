@@ -34,6 +34,7 @@ class UcdCopyTeamMembers extends UcAdfAction {
 		UcdTeam ucdFromTeamInfo = actionsRunner.runAction([
 			action: UcdGetTeam.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			team: fromTeam,
 			failIfNotFound: true
 		])
@@ -41,6 +42,7 @@ class UcdCopyTeamMembers extends UcAdfAction {
 		UcdTeam ucdToTeamInfo = actionsRunner.runAction([
 			action: UcdGetTeam.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			team: toTeam,
 			failIfNotFound: true
 		])
@@ -64,6 +66,7 @@ class UcdCopyTeamMembers extends UcAdfAction {
 		actionsRunner.runAction([
 			action: UcdChangeTeamMembers.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: actionVerbose,
 			addUsers: addUsers,
 			addGroups: addGroups,
 			teamRoles: [

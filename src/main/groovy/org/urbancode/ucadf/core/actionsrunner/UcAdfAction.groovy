@@ -43,6 +43,16 @@ abstract class UcAdfAction extends UcdObject {
 	 * Evaluate as a Groovy code snippet to determine if the action should be run.
 	 */
 	String when = ""
+
+	/**
+	 * Catch exception match value. If an action throws an exception and the exception message matches this value then ignore it.
+	 */
+	String catchExceptionMatch = ""
+	
+	/**
+	 * Assert exception match value. If this is specified then the action must throw a matching an execption with a matching message.
+	 */
+	String assertExceptionMatch = ""
 	
 	/**
 	 * The variable name in which the action return value should be stored.

@@ -16,11 +16,14 @@ import org.urbancode.ucadf.core.model.ucd.status.UcdStatus
 class UcdGetSnapshotStatuses extends UcAdfAction {
 	/** The type of collection to return. */
 	enum ReturnAsEnum {
-		/** Return as a list of UcdSnapshot objects. */
+		/** Return as a list of UcdStatus objects. */
 		OBJECTS,
 		
-		/** Return as a list of snapshot names. */
-		NAMES
+		/** Return as a list of snapshot status names. */
+		NAMES,
+		
+		/** Return as a map of UcdStatus objects. */
+		MAPBYNAME
 	}
 
 	// Action properties.
@@ -52,6 +55,7 @@ class UcdGetSnapshotStatuses extends UcAdfAction {
 			UcdSnapshot ucdSnapshot = actionsRunner.runAction([
 				action: UcdGetSnapshot.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				application: application,
 				snapshot: snapshot,
 				failIfNotFound: true
@@ -70,18 +74,24 @@ class UcdGetSnapshotStatuses extends UcAdfAction {
 			throw new UcAdfInvalidValueException(response)
 		}
 
-		Object returnList
+		Object snapshotStatuses
 		
 		if (ReturnAsEnum.OBJECTS.equals(returnAs)) {
-			returnList = ucdStatuses
+			snapshotStatuses = ucdStatuses
+		} else if (ReturnAsEnum.MAPBYNAME.equals(returnAs)){
+			Map<String, UcdStatus> statusMap = [:]
+			for (ucdStatus in ucdStatuses) {
+				statusMap.put(ucdStatus.getName(), ucdStatus)
+			}
+			snapshotStatuses = statusMap
 		} else {
 			List<String> namesList = []
 			ucdStatuses.each {
 				namesList.add(it.getName())
 			}
-			returnList = namesList
+			snapshotStatuses = namesList
 		}
 
-		return returnList
+		return snapshotStatuses
 	}
 }
