@@ -18,8 +18,8 @@ import groovy.json.JsonBuilder
 
 class UcdUpdateApplicationProcessPropDefHttpMultiSelect extends UcAdfAction {
 	// Action properties.
-	/** The application name or ID. */
-	String application
+	/** The application name or ID. If not specified then process must be an ID. */
+	String application = ""
 	
 	/** The process name or ID. */
 	String process
@@ -77,7 +77,7 @@ class UcdUpdateApplicationProcessPropDefHttpMultiSelect extends UcAdfAction {
 			]
 		)
 		
-		logVerbose("Set application [$application] process [$process] property definition [$name].")
+		logVerbose("Set application [$application] process [$process] HTTP multi-select property definition [$name].")
 
 		// Get the application process full information.		
 		UcdApplicationProcess ucdApplicationProcess = actionsRunner.runAction([

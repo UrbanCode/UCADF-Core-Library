@@ -13,13 +13,16 @@ import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 
 class UcdGetApplicationProcess extends UcAdfAction {
 	// Action properties.
-	/** The application name or ID. */
-	String application
+	/** The application name or ID. If not specified then process must be an ID. */
+	String application = ""
 	
 	/** The process name or ID. */
 	String process
-	
+
+	/** The version of the process. Default is -1. */	
 	Long version = -1
+	
+	/** The flag that indicates to return the full information about the process. */
 	Boolean full = true
 	
 	/** The flag that indicates fail if the application process is not found. Default is true. */
@@ -32,7 +35,7 @@ class UcdGetApplicationProcess extends UcAdfAction {
 	@Override
 	public UcdApplicationProcess run() {
 		// Validate the action properties.
-		validatePropsExist()
+		validatePropsExistExclude([ 'application' ])
 
 		logVerbose("Getting application [$application] process [$process].")
 	

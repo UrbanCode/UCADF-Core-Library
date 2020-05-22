@@ -42,7 +42,6 @@ class UcdDeleteResource extends UcAdfAction {
 					
 				Response response = target.request(MediaType.APPLICATION_JSON).delete()
 				if (response.getStatus() == 204) {
-					logVerbose("Resource deleted.")
 					break
 				} else {
 					String responseStr = response.readEntity(String.class)

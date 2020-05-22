@@ -77,7 +77,7 @@ class UcdUpdateApplicationProcessPropDefHttpSelect extends UcAdfAction {
 			]
 		)
 		
-		logVerbose("Set application [$application] process [$process] property definition [$name].")
+		logVerbose("Set application [$application] process [$process] HTTP select property definition [$name].")
 
 		// Get the application process full information.		
 		UcdApplicationProcess ucdApplicationProcess = actionsRunner.runAction([

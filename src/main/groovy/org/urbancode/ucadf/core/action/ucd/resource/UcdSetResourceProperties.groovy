@@ -83,9 +83,7 @@ class UcdSetResourceProperties extends UcAdfAction {
 			response = target.request().put(Entity.text(""))
 		}
 		
-		if (response.getStatus() == 200) {
-			logVerbose("Property [${ucdProperty.getName()}] set.")
-		} else {
+		if (response.getStatus() != 200) {
 			throw new UcAdfInvalidValueException(response)
 		}
 	}

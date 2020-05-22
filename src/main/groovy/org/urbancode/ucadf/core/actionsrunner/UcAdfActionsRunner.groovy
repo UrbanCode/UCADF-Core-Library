@@ -851,7 +851,8 @@ class UcAdfActionsRunner {
 	
 					// Replace the nested property variable with the property value.				
 					String regex = '\\$\\{' + (uValue == 'u?' ? 'u\\?:' : 'u:') + propName + '\\}'
-					returnText = returnText.replaceAll(regex, propertyValueText)
+
+					returnText = returnText.replaceAll(regex, Matcher.quoteReplacement(propertyValueText))
 					
 					// Indicate to keep processing.
 					replaceNested = true

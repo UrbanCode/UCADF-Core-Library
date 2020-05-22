@@ -64,7 +64,6 @@ class UcdCreateResource extends UcAdfAction {
 		
 		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
 		if (response.getStatus() == 200) {
-			logVerbose("Resource [$name] created.")
 			created = true
 		} else {
 			String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
