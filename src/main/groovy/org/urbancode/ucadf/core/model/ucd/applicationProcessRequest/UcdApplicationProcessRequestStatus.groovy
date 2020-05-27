@@ -29,4 +29,12 @@ class UcdApplicationProcessRequestStatus extends UcdObject {
 	// Constructors.	
 	UcdApplicationProcessRequestStatus() {
 	}
+	
+	/**
+	 * @param ucdUrl The UCD instance URL.
+	 * @return The application process request URL.
+	 */
+	public URL getApplicationProcessRequestUrl(final URL ucdUrl) {
+		return UcdApplicationProcessRequest.getApplicationProcessRequestUrl(ucdUrl, requestId)
+	}
 }

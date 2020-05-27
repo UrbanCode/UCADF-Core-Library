@@ -22,6 +22,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import groovy.transform.TypeChecked
 import groovy.util.logging.Slf4j
 
+/**
+ * @author QOP4
+ *
+ */
+/**
+ * @author QOP4
+ *
+ */
 @Slf4j
 @TypeChecked
 class UcdSession {
@@ -121,7 +129,21 @@ class UcdSession {
 	public void setUcdUrl(final String ucdUrl) {
 		this.ucdUrl = ucdUrl
 	}
-
+	
+	/**
+	 * Get the UCD URL with the instance name replaced with an alias. Default to using the instance URL and optionally, replace the host name portion of the URL with the alias.
+	 * @param alias The alias name to used to replace the instance name segment.
+	 * @return URL The URL with the instance name segment replaced with the alias.
+	 */
+	public URL getUcdUrlForAlias(final String alias) {
+		String derivedUrlStr = ucdUrl.toString()
+		if (alias) {
+			derivedUrlStr = derivedUrlStr.replaceAll(/^(http[s]?:\/\/)(.*?)(\..*)/, '$1' + alias + '$3')
+		}
+		
+		return new URL(derivedUrlStr)
+	}
+	
 	public String getUcdInstanceName() {
 		return new URL(ucdUrl).getHost().split(/\./)[0]
 	}

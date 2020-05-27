@@ -32,8 +32,8 @@ class UcdAddResourceInventory extends UcAdfAction {
 	/** The version name or ID. */	
 	String version
 	
-	/** The inventory status name or ID. */
-	String status
+	/** (Optional) The inventory status name or ID. Default is Active. */
+	String status = "Active"
 	
 	/**
 	 * Runs the action.	
