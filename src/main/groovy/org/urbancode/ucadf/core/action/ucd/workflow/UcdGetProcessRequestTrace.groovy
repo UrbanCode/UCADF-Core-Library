@@ -144,6 +144,7 @@ class UcdGetProcessRequestTrace extends UcAdfAction {
 				UcdComponentProcessRequest ucdComponentProcessRequest = actionsRunner.runAction([
 					action: UcdGetComponentProcessRequest.getSimpleName(),
 					actionInfo: false,
+					actionVerbose: false,
 					requestId: trace.getComponentProcessRequestId()
 				])
 	

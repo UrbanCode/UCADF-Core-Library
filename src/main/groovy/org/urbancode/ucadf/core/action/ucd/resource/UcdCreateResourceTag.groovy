@@ -42,6 +42,7 @@ class UcdCreateResourceTag extends UcAdfAction {
 		UcdTag ucdTag = actionsRunner.runAction([
 			action: UcdGetResourceTag.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			actionVerbose: actionVerbose,
 			tag: name,
 			failIfNotFound: false
@@ -59,6 +60,7 @@ class UcdCreateResourceTag extends UcAdfAction {
 			UcdResource ucdResource = actionsRunner.runAction([
 				action: UcdGetResource.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				resource: resource,
 				failIfNotFound: true
 			])

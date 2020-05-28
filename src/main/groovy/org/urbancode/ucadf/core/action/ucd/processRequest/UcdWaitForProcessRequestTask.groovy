@@ -64,6 +64,7 @@ class UcdWaitForProcessRequestTask extends UcAdfAction {
 			UcdApplicationProcessRequest ucdApplicationProcessRequest = actionsRunner.runAction([
 				action: UcdGetApplicationProcessRequest.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				requestId: requestId,
 				failIfNotFound: failIfNotFound
 			])
@@ -72,6 +73,7 @@ class UcdWaitForProcessRequestTask extends UcAdfAction {
 			ucdProcessRequestTask = actionsRunner.runAction([
 				action: UcdFindProcessRequestTask.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				requestId: requestId,
 				type: type,
 				taskPath: taskPath,

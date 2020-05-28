@@ -44,6 +44,7 @@ class UcdDeleteEnvironment extends UcAdfAction {
 		UcdEnvironment ucdEnvironment = actionsRunner.runAction([
 			action: UcdGetEnvironment.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			application: application,
 			environment: environment,
 			failIfNotFound: failIfNotFound

@@ -32,7 +32,7 @@ class UcdGetComponentTemplate extends UcAdfAction {
 
 		UcdComponentTemplate ucdComponentTemplate
 		
-		// If an component template ID was provided then use it. Otherwise get the component template information to get the ID.
+		// If a component template ID was provided then use it. Otherwise get the component template information to get the ID.
 		String componentTemplateId
 		if (UcdObject.isUUID(componentTemplate)) {
 			componentTemplateId = componentTemplate
@@ -40,7 +40,8 @@ class UcdGetComponentTemplate extends UcAdfAction {
 			// No API found to get a single template by name so have to get the list of all templates then select the one from it.
 			List<UcdComponentTemplate> ucdComponentTemplates = actionsRunner.runAction([
 				action: UcdGetComponentTemplates.getSimpleName(),
-				actionInfo: false
+				actionInfo: false,
+				actionVerbose: false
 			])
 	
 			UcdComponentTemplate ucdFindComponentTemplate = ucdComponentTemplates.find {

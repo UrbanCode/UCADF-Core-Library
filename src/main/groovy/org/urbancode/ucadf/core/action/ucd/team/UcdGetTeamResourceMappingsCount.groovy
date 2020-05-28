@@ -38,7 +38,9 @@ class UcdGetTeamResourceMappingsCount extends UcAdfAction {
 		if (types.size() == 0) {
 			// Get the list of security types.
 			List<UcdSecurityType> ucdSecurityTypes = actionsRunner.runAction([
-				action: UcdGetSecurityTypes.getSimpleName()
+				action: UcdGetSecurityTypes.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false
 			])
 			
 			for (ucdSecurityType in ucdSecurityTypes) {
@@ -48,6 +50,8 @@ class UcdGetTeamResourceMappingsCount extends UcAdfAction {
 
 		UcdTeam ucdTeam = actionsRunner.runAction([
 			action: UcdGetTeam.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			team: team,
 			failIfNotFound: failIfNotFound
 		])
@@ -60,6 +64,8 @@ class UcdGetTeamResourceMappingsCount extends UcAdfAction {
 
 				List<UcdObject> teamResourceMappings = actionsRunner.runAction([
 					action: UcdGetTeamResourceMappings.getSimpleName(),
+					actionInfo: false,
+					actionVerbose: false,
 					team: ucdTeam.getId(),
 					type: type
 				])

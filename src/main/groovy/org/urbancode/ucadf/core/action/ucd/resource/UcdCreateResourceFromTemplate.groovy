@@ -49,6 +49,7 @@ class UcdCreateResourceFromTemplate extends UcAdfAction {
 		UcdResource ucdParentResource = actionsRunner.runAction([
 			action: UcdGetResource.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			resource: parent,
 			failIfNotFound: true
 		])

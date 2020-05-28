@@ -49,7 +49,9 @@ class UcdGetPostProcessingScript extends UcAdfAction {
 		} else {
 			// Only way found to get a post-processing script by name is to get the list then find the matching one.
 			List<UcdPostProcessingScript> ucdPostProcessingScripts = actionsRunner.runAction([
-				action: UcdGetPostProcessingScripts.getSimpleName()
+				action: UcdGetPostProcessingScripts.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false
 			])
 
 			ucdPostProcessingScript = ucdPostProcessingScripts.find {

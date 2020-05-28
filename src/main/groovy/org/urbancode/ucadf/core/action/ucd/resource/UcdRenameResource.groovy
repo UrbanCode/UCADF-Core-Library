@@ -37,6 +37,7 @@ class UcdRenameResource extends UcAdfAction {
 			UcdResource ucdToResource = actionsRunner.runAction([
 				action: UcdGetResource.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				resource: resource,
 				failIfNotFound: true
 			])

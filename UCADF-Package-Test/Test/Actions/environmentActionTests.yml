@@ -241,6 +241,31 @@ actions:
         values:
           - ${u:item}
     
+  # Get latest desired inventory without grouping.
+  - action: UcdGetEnvironmentLatestDesiredInventory
+    application: "${u:coreTestApp1}"
+    environment: "${u:coreTestEnv1}"
+  - action: UcAdfItemsLoop
+    items: ${u:actionReturn}
+    actions:
+      - action: UcAdfComment
+        comment: "Environment inventory by component %s."
+        values:
+          - ${u:item}
+    
+  # Get latest desired inventory with grouping.
+  - action: UcdGetEnvironmentLatestDesiredInventory
+    application: "${u:coreTestApp1}"
+    environment: "${u:coreTestEnv1}"
+    groupVersions: true
+  - action: UcAdfItemsLoop
+    items: ${u:actionReturn}
+    actions:
+      - action: UcAdfComment
+        comment: "Environment inventory by component %s."
+        values:
+          - ${u:item}
+    
   # Delete redundant desired inventory versions.
   - action: UcdDeleteRedundantDesiredInventoryVersions
     application: "${u:coreTestApp1}"

@@ -44,6 +44,8 @@ class UcdRemoveEnvironmentBaseResources extends UcAdfAction {
 		if (matchPath) {
 			List<UcdResource> ucdResources = actionsRunner.runAction([
 				action: UcdGetEnvironmentBaseResources.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				application: application,
 				environment: environment
 			])

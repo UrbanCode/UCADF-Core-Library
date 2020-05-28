@@ -40,6 +40,8 @@ class UcdAddEnvironmentToTeams extends UcAdfAction {
 
 		UcdEnvironment ucdEnvironment = actionsRunner.runAction([
 			action: UcdGetEnvironment.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			application: application,
 			environment: environment,
 			failIfNotFound: failIfNotFound
@@ -94,6 +96,8 @@ class UcdAddEnvironmentToTeams extends UcAdfAction {
 		// Get the environment information.		
 		UcdEnvironment derivedEnvironment = actionsRunner.runAction([
 			action: UcdGetEnvironment.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			application: application,
 			environment: environment,
 			withDetails: true

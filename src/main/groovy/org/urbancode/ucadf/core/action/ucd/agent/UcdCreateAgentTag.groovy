@@ -43,6 +43,7 @@ class UcdCreateAgentTag extends UcAdfAction {
 		// Get the tag if it exists.
 		UcdTag ucdTag = actionsRunner.runAction([
 			action: UcdGetAgentTag.getSimpleName(),
+			actionInfo: false,
 			tag: name,
 			failIfNotFound: false
 		])
@@ -58,7 +59,8 @@ class UcdCreateAgentTag extends UcAdfAction {
 		
 			// The only way to create a new tag is by adding it to an agent temporarily.
 			List<UcdAgent> ucdAgents = actionsRunner.runAction([
-				action: UcdGetAgents.getSimpleName()
+				action: UcdGetAgents.getSimpleName(),
+				actionInfo: false
 			])
 	
 			if (ucdAgents.size() < 1) {
@@ -93,6 +95,7 @@ class UcdCreateAgentTag extends UcAdfAction {
 			// Remove the tag from where it was temporarily created.
 			actionsRunner.runAction([
 				action: UcdRemoveTagsFromAgent.getSimpleName(),
+				actionInfo: false,
 				agent: ucdAgent.getName(),
 				tags: [ name ]
 			])

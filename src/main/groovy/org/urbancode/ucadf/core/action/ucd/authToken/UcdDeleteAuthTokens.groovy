@@ -35,6 +35,7 @@ class UcdDeleteAuthTokens extends UcAdfAction {
 		for (ucdAuthToken in ucdAuthTokens) {
 			actionsRunner.runAction([
 				action: UcdDeleteAuthToken.getSimpleName(),
+				actionInfo: false,
 				authToken: ucdAuthToken.getId(),
 				commit: commit
 			])

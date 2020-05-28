@@ -37,6 +37,8 @@ class UcdGetEnvironmentTemplates extends UcAdfAction {
 		} else {
 			UcdApplicationTemplate ucdApplicationTemplate = actionsRunner.runAction([
 				action: UcdGetApplicationTemplate.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				applicationTemplate: applicationTemplate,
 				actionInfo: false
 			])

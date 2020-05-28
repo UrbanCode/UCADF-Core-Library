@@ -41,6 +41,7 @@ class UcdIsUserTeamMember extends UcAdfAction {
 		ucdTeam = actionsRunner.runAction([
 			action: UcdGetTeam.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			team: team,
 			failIfNotFound: true
 		])
@@ -58,6 +59,7 @@ class UcdIsUserTeamMember extends UcAdfAction {
 				List<UcdUser> ucdUsers = actionsRunner.runAction([
 					action: UcdGetGroupMembers.getSimpleName(),
 					actionInfo: false,
+					actionVerbose: false,
 					group: roleMapping.getGroup().getName()
 				])
 

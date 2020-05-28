@@ -62,6 +62,7 @@ class UcdImportApplicationTemplate extends UcAdfAction {
 		// Determine whether to do an upgrade or an import action.
 		UcdApplicationTemplate ucdApplicationTemplate = actionsRunner.runAction([
 			action: UcdGetApplicationTemplate.getSimpleName(),
+			actionInfo: false,
 			applicationTemplate: applicationTemplate,
 			failIfNotFound: false
 		])

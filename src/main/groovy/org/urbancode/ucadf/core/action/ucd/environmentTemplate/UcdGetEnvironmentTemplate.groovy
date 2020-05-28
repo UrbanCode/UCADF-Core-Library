@@ -42,6 +42,8 @@ class UcdGetEnvironmentTemplate extends UcAdfAction {
 			// No API found to get a single template by name so have to get the list of all templates then select the one from it.
 			List<UcdEnvironmentTemplate> ucdEnvironmentTemplates = actionsRunner.runAction([
 				action: UcdGetEnvironmentTemplates.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				applicationTemplate: applicationTemplate,
 				actionInfo: false
 			])

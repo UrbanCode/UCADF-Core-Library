@@ -38,6 +38,7 @@ class UcdGetApplicationProcesses extends UcAdfAction {
 		if (!UcdObject.isUUID(application)) {
 			UcdApplication ucdApplication = actionsRunner.runAction([
 				action: UcdGetApplication.getSimpleName(),
+				actionInfo: false,
 				application: application,
 				failIfNotFound: true
 			])

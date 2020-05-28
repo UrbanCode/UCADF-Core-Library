@@ -32,8 +32,8 @@ class UcdAddResourceInventory extends UcAdfAction {
 	/** The version name or ID. */	
 	String version
 	
-	/** The inventory status name or ID. */
-	String status
+	/** (Optional) The inventory status name or ID. Default is Active. */
+	String status = "Active"
 	
 	/**
 	 * Runs the action.	
@@ -48,18 +48,21 @@ class UcdAddResourceInventory extends UcAdfAction {
 		UcdResource ucdResource = actionsRunner.runAction([
 			action: UcdGetResource.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			resource: resource
 		])
 		
 		UcdComponent ucdComponent = actionsRunner.runAction([
 			action: UcdGetComponent.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			component: component
 		])
 
 		UcdVersion ucdVersion = actionsRunner.runAction([
 			action: UcdGetVersion.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			component: component,
 			version: version
 		])

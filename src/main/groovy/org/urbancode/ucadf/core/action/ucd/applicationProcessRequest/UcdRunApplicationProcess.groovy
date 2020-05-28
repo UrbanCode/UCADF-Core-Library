@@ -3,20 +3,21 @@
  */
 package org.urbancode.ucadf.core.action.ucd.applicationProcessRequest
 
-import java.text.SimpleDateFormat
-
 import javax.ws.rs.client.Entity
 import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
+import org.urbancode.ucadf.core.action.ucd.componentProcessRequest.UcdGetComponentProcessRequest
+import org.urbancode.ucadf.core.action.ucd.componentProcessRequest.UcdSetComponentProcessRequestProperties
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.applicationProcessRequest.UcdApplicationProcessRequestOutPropEnum
 import org.urbancode.ucadf.core.model.ucd.applicationProcessRequest.UcdApplicationProcessRequestResponseExpectEnum
 import org.urbancode.ucadf.core.model.ucd.applicationProcessRequest.UcdApplicationProcessRequestStatus
 import org.urbancode.ucadf.core.model.ucd.applicationProcessRequest.UcdApplicationProcessRequestStatusEnum
 import org.urbancode.ucadf.core.model.ucd.applicationProcessRequest.UcdApplicationProcessRequestVersion
-import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
+import org.urbancode.ucadf.core.model.ucd.componentProcessRequest.UcdComponentProcessRequest
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
 
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -67,6 +68,12 @@ class UcdRunApplicationProcess extends UcAdfAction {
 	
 	/** (Optional) The UCD instance alias that makes details links use the alias instead of the default UCD server name. */
 	String detailsLinkAlias = ""
+	
+	/** (Optional) The request ID for which to set a details link property value to appear in the plugin step. */
+	String detailsLinkRequestId = ""
+	
+	/** (Optional) The property to set for the detailsaLinkRequestId. */
+	String detailsLinkProperty = ""
 
 	/** (Optional) The expected status return values. */
 	UcdApplicationProcessRequestResponseExpectEnum expect
@@ -76,7 +83,7 @@ class UcdRunApplicationProcess extends UcAdfAction {
 	
 	/** (Optional) The file to which the status will be written. */
 	File processResultsFile
-
+	
 	/**
 	 * Runs the action.	
 	 * @return The application process request status object.
@@ -148,13 +155,11 @@ class UcdRunApplicationProcess extends UcAdfAction {
 				requestId
 			)
 			
-			// Get the process details link. Default to using the instance URL and optionally, replace the host name portion of the URL with the alias.
-			String useDetailsLinkAlias = ucdSession.getUcdUrl()
-			if (detailsLinkAlias) {
-				useDetailsLinkAlias = useDetailsLinkAlias.replaceAll(/^(http[s]?:\/\/)(.*?)(\..*)/, '$1' + detailsLinkAlias + '$3')
-			}
-
-			detailsLink = "$useDetailsLinkAlias/#applicationProcessRequest/$requestId".toString()
+			// Get the application process request details link.
+			detailsLink = ucdApplicationProcessRequestStatus.getApplicationProcessRequestUrl(
+				ucdSession.getUcdUrlForAlias(detailsLinkAlias)
+			)
+			
 			logVerbose("detailsLink=$detailsLink")
 			
 			outProps.put(
@@ -162,11 +167,36 @@ class UcdRunApplicationProcess extends UcAdfAction {
 				detailsLink
 			)
 
+			// If a details link request ID was provided then set the details link property name on that process.
+			if (detailsLinkRequestId) {
+				// Determine if the request ID is for a component process request.
+				UcdComponentProcessRequest ucdComponentProcessRequest = actionsRunner.runAction([
+					action: UcdGetComponentProcessRequest.getSimpleName(),
+					actionInfo: false,
+					actionVerbose: false,
+					requestId: detailsLinkRequestId,
+					failIfNotFound: false
+				])
+				
+				if (ucdComponentProcessRequest) {
+					actionsRunner.runAction([
+						action: UcdSetComponentProcessRequestProperties.getSimpleName(),
+						actionInfo: false,
+						actionVerbose: actionVerbose,
+						requestId: detailsLinkRequestId,
+						properties: [
+							new UcdProperty(detailsLinkProperty, detailsLink)
+						]
+					])
+				}
+			}
+			
 			// Wait for the process to complete.
 			if (waitForProcess && maxWaitSecs > 0) {
 				ucdApplicationProcessRequestStatus = actionsRunner.runAction([
 					action: UcdWaitForApplicationProcessRequest.getSimpleName(),
 					actionInfo: false,
+					actionVerbose: actionVerbose,
 					requestId: requestId,
 					waitIntervalSecs: waitIntervalSecs,
 					maxWaitSecs: maxWaitSecs,

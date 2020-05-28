@@ -38,6 +38,7 @@ class UcdMoveResource extends UcAdfAction {
 			UcdResource ucdFromResource = actionsRunner.runAction([
 				action: UcdGetResource.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				resource: resourceFrom,
 				failIfNotFound: true
 			])
@@ -49,6 +50,7 @@ class UcdMoveResource extends UcAdfAction {
 			UcdResource ucdToResource = actionsRunner.runAction([
 				action: UcdGetResource.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				resource: resourceTo,
 				failIfNotFound: true
 			])

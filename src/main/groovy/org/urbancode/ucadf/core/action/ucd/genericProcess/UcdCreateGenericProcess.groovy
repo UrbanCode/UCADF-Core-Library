@@ -10,6 +10,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.action.ucd.notificationScheme.UcdGetNotificationScheme
 import org.urbancode.ucadf.core.action.ucd.resource.UcdGetResource
+import org.urbancode.ucadf.core.action.ucd.security.UcdGetSecurityTeamMappings
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
@@ -17,6 +18,7 @@ import org.urbancode.ucadf.core.model.ucd.genericProcess.UcdGenericProcess
 import org.urbancode.ucadf.core.model.ucd.notificationScheme.UcdNotificationScheme
 import org.urbancode.ucadf.core.model.ucd.resource.UcdResource
 import org.urbancode.ucadf.core.model.ucd.system.UcdSession
+import org.urbancode.ucadf.core.model.ucd.team.UcdTeamSecurity
 
 import groovy.json.JsonBuilder
 
@@ -40,6 +42,9 @@ class UcdCreateGenericProcess extends UcAdfAction {
 	/** The notification scheme. (Optional) */	
 	String notificationScheme = ""
 	
+	/** The list of teams/subtypes to add. */
+	List<UcdTeamSecurity> teams = []
+
 	/** The flag that indicates fail if the generic process already exists. Default is true. */
 	Boolean failIfExists = true
 
@@ -60,6 +65,17 @@ class UcdCreateGenericProcess extends UcAdfAction {
 		
 		logVerbose("Creating generic process [$name].")
 
+		// If teams were specified then derive the team mappings.
+		List<Map<String, String>> teamMappings = []
+		if (teams.size() > 0) {
+			teamMappings = actionsRunner.runAction([
+				action: UcdGetSecurityTeamMappings.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
+				teams: teams
+			])
+		}
+
 		// If a single resource was specified then add it to the list.
 		if (defaultResource) {
 			defaultResources.add(defaultResource)
@@ -75,6 +91,7 @@ class UcdCreateGenericProcess extends UcAdfAction {
 					UcdResource ucdResource = actionsRunner.runAction([
 						action: UcdGetResource.getSimpleName(),
 						actionInfo: false,
+						actionVerbose: false,
 						resource: defaultResourceItem,
 						failIfNotFound: true
 					])
@@ -91,6 +108,7 @@ class UcdCreateGenericProcess extends UcAdfAction {
 				UcdNotificationScheme ucdNotificationScheme = actionsRunner.runAction([
 					action: UcdGetNotificationScheme.getSimpleName(),
 					actionInfo: false,
+					actionVerbose: false,
 					notificationScheme: notificationScheme,
 					failIfNotFound: true
 				])
@@ -106,7 +124,7 @@ class UcdCreateGenericProcess extends UcAdfAction {
 			properties: [
 				workingDir: workingDir
 			],
-			teamMappings: []
+			teamMappings: teamMappings
 		]
 
 		if (ucdSession.compareVersion(UcdSession.UCDVERSION_704) >= 0) {

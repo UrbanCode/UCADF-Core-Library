@@ -41,6 +41,7 @@ class UcAdfCacheCleanProcessTemp extends UcAdfAction {
 			// Get the component versions.
 			List<UcdVersion> ucdVersions = actionsRunner.runAction([
 				action: UcdGetComponentVersions.getSimpleName(),
+				actionInfo: false,
 				component: component,
 				failIfNotFound: false
 			])
@@ -49,6 +50,7 @@ class UcAdfCacheCleanProcessTemp extends UcAdfAction {
 				try {
 					String requestId = actionsRunner.runAction([
 						action: UcdGetVersionProperty.getSimpleName(),
+						actionInfo: false,
 						component: component,
 						version: ucdVersion.getName(),
 						property: UcAdfCachePutComponentVersion.UCDPROPNAME_PROCESSREQUESTID,
@@ -62,6 +64,7 @@ class UcAdfCacheCleanProcessTemp extends UcAdfAction {
 					} else {
 						Boolean isProcessRequestRunning = actionsRunner.runAction([
 							action: UcdIsProcessRequestRunning.getSimpleName(),
+							actionInfo: false,
 							requestId: requestId
 						])
 						
@@ -73,6 +76,7 @@ class UcAdfCacheCleanProcessTemp extends UcAdfAction {
 					if (deleteCache) {
 						actionsRunner.runAction([
 							action: UcdDeleteVersion.getSimpleName(),
+							actionInfo: false,
 							component: component,
 							version: ucdVersion.getName()
 						])
@@ -105,6 +109,7 @@ class UcAdfCacheCleanProcessTemp extends UcAdfAction {
 				// Determine if process request is running.
 				Boolean isProcessRequestRunning = actionsRunner.runAction([
 					action: UcdIsProcessRequestRunning.getSimpleName(),
+					actionInfo: false,
 					requestId: requestId
 				])
 				if (!isProcessRequestRunning) {

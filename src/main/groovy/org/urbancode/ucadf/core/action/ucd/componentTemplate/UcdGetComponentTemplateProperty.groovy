@@ -45,6 +45,8 @@ class UcdGetComponentTemplateProperty extends UcAdfAction {
 		// Get the component template information.		
 		UcdComponentTemplate ucdComponentTemplate = actionsRunner.runAction([
 			action: UcdGetComponentTemplate.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			componentTemplate: componentTemplate,
 			failIfNotFound: true
 		])

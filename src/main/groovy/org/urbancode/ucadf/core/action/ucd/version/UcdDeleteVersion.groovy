@@ -44,6 +44,8 @@ class UcdDeleteVersion extends UcAdfAction {
 		} else {
 			UcdVersion ucdVersion = actionsRunner.runAction([
 				action: UcdGetVersion.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				component: component,
 				version: version,
 				failIfNotFound: failIfNotFound

@@ -37,6 +37,7 @@ class UcdGetApplicationProocessPropDefs extends UcAdfAction {
 			// Must have a ID to get the full information.
 			UcdApplicationProcess ucdApplicationProcess = actionsRunner.runAction([
 				action: UcdGetApplicationProcess.getSimpleName(),
+				actionInfo: false,
 				application: application,
 				process: process,
 				failIfNotFound: true

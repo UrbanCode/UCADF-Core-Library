@@ -250,6 +250,9 @@ class UcAdfActionsRunner {
 		String actionName = actionMap.get(UcAdfActionPropertyEnum.ACTION.getPropertyName())
 		actionsStack.push(actionName)
 
+		UcAdfAction action
+		Exception caughtException
+		
 		// 	Try/finally used to ensure pop actions stack.	
 		try {
 			// If no value was provided for actionInfo then default it to true.
@@ -287,7 +290,6 @@ class UcAdfActionsRunner {
 			}
 	
 			// Serialize the action map into a runner action object after the property values have been replaced.
-			UcAdfAction action
 			try {
 				// Convert action using JSON deserializer.
 				action = actionsMapper.convertValue(
@@ -363,7 +365,38 @@ class UcAdfActionsRunner {
 	
 			// Action end processing.
 			action.end()
+		} catch (Exception e) {
+			// Save the action exception.
+			caughtException = e
+			setPropertyValue(
+				UcAdfActionPropertyEnum.ACTIONRETURNEXCEPTION.getPropertyName(), 
+				e.getMessage()
+			)
+			
+			// If catchExceptionMatch was specified then see if the exception message matches and if so then ignore it.
+			if (action?.getCatchExceptionMatch() && e.getMessage().matches(/${Matcher.quoteReplacement(action.getCatchExceptionMatch())}/)) {
+				println "Catch exception match [${e.getMessage()}]"
+			} else {
+				// If an exception was thrown but the message doesn't match the assertion then throw an error.
+				if (action?.getAssertExceptionMatch()) {
+					if (!e.getMessage().matches(/${Matcher.quoteReplacement(action.getAssertExceptionMatch())}/)) {
+						throw new UcAdfInvalidValueException("Exception ${e.getMessage()} does not match assertExceptionMatch ${action.getAssertExceptionMatch()}")
+					}
+					println "Assert exception match [${e.getMessage()}]"
+				} else {
+					// Throw an unexpected exception.
+					throw e
+				}
+			}
 		} finally {
+			// If an exception was not thrown and assertExceptionMatch was specified then throw an error.
+			if (!caughtException && action?.getAssertExceptionMatch()) {
+				throw new UcAdfInvalidValueException("A value for assertExceptionMatch ${action.getAssertExceptionMatch()} was specified but no action was thrown.")
+			}
+			
+			// Remove the action exception property from any previous action runs.
+			propertyValues.remove(UcAdfActionPropertyEnum.ACTIONRETURNEXCEPTION.getPropertyName())
+			
 			// Remove the action from the stack.
 			actionsStack.pop()
 		}
@@ -709,7 +742,9 @@ class UcAdfActionsRunner {
 					throw new UcAdfInvalidValueException("List index value of [$key] is not an index number.")
 				}
 			} else {
-				if ((returnObject instanceof Map && returnObject.containsKey(key)) || returnObject.hasProperty(key)) {
+				if (returnObject instanceof Map && key.equals("#")) {
+					returnObject = returnObject.size()
+				} else if ((returnObject instanceof Map && returnObject.containsKey(key)) || returnObject.hasProperty(key)) {
 					returnObject = returnObject[key]
 				} else {
 					if ('u'.equals(replaceType)) {
@@ -816,7 +851,8 @@ class UcAdfActionsRunner {
 	
 					// Replace the nested property variable with the property value.				
 					String regex = '\\$\\{' + (uValue == 'u?' ? 'u\\?:' : 'u:') + propName + '\\}'
-					returnText = returnText.replaceAll(regex, propertyValueText)
+
+					returnText = returnText.replaceAll(regex, Matcher.quoteReplacement(propertyValueText))
 					
 					// Indicate to keep processing.
 					replaceNested = true

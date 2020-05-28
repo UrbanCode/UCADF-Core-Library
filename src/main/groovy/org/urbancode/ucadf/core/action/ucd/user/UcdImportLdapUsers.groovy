@@ -42,6 +42,8 @@ class UcdImportLdapUsers extends UcAdfAction {
 		// Initialize the LDAP manager.
 		ldapManager = actionsRunner.runAction([
 			action: UcdGetLdapManager.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			authenticationRealm: authenticationRealm,
 			authorizationRealm: authorizationRealm,
 			connectionPassword: connectionPassword.toString()

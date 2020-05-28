@@ -43,7 +43,8 @@ class UcdGetTeamUsers extends UcAdfAction {
 		// Get the team information.
 		UcdTeam ucdTeam = actionsRunner.runAction([
 			action: UcdGetTeam.getSimpleName(),
-			actionInfo: actionInfo,
+			actionInfo: false,
+			actionVerbose: false,
 			team: team,
 			failIfNotFound: true
 		])
@@ -69,7 +70,8 @@ class UcdGetTeamUsers extends UcAdfAction {
             if (ucdRoleMapping.getGroup()) {
 				List<UcdUser> ucdGroupUsers = actionsRunner.runAction([
 					action: UcdGetGroupMembers.getSimpleName(),
-					actionInfo: actionInfo,
+					actionInfo: false,
+					actionVerbose: false,
 					group: ucdRoleMapping.getGroup().getName()
 				])
 

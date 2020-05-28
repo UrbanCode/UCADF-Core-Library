@@ -63,7 +63,8 @@ class UcdGetSystemProperty extends UcAdfAction {
 			// Only way found to get a single property is to get all the properties then find the matching one.
 			List<UcdProperty> ucdProperties = actionsRunner.runAction([
 				action: UcdGetSystemProperties.getSimpleName(),
-				actionInfo: false
+				actionInfo: false,
+				actionVerbose: false
 			])
 
 			returnProperty = ucdProperties.find {

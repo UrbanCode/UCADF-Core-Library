@@ -79,4 +79,25 @@ class UcdApplicationProcessRequest extends UcdObject {
 	// Constructors.	
 	UcdApplicationProcessRequest() {
 	}
+	
+	
+	/**
+	 * @param ucdUrl The UCD instance URL.
+	 * @return The application process request URL.
+	 */
+	public URL getApplicationProcessRequestUrl(final URL ucdUrl) {
+		return getApplicationProcessRequestUrl(ucdUrl, id)
+	}
+	
+	/**
+	 * @param ucdUrl The UCD instance URL.
+	 * @param requestId The application process request ID.
+	 * @return The application process request URL.
+	 */
+	public static URL getApplicationProcessRequestUrl(
+		final URL ucdUrl, 
+		final String requestId) {
+		
+		return new URL("${ucdUrl.toString()}/#applicationProcessRequest/$requestId")
+	}
 }

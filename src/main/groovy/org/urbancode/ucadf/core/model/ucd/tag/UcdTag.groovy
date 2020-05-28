@@ -3,7 +3,6 @@
  */
 package org.urbancode.ucadf.core.model.ucd.tag
 
-import org.urbancode.ucadf.core.model.ucd.general.UcdColorEnum
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
@@ -23,7 +22,7 @@ class UcdTag extends UcdObject {
 	String color
 
 	/** The object type. */
-	String objectType
+	UcdTagTypeEnum objectType
 	
 	// Constructors.	
 	UcdTag() {

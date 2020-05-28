@@ -42,6 +42,8 @@ class UcdDeleteComponentProcess extends UcAdfAction {
 		} else {
 			UcdComponentProcess ucdComponentProcess = actionsRunner.runAction([
 				action: UcdGetComponentProcess.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				component: component,
 				process: process,
 				failIfNotFound: failIfNotFound

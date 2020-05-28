@@ -31,11 +31,13 @@ class UcdGetComponentConfigTemplates extends UcAdfAction {
 		
 		logVerbose("Getting component [$component] configuration templates.")
 
-		// If an component ID was provided then use it. Otherwise get the component information to get the ID.
+		// If a component ID was provided then use it. Otherwise get the component information to get the ID.
 		String componentId = component
 		if (!UcdObject.isUUID(component)) {
 			UcdComponent ucdComponent = actionsRunner.runAction([
 				action: UcdGetComponent.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				component: component,
 				failIfNotFound: true
 			])

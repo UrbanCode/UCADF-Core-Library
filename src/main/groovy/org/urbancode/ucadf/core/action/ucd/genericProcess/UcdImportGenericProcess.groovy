@@ -71,6 +71,8 @@ class UcdImportGenericProcess extends UcAdfAction {
 		// Determine whether to do an upgrade or an import action.
 		UcdGenericProcess ucdGenericProcess = actionsRunner.runAction([
 			action: UcdGetGenericProcess.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			process: process,
 			failIfNotFound: false
 		])

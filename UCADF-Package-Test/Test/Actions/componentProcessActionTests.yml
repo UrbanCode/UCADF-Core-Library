@@ -24,7 +24,7 @@ actions:
         values:
           - ${u:item}
 
-  # Delete an component process.
+  # Delete a component process.
   - action: UcdDeleteComponentProcess
     component: "${u:coreTestCompDelete}"
     process: "${u:coreTestCompProcessDelete}"

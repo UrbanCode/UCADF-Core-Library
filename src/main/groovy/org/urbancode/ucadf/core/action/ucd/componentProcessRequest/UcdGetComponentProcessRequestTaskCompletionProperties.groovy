@@ -48,6 +48,7 @@ class UcdGetComponentProcessRequestTaskCompletionProperties extends UcAdfAction 
 		UcdComponentProcessRequest ucdComponentProcessRequest = actionsRunner.runAction([
 			action: UcdGetComponentProcessRequest.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			requestId: requestId,
 			failIfNotFound: failIfNotFound
 		])
@@ -97,6 +98,8 @@ class UcdGetComponentProcessRequestTaskCompletionProperties extends UcAdfAction 
 		// Validate the user exists.
 		UcdUser ucdUser = actionsRunner.runAction([
 			action: UcdGetUser.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			user: user,
 			failIfNotFound: false
 		])

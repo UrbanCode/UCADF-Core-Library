@@ -32,6 +32,8 @@ class UcdIsExternalLoginUser extends UcAdfAction {
 		// Get the user information.				
 		UcdUser ucdUser = actionsRunner.runAction([
 			action: UcdGetUser.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			user: user,
 			failIfNotFound: true
 		])
@@ -39,6 +41,8 @@ class UcdIsExternalLoginUser extends UcAdfAction {
 		// Get the user's authentication realm information.
 		UcdAuthenticationRealm authenticationRealm = actionsRunner.runAction([
 			action: UcdGetAuthenticationRealm.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			realm: ucdUser.getAuthenticationRealm(),
 			failIfNotFound: true
 		])

@@ -40,6 +40,7 @@ class UcdDeleteSnapshot extends UcAdfAction {
 		UcdSnapshot ucdSnapshot = actionsRunner.runAction([
 			action: UcdGetSnapshot.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			application: application,
 			snapshot: snapshot,
 			failIfNotFound: failIfNotFound

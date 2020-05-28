@@ -9,11 +9,13 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.action.ucd.notificationScheme.UcdGetNotificationScheme
+import org.urbancode.ucadf.core.action.ucd.security.UcdGetSecurityTeamMappings
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.applicationTemplate.UcdApplicationTemplateTagRequirementRequest
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.notificationScheme.UcdNotificationScheme
+import org.urbancode.ucadf.core.model.ucd.team.UcdTeamSecurity
 
 import groovy.json.JsonBuilder
 
@@ -37,6 +39,9 @@ class UcdCreateApplicationTemplate extends UcAdfAction {
 	/** The tag requirements */
 	List<UcdApplicationTemplateTagRequirementRequest> tagRequirements = []
 	
+	/** The list of teams/subtypes to add. */
+	List<UcdTeamSecurity> teams = []
+
 	/**
 	 * Runs the action.	
 	 * @return True if the application template was created.
@@ -49,7 +54,17 @@ class UcdCreateApplicationTemplate extends UcAdfAction {
 		Boolean created = false
 		
 		logVerbose("Creating application template [$name].")
-		
+
+		// If teams were specified then derive the team mappings.
+		List<Map<String, String>> teamMappings = []
+		if (teams.size() > 0) {
+			teamMappings = actionsRunner.runAction([
+				action: UcdGetSecurityTeamMappings.getSimpleName(),
+				actionInfo: false,
+				teams: teams
+			])
+		}
+
 		// If notification scheme ID was provided then use it. Otherwise, look up the ID.
 		String notificationSchemeId = notificationScheme
 		if (notificationScheme) {
@@ -70,7 +85,7 @@ class UcdCreateApplicationTemplate extends UcAdfAction {
 			notificationSchemeId: notificationSchemeId,
 			enforceCompleteSnapshots: enforceCompleteSnapshots,
 			tagRequirements: tagRequirements,
-			teamMappings: []
+			teamMappings: teamMappings
 		]
 
 		JsonBuilder jsonBuilder = new JsonBuilder(requestMap)

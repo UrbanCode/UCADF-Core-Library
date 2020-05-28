@@ -54,7 +54,8 @@ class UcdGetSecurityTypePermissions extends UcAdfAction {
 			// Get the list of security types.
 			List<UcdSecurityType> ucdSecurityTypes = actionsRunner.runAction([
 				action: UcdGetSecurityTypes.getSimpleName(),
-				actionInfo: false
+				actionInfo: false,
+				actionVerbose: false
 			])
 			
 			for (ucdSecurityType in ucdSecurityTypes) {

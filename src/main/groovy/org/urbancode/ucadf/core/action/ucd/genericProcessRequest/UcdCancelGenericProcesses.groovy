@@ -27,7 +27,8 @@ class UcdCancelGenericProcesses extends UcAdfAction {
 
 		List<UcdWorkflowProcessRequest> ucdWorkflowProcessRequests = actionsRunner.runAction([
 			action: UcdGetWorkflowActivity.getSimpleName(),
-			actionInfo: false
+			actionInfo: false,
+			actionVerbose: false
 		])
 
         for (UcdWorkflowProcessRequest ucdWorkflowProcessRequest in ucdWorkflowProcessRequests) {
@@ -42,6 +43,7 @@ class UcdCancelGenericProcesses extends UcAdfAction {
 				actionsRunner.runAction([
 					action: UcdCancelWorkflow.getSimpleName(),
 					actionInfo: false,
+					actionVerbose: false,
 					workflow: genericWorkflowRequest.getWorkflowTraceId()
 				])
 		

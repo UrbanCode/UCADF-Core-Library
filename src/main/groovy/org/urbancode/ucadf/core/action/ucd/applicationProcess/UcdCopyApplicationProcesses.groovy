@@ -44,6 +44,7 @@ class UcdCopyApplicationProcesses extends UcAdfAction {
 		logVerbose("Copying application processes from [$fromApplication] to [$toApplication]."		)
 		List<UcdApplicationProcess> fromProcesses = actionsRunner.runAction([
 			action: UcdGetApplicationProcesses.getSimpleName(),
+			actionInfo: false,
 			application: fromApplication
 		])
 
@@ -51,6 +52,7 @@ class UcdCopyApplicationProcesses extends UcAdfAction {
 			if (processes.size() == 0 || processes.contains(fromProcess.getName())) {
 				actionsRunner.runAction([
 					action: UcdCopyApplicationProcess.getSimpleName(),
+					actionInfo: false,
 					fromApplication: fromApplication,
 					fromProcess: fromProcess.getName(),
 					toApplication: toApplication, 

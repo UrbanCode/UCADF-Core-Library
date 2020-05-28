@@ -94,6 +94,8 @@ class UcdImportComponent extends UcAdfAction {
 		// Determine if creating a new component or upgrading an existing one.
 		UcdComponent ucdComponent = actionsRunner.runAction([
 			action: UcdGetComponent.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			component: component,
 			failIfNotFound: false
 		])

@@ -6,7 +6,6 @@ package org.urbancode.ucadf.core.action.ucd.application
 import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.Response
 
-import org.urbancode.ucadf.core.action.ucd.environment.UcdGetEnvironmentProperty.ReturnAsEnum
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
@@ -69,6 +68,7 @@ class UcdGetApplicationProperty extends UcAdfAction {
 			// Only way found to get a single property is to get all the properties then find the matching one.
 			List<UcdProperty> ucdProperties = actionsRunner.runAction([
 				action: UcdGetApplicationProperties.getSimpleName(),
+				actionInfo: false,
 				application: application
 			])
 

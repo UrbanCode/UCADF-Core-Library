@@ -32,11 +32,13 @@ class UcdGetComponentTemplateProcesses extends UcAdfAction {
 		
 		logVerbose("Getting component template [$componentTemplate] processes.")
 
-		// If an component template ID was provided then use it. Otherwise get the component information to get the ID.
+		// If a component template ID was provided then use it. Otherwise get the component information to get the ID.
 		String componentTemplateId = componentTemplate
 		if (!UcdObject.isUUID(componentTemplate)) {
 			UcdComponentTemplate ucdComponentTemplate = actionsRunner.runAction([
 				action: UcdGetComponentTemplate.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				componentTemplate: componentTemplate,
 				failIfNotFound: true
 			])

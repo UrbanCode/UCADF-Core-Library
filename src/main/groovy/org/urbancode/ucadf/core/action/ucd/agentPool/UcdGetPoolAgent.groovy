@@ -27,6 +27,7 @@ class UcdGetPoolAgent extends UcAdfAction {
 		// Get information about the pool.
 		UcdAgentPool agentPool = actionsRunner.runAction([
 			action: UcdGetAgentPool.getSimpleName(),
+			actionInfo: false,
 			pool: pool
 		])
 

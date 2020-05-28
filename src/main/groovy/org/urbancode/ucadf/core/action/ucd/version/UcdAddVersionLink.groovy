@@ -41,6 +41,7 @@ class UcdAddVersionLink extends UcAdfAction {
 			UcdVersion ucdVersion = actionsRunner.runAction([
 				action: UcdGetVersion.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				component: component,
 				version: version,
 				failIfNotFound: true

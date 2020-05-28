@@ -40,6 +40,8 @@ class UcdUserHasEnvironmentTeamRole extends UcAdfAction {
 		// Get the environment information.
 		UcdEnvironment ucdEnvironment = actionsRunner.runAction([
 			action: UcdGetEnvironment.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			application: application,
 			environment: environment,
 			withDetails: true
@@ -50,6 +52,8 @@ class UcdUserHasEnvironmentTeamRole extends UcAdfAction {
 		for (team in extendedSecurity.getTeams()) {
 			UcdTeam ucdTeam = actionsRunner.runAction([
 				action: UcdGetTeam.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				team: team.getTeamName(),
 				failIfNotFound: true
 			])
@@ -57,6 +61,8 @@ class UcdUserHasEnvironmentTeamRole extends UcAdfAction {
 			// Determine if the user is a member of the team role.
 			hasRole = actionsRunner.runAction([
 				action: UcdIsUserTeamMember.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				team: ucdTeam.getName(),
 				user: user,
 				role: role,

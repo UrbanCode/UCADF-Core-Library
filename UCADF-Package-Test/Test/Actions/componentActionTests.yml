@@ -107,7 +107,7 @@ actions:
     tag: "${u:componentTag}"
     failIfNotFound: true
     
-  # Add a tag to an component.  
+  # Add a tag to a component.  
   - action: UcdAddTagsToComponent
     component: "${u:coreTestComp1}"
     tags:

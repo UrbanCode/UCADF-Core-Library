@@ -12,7 +12,7 @@ import org.urbancode.ucadf.core.model.ucd.team.UcdTeam
 import org.urbancode.ucadf.core.model.ucd.team.UcdTeamSecurity
 
 class UcdGetSecurityTeamMappings extends UcAdfAction {
-	/** The extended security from the existing object. This will be used for the initial map unless removeOthers is specified. */
+	/** (Optional) The extended security from the existing object. This will be used for the initial map unless removeOthers is specified. */
 	UcdExtendedSecurity extendedSecurity
 	
 	/** The list of teams/subtypes. If not specified and removeOthers is true then all teams are removed. */
@@ -28,13 +28,13 @@ class UcdGetSecurityTeamMappings extends UcAdfAction {
 	@Override
 	public List<Map<String, String>> run() {
 		// Validate the action properties.
-		validatePropsExist()
+		validatePropsExistExclude([ 'extendedSecurity' ])
 
 		// Get the team mappings.			
 		List<Map<String, String>> teamMappings = []
 
-		// If not removing others then initialize the map with the current teams/subtypes.
-		if (extendedSecurity.getTeams() && !removeOthers) {
+		// If extended security was provided and not removing others then initialize the map with the current teams/subtypes.
+		if (extendedSecurity && extendedSecurity.getTeams() && !removeOthers) {
 			for (ucdExtendedSecurityTeam in extendedSecurity.getTeams()) {
 				String teamId = ucdExtendedSecurityTeam.getTeamId()
 				String subtypeId = ucdExtendedSecurityTeam.getSubtypeId()
@@ -60,6 +60,7 @@ class UcdGetSecurityTeamMappings extends UcAdfAction {
 				UcdTeam ucdTeam = actionsRunner.runAction([
 					action: UcdGetTeam.getSimpleName(),
 					actionInfo: false,
+					actionVerbose: false,
 					team: team,
 					failIfNotFound: true
 				])

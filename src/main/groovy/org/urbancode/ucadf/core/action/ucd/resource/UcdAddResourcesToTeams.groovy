@@ -40,6 +40,7 @@ class UcdAddResourcesToTeams extends UcAdfAction {
 			UcdResource ucdResource = actionsRunner.runAction([
 				action: UcdGetResource.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				resource: resource,
 				failIfNotFound: true
 			])
@@ -48,10 +49,13 @@ class UcdAddResourcesToTeams extends UcAdfAction {
 			List<Map<String, String>> teamMappings = actionsRunner.runAction([
 				action: UcdGetSecurityTeamMappings.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				extendedSecurity: ucdResource.getExtendedSecurity(),
 				teams: teams,
 				removeOthers: removeOthers
 			])
+
+			logVerbose("Adding resource [$resource] to team mappings $teamMappings.")
 
 			// Update the team mappings.
 			WebTarget target = ucdSession.getUcdWebTarget().path("/rest/resource/resource")

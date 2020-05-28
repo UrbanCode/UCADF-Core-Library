@@ -69,6 +69,7 @@ class UcdGetResourceProperty extends UcAdfAction {
 			List<UcdProperty> ucdProperties = actionsRunner.runAction([
 				action: UcdGetResourceProperties.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				resource: resource,
 				failIfNotFound: failIfNotFound
 			])

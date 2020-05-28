@@ -54,6 +54,8 @@ class UcdUpdateGenericProcess extends UcAdfAction {
 		// Get the generic process information.
 		UcdGenericProcess ucdGenericProcess = actionsRunner.runAction([
 			action: UcdGetGenericProcess.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			process: process,
 			failIfNotFound: true
 		])
@@ -65,6 +67,7 @@ class UcdUpdateGenericProcess extends UcAdfAction {
 				UcdResource ucdResource = actionsRunner.runAction([
 					action: UcdGetResource.getSimpleName(),
 					actionInfo: false,
+					actionVerbose: false,
 					resource: defaultResource,
 					failIfNotFound: true
 				])
@@ -79,6 +82,7 @@ class UcdUpdateGenericProcess extends UcAdfAction {
 				UcdNotificationScheme ucdNotificationScheme = actionsRunner.runAction([
 					action: UcdGetNotificationScheme.getSimpleName(),
 					actionInfo: false,
+					actionVerbose: false,
 					notificationScheme: notificationScheme,
 					failIfNotFound: true
 				])

@@ -29,6 +29,8 @@ class UcdUpdateSystemConfiguration extends UcAdfAction {
 		// Get the UrbanCode system configuration.
 		Map existingConfigMap = actionsRunner.runAction([
 			action: UcdGetSystemConfiguration.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
 			returnAs: UcdGetSystemConfiguration.ReturnAsEnum.MAP
 		])
 		

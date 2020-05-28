@@ -37,6 +37,8 @@ class UcdExportGenericProcess extends UcAdfAction {
 		if (!UcdObject.isUUID(process)) {
 			UcdGenericProcess ucdGenericProcess = actionsRunner.runAction([
 				action: UcdGetGenericProcess.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				process: process,
 				failIfNotFound: true
 			])

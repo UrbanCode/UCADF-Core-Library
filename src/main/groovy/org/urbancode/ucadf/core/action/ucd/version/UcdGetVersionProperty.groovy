@@ -49,6 +49,7 @@ class UcdGetVersionProperty extends UcAdfAction {
 		Map<String, UcdProperty> propertiesMap = actionsRunner.runAction([
 			action: UcdGetVersionProperties.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			component: component,
 			version: version,
 			failIfNotFound: failIfNotFound

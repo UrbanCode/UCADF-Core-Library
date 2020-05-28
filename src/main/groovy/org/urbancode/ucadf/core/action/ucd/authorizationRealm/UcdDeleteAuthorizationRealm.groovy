@@ -47,6 +47,7 @@ class UcdDeleteAuthorizationRealm extends UcAdfAction {
 			} else {
 				UcdAuthorizationRealm ucdAuthorizationRealm = actionsRunner.runAction([
 					action: UcdGetAuthorizationRealm.getSimpleName(),
+					actionInfo: false,
 					realm: realm,
 					failIfNotFound: failIfNotFound
 				])

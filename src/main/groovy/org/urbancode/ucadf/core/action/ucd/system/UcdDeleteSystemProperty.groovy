@@ -42,7 +42,9 @@ class UcdDeleteSystemProperty extends UcAdfAction {
 			if (property) {		
 				// Get the propSheet so we can get the current version number from it.
 				UcdPropSheet ucdPropSheet = actionsRunner.runAction([
-					action: UcdGetSystemPropSheet.getSimpleName()
+					action: UcdGetSystemPropSheet.getSimpleName(),
+					actionInfo: false,
+					actionVerbose: false
 				])
 
 				WebTarget target = ucdSession.getUcdWebTarget()

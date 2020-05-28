@@ -67,6 +67,7 @@ class UcdChangeTeamMembers extends UcAdfAction {
 			UcdTeam ucdTeam = actionsRunner.runAction([
 				action: UcdGetTeam.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				team: team
 			])
 			
@@ -153,6 +154,7 @@ class UcdChangeTeamMembers extends UcAdfAction {
 				UcdGroup ucdGroup = actionsRunner.runAction([
 					action: UcdGetGroup.getSimpleName(),
 					actionInfo: false,
+					actionVerbose: false,
 					group: groupName,
 					failIfNotFound: false
 				])
@@ -164,6 +166,7 @@ class UcdChangeTeamMembers extends UcAdfAction {
 					actionsRunner.runAction([
 						action: UcdAddLdapGroups.getSimpleName(),
 						actionInfo: false,
+						actionVerbose: actionVerbose,
 						authorizationRealm: authorizationRealm,
 						authenticationRealm: authenticationRealm,
 						connectionPassword: connectionPassword,
@@ -175,6 +178,7 @@ class UcdChangeTeamMembers extends UcAdfAction {
 				ucdGroup = actionsRunner.runAction([
 					action: UcdGetGroup.getSimpleName(),
 					actionInfo: false,
+					actionVerbose: false,
 					group: groupName,
 					failIfNotFound: false
 				])

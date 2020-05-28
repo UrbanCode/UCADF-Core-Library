@@ -39,6 +39,7 @@ class UcdAddTagsToResource extends UcAdfAction {
 			UcdTag ucdTag = actionsRunner.runAction([
 				action: UcdGetResourceTag.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				actionVerbose: actionVerbose,
 				tag: tag
 			])
@@ -60,6 +61,8 @@ class UcdAddTagsToResource extends UcAdfAction {
 			// Get the resource to get the tags.
 			UcdResource ucdResource = actionsRunner.runAction([
 				action: UcdGetResource.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				resource: resource
 			])
 
@@ -75,6 +78,8 @@ class UcdAddTagsToResource extends UcAdfAction {
 			if (removeTags.size() > 0) {
 				actionsRunner.runAction([
 					action: UcdRemoveTagsFromResource.getSimpleName(),
+					actionInfo: false,
+					actionVerbose: actionVerbose,
 					resource: resource,
 					tags: removeTags
 				])

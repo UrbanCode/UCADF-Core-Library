@@ -29,6 +29,7 @@ class UcdSyncApplicationProcesses extends UcAdfAction {
 		// Copy all application processes from one application to another.		
 		List<UcdApplicationProcess> fromProcesses = actionsRunner.runAction([
 			action: UcdCopyApplicationProcesses.getSimpleName(),
+			actionInfo: false,
 			fromApplication: fromApplication,
 			toApplication: toApplication,
 			replaceProcess: true
@@ -36,6 +37,7 @@ class UcdSyncApplicationProcesses extends UcAdfAction {
 
 		List<UcdApplicationProcess> toProcesses = actionsRunner.runAction([
 			action: UcdGetApplicationProcesses.getSimpleName(),
+			actionInfo: false,
 			application: toApplication
 		])
 
@@ -45,6 +47,7 @@ class UcdSyncApplicationProcesses extends UcAdfAction {
                 logVerbose("Deleting application process [${toProcess.getName()}] that does not exist in from application.")
 				actionsRunner.runAction([
 					action: UcdDeleteApplicationProcess.getSimpleName(),
+					actionInfo: false,
 					application: toApplication,
 					process: toProcess.getId(),
 					failIfNotFound: false

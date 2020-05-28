@@ -36,6 +36,8 @@ class UcdRemoveGroupMember extends UcAdfAction {
 		if (!UcdObject.isUUID(group)) {
 			UcdGroup ucdGroup = actionsRunner.runAction([
 				action: UcdGetGroup.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				group: group,
 				failIfNotFound: true
 			])
@@ -47,6 +49,8 @@ class UcdRemoveGroupMember extends UcAdfAction {
 		if (!UcdObject.isUUID(user)) {
 			UcdUser ucdUser = actionsRunner.runAction([
 				action: UcdGetUser.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
 				user: user,
 				failIfNotFound: true
 			])
