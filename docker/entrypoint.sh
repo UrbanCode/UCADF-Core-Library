@@ -6,7 +6,7 @@ cat /ucadf/UCADF-Store/Instances/example/instance.properties
 
 #temporary workarounds
 java -jar /opt/ucadf/udclient.jar -weburl https://ucd:8443 -username PasswordIsAuthToken -password '{"token": "'$UCD_AUTH_TOKEN'"}' createGroup -group uc_support -authorizationRealm "Internal Security"
-java -jar /opt/ucadf/udclient.jar -weburl https://ucd:8443 -username PasswordIsAuthToken -password '{"token": "'$UCD_AUTH_TOKEN'"}' createTeam -team "Public Viewer"
+java -jar /opt/ucadf/udclient.jar -weburl https://ucd:8443 -username PasswordIsAuthToken -password '{"token": "'$UCD_AUTH_TOKEN'"}' createTeam -team Public
 
 #Still need to create role manually and upload plugin
 
