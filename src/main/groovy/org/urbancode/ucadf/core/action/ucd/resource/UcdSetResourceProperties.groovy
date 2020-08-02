@@ -50,7 +50,7 @@ class UcdSetResourceProperties extends UcAdfAction {
 		WebTarget target
 		Response response
 
-		if (ucdSession.isUcdVersion(UcdSession.UCDVERSION_70)) {
+		if (ucdSession.compareVersion(UcdSession.UCDVERSION_70) >= 0) {
 			// Newer API.
 			target = ucdSession.getUcdWebTarget().path("/cli/resource/setProperty")
 			logDebug("target=$target")

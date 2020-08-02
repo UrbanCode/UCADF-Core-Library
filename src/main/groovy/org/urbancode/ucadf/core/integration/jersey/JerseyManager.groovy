@@ -12,6 +12,7 @@ import org.glassfish.jersey.client.ClientConfig
 import org.glassfish.jersey.client.HttpUrlConnectorProvider
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature
 import org.glassfish.jersey.filter.LoggingFilter
+import org.glassfish.jersey.jackson.JacksonFeature
 import org.glassfish.jersey.media.multipart.MultiPartFeature
 import org.urbancode.ucadf.core.integration.trustmanager.FakeX509TrustManager
 
@@ -69,7 +70,7 @@ class JerseyManager {
 			client.register(basicAuthFeature)
 		}
 
-		client.register(new LoggingFilter(new JerseyLogger(), true)).register(MultiPartFeature.class)
+		client.register(new LoggingFilter(new JerseyLogger(), true)).register(MultiPartFeature.class).register(JacksonFeature.class);
 
 		// This allows for non-standard request methods such as PATCH.
 		client.property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true)

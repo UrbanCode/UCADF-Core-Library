@@ -3,6 +3,7 @@
  */
 package org.urbancode.ucadf.core.model.ucd.security
 
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.agent.UcdAgent
 import org.urbancode.ucadf.core.model.ucd.agent.UcdAgentConfigurationTemplate
 import org.urbancode.ucadf.core.model.ucd.agentPool.UcdAgentPool
@@ -14,7 +15,7 @@ import org.urbancode.ucadf.core.model.ucd.component.UcdComponent
 import org.urbancode.ucadf.core.model.ucd.componentTemplate.UcdComponentTemplate
 import org.urbancode.ucadf.core.model.ucd.environment.UcdEnvironment
 import org.urbancode.ucadf.core.model.ucd.environmentTemplate.UcdEnvironmentTemplate
-import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
+import org.urbancode.ucadf.core.model.ucd.externalApproval.UcdExternalApproval
 import org.urbancode.ucadf.core.model.ucd.genericProcess.UcdGenericProcess
 import org.urbancode.ucadf.core.model.ucd.resource.UcdResource
 import org.urbancode.ucadf.core.model.ucd.resourceTemplate.UcdResourceTemplate
@@ -36,6 +37,7 @@ enum UcdSecurityTypeEnum {
 	COMPONENTTEMPLATE("Component Template", UcdComponentTemplate.class, true),
 	ENVIRONMENT("Environment", UcdEnvironment.class, true),
 	ENVIRONMENTTEMPLATE("Environment Template", UcdEnvironmentTemplate.class, true),
+	EXTERNALAPPROVAL("External Approval", UcdExternalApproval.class, true),
 	PROCESS("Process", UcdGenericProcess.class, true),
 	RESOURCE("Resource", UcdResource.class, true),
 	RESOURCETEMPLATE("Resource Template", UcdResourceTemplate.class, true),

@@ -118,7 +118,7 @@ class UcdImportGenericProcess extends UcAdfAction {
 		final String jsonStr) {
 
 		String replacedJsonStr = jsonStr
-		if (ucdSession.isUcdVersion(UcdSession.UCDVERSION_70)) {
+		if (ucdSession.compareVersion(UcdSession.UCDVERSION_70) >= 0) {
 			log.info("Replacing IBM UrbanCode plugin names with UrbanCode names.")
 			replacedJsonStr = jsonStr.replaceAll('\"pluginName\":\"IBM UrbanCode', '\"pluginName\":\"UrbanCode')
 		}

@@ -9,13 +9,14 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.action.ucd.component.UcdGetComponent
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.component.UcdComponent
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucadf.loop.UcAdfPageLoopControl
+import org.urbancode.ucadf.core.model.ucd.component.UcdComponent
 import org.urbancode.ucadf.core.model.ucd.filterField.UcdFilterField
 import org.urbancode.ucadf.core.model.ucd.filterField.UcdFilterFieldClassEnum
 import org.urbancode.ucadf.core.model.ucd.filterField.UcdFilterFieldTypeEnum
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
+import org.urbancode.ucadf.core.model.ucd.system.UcdSession
 import org.urbancode.ucadf.core.model.ucd.version.UcdVersion
 
 class UcdGetVersions extends UcAdfAction {
@@ -128,14 +129,16 @@ class UcdGetVersions extends UcAdfAction {
 		}
 
 		// Add an active-only filter.
-		filterFields.add(
-			new UcdFilterField(
-				"active",
-				"true",
-				UcdFilterFieldTypeEnum.eq,
-				UcdFilterFieldClassEnum.Boolean
+		if (ucdSession.compareVersion(UcdSession.UCDVERSION_71) < 0) {
+			filterFields.add(
+				new UcdFilterField(
+					"active",
+					"true",
+					UcdFilterFieldTypeEnum.eq,
+					UcdFilterFieldClassEnum.Boolean
+				)
 			)
-		)
+		}
 		
 		WebTarget target = UcdFilterField.addFilterFieldQueryParams(
 			ucdSession.getUcdWebTarget().path("/rest/deploy/version"),

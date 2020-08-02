@@ -40,6 +40,7 @@ class UcdSession {
     public final static String UCDVERSION_62 = /6\.2\..*/
 	public final static String UCDVERSION_70 = /7\.0\..*/
 	public final static String UCDVERSION_704 = /7\.0\.4\.*/
+	public final static String UCDVERSION_71 = /7\.1\..*/
 	
 	// Session properties.	
 	public final static String PROPUCDURL = "ucdUrl"
@@ -391,10 +392,10 @@ class UcdSession {
 			if (versionaSegments.size() < versionbSegments.size()) {
 				compareReturn = -1
 			} else if (versionaSegments.size() > versionbSegments.size()) {
-			compareReturn = 1
+				compareReturn = 1
+			}
 		}
-	}
-	
-	return compareReturn
+
+		return compareReturn
 	}
 }

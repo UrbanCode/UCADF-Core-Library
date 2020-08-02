@@ -8,9 +8,10 @@ import java.util.regex.Matcher
 
 import org.urbancode.ucadf.core.action.ucd.user.UcdGetUser
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.componentProcessRequest.UcdComponentProcessRequest
 import org.urbancode.ucadf.core.model.ucd.componentProcessRequest.UcdComponentProcessRequestTask
-import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
+import org.urbancode.ucadf.core.model.ucd.task.UcdTaskStatusEnum
 import org.urbancode.ucadf.core.model.ucd.user.UcdUser
 
 class UcdGetComponentProcessRequestTaskCompletionProperties extends UcAdfAction {
@@ -60,9 +61,10 @@ class UcdGetComponentProcessRequestTaskCompletionProperties extends UcAdfAction 
 			// Get the task custom property values.
 			outProps = task.getTaskCustomPropertyValues()
 
-			// Get the task completed information
+			// Get the task completed information.
 			completedBy = task.getCompletedBy()
 			completedOn = task.getCompletedOn()
+
             logVerbose("Completed by [$completedBy] on [$completedOn].")
 			UcdUser completedByUser = getUserInfoByDisplayName(completedBy)
 			if (!completedByUser) {
@@ -79,6 +81,7 @@ class UcdGetComponentProcessRequestTaskCompletionProperties extends UcAdfAction 
 			taskReturn.setTaskCompletedBy(completedBy)
 			taskReturn.setTaskCompletedByDisplayName(completedByDisplayName)
 			taskReturn.setTaskCompletedOn(completedOnTs)
+			taskReturn.setTaskStatus(task.getStatus())
 		} else {
 			throw new UcAdfInvalidValueException("Unable to get task information.")
 		}
@@ -112,5 +115,6 @@ class UcdGetComponentProcessRequestTaskCompletionProperties extends UcAdfAction 
 		String taskCompletedBy
 		String taskCompletedByDisplayName
 		String taskCompletedOn
+		UcdTaskStatusEnum taskStatus
 	}
 }

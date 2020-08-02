@@ -93,7 +93,7 @@ abstract class UcdPropDef extends UcdObject {
 					UcdPropDefSelect newPropDef = new UcdPropDefSelect()
 					newPropDef.setName(propDef.getName())
 					ucdPropDefs[i] = newPropDef
-				} else if (ucdSession.isUcdVersion(UcdSession.UCDVERSION_70)) {
+				} else if (ucdSession.compareVersion(UcdSession.UCDVERSION_70) >= 0) {
 					// Fix the HTTP authentication type value.
 					if (!propDef.getHttpAuthenticationType()) {
 						log.info "Fixing HTTP property definition for application [$application] process [$process] property [${propDef.getName()}] httpUrl [${propDef.getHttpUrl()}]."

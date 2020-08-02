@@ -24,6 +24,9 @@ class UcdExportApplication extends UcAdfAction {
 	// Action properties.
 	/** The application name or ID. */
 	String application
+
+	/** The environment match regular expression. Default is .* */
+	String environmentMatch = ".*"
 	
 	/** (Optional) The file name to which to write the exported application. */
 	String fileName = ""
@@ -88,6 +91,11 @@ class UcdExportApplication extends UcAdfAction {
 			throw new UcAdfInvalidValueException(response)
 		}
 
+		// Remove environments that don't match the name.
+		ucdApplicationImport.getEnvironments().removeAll {
+			!(it.getName().matches(environmentMatch))
+		}
+		
 		// The export object to return.
 		UcdExport ucdExport = new UcdExport(ucdApplicationImport)
 		
@@ -98,10 +106,9 @@ class UcdExportApplication extends UcAdfAction {
 			exportFile.getParentFile()?.mkdirs()
 			
 			// Write the supplemental actions file.
-			String actionsFileName = fileName.replaceAll(/\..*?$/, "") + ".actions.json"
-			File actionsFile = new File(actionsFileName)
+			File actionsFile = new File(exportFile.getParent(), exportFile.getName().replaceAll(/\..*?$/, "") + ".actions.json")
 
-			logVerbose("Saving application [$application] export actions to file [$actionsFileName].")
+			logVerbose("Saving application [$application] export actions to file [${actionsFile.getName()}].")
 			ObjectMapper mapper = new ObjectMapper()
 			actionsFile.write(
 				mapper.writer().withDefaultPrettyPrinter().writeValueAsString(
@@ -113,13 +120,13 @@ class UcdExportApplication extends UcAdfAction {
 			exportFile.write(ucdApplicationImport.toJsonString())
 		
 			// Write the keystore names and UCD version to the application properties file.		
-			String propertiesFileName = fileName.replaceAll(/\..*?$/, "") + ".properties"
+			File propertiesFile = new File(exportFile.getParent(), exportFile.getName().replaceAll(/\..*?$/, "") + ".properties")
 			
-			logVerbose("Saving application [$application] export properties to file [$propertiesFileName].")
+			logVerbose("Saving application [$application] export properties to file [${propertiesFile.getName()}].")
 			actionsRunner.runAction([
 				action: UcAdfUpdatePropertiesFile.getSimpleName(),
 				actionInfo: false,
-				fileName: propertiesFileName,
+				fileName: propertiesFile.getPath(),
 			    propertyValues: [
 					keystoreNames: ucdExport.getKeystoreNames().join(","),
 					ucdVersion: ucdSession.getUcdVersion()

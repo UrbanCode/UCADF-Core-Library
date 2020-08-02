@@ -14,6 +14,7 @@ import org.urbancode.ucadf.core.model.ucd.filterField.UcdFilterFieldClassEnum
 import org.urbancode.ucadf.core.model.ucd.filterField.UcdFilterFieldTypeEnum
 import org.urbancode.ucadf.core.model.ucd.resource.UcdResource
 import org.urbancode.ucadf.core.model.ucd.resource.UcdResourceTree
+import org.urbancode.ucadf.core.model.ucd.system.UcdSession
 
 import groovy.json.JsonBuilder
 
@@ -97,14 +98,16 @@ class UcdFindResources extends UcAdfAction {
 			String resource = ucdParentResource.getId()
 
 			// Construct the query fields.
-			filterFields.add(
-				new UcdFilterField(
-					"active",
-					"true",
-					UcdFilterFieldTypeEnum.eq,
-					UcdFilterFieldClassEnum.Boolean
+			if (ucdSession.compareVersion(UcdSession.UCDVERSION_71) < 0) {
+				filterFields.add(
+					new UcdFilterField(
+						"active",
+						"true",
+						UcdFilterFieldTypeEnum.eq,
+						UcdFilterFieldClassEnum.Boolean
+					)
 				)
-			)
+			}
 
 			WebTarget target = UcdFilterField.addFilterFieldQueryParams(
 				ucdSession.getUcdWebTarget().path("/rest/resource/resource/{resource}/resourcesTree").resolveTemplate("resource", resource),
@@ -119,9 +122,10 @@ class UcdFindResources extends UcAdfAction {
 			]
 			
 			JsonBuilder jsonBuilder = new JsonBuilder(requestMap)
-
+			
 			UcdResourceTree ucdResourceTree
 			Response response = target.request().post(Entity.json(jsonBuilder.toString()))
+
 			if (response.getStatus() == 200) {
 				ucdResourceTree = response.readEntity(UcdResourceTree.class)
 			} else {

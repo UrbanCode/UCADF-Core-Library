@@ -15,10 +15,11 @@ class Base64Codec {
 	public byte[] decodeFromString(final String secretVar) {
 		log.debug("decodeFromString secretVar=$secretVar")
 		
-		// The decoder class is available at runtime from the agent installation directory in securedata.jar.
+		// Class is available at runtime from the agent installation directory in securedata.jar.
+		// Also need transitive dependencies: commons-codec.jar, jettison-1.1.jar or jettison.jar.
 		Class base64CodecClass = Base64Codec.class.classLoader.loadClass("com.urbancode.air.securedata.Base64Codec")
 		log.debug("decodeFromString base64CodecClass=$base64CodecClass")
-		
+
 		// Get an instance of the class with the default constructor.
 		Object base64CodecInstance = base64CodecClass.newInstance()
 		log.debug("decodeFromString base64CodecInstance=$base64CodecInstance")
