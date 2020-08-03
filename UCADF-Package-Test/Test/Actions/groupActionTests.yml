@@ -1,0 +1,75 @@
+# ===============================================================================
+# This actions file runs group action tests.
+# ===============================================================================
+propertyFiles:
+  - fileName: "UCADF-Package-Test/Test/UcAdfCoreTestProperties.yml"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.properties"
+  - fileName: "${u:UCADF_STORE}/Instances/${u:ucAdfInstance}/instance.secure.properties"
+  
+actions:
+  #==============================================================================          
+  # Run the tests.
+  #==============================================================================
+  # Create a group.
+  - action: UcdCreateGroup
+    name: "uc_support"
+    authorizationRealm: "Internal Security"
+    failIfExists: false
+
+  # Get the group.
+  - action: UcdGetGroup
+    group: "uc_support"
+    authorizationRealm: "Internal Security"
+    actionReturnPropertyName: ucdGroup
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "Group %s"
+    values:
+      - ${u:ucdGroup}
+ 
+  # Get the list of groups.
+  - action: UcdGetGroups
+    actionReturnPropertyName: ucdGroups
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "Group count %s"
+    values:
+      - ${u:ucdGroups/#}
+ 
+  # Create a user.
+  - action: UcdCreateUser
+    name: "${u:coreTestUser1}"
+    password: "InitialPassword"
+    failIfExists: false
+        
+  # Add a group member.
+  - action: UcdAddGroupMember
+    group: "uc_support"
+    authorizationRealm: "Internal Security"
+    user: "${u:coreTestUser1}"
+    
+  # Get the group members.
+  - action: UcdGetGroupMembers
+    group: "uc_support"
+    authorizationRealm: "Internal Security"
+    actionReturnPropertyName: ucdGroupMembers
+  - action: UcAdfComment
+    actionInfo: false
+    comment: "Group Members %s"
+    values:
+      - ${u:ucdGroupMembers/#}
+    
+  # Remove a group member.
+  - action: UcdRemoveGroupMember
+    group: "uc_support"
+    authorizationRealm: "Internal Security"
+    user: "${u:coreTestUser1}"
+    
+  # Delete a user.
+  - action: UcdDeleteUser
+    user: "${u:coreTestUser1}"
+    
+  # Delete the group.
+  - action: UcdDeleteGroup
+    group: "uc_support"
+    authorizationRealm: "Internal Security"
