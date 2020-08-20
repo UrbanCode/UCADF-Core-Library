@@ -9,9 +9,8 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.environment.UcdEnvironment
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
-import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfNotFoundException
+import org.urbancode.ucadf.core.model.ucd.environment.UcdEnvironment
 import org.urbancode.ucadf.core.model.ucd.team.UcdTeamSecurity
 
 class UcdAddEnvironmentToTeams extends UcAdfAction {
@@ -63,7 +62,7 @@ class UcdAddEnvironmentToTeams extends UcAdfAction {
 			}
 		} else {
 			if (failIfNotFound) {
-				throw new UcAdfNotFoundException("Environment [$environment] not found.")
+				throw new UcAdfInvalidValueException("Environment [$environment] not found.")
 			}
 		}
 	}

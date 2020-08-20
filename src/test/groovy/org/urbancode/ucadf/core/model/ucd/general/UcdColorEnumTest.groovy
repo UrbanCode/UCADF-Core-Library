@@ -8,6 +8,10 @@ class UcdColorEnumTest {
 		String name = "RED"
 		String longName = "COLOR_RED"
 		String value = "#D9182D"
+
+		println "${(name as UcdColorEnum).getValue()}"
+
+		println UcdColorEnum.newEnum(name).getValue()
 		
 		assert(UcdColorEnum.RED.name().equals(name))
 		

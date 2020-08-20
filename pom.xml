@@ -14,8 +14,8 @@
 	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<junit-version>5.0.0</junit-version>
-		<jersey-version>2.25.1</jersey-version>
+		<junit-version>5.5.2</junit-version>
+		<jersey-version>2.29.1</jersey-version>
 		<jackson-databind-version>2.10.4</jackson-databind-version>
 	</properties>
 
@@ -247,7 +247,71 @@
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy-all</artifactId>
-			<version>2.4.8</version>
+			<version>3.0.5</version>
+			<type>pom</type>
+			<!-- Exclusions due to vulnerability issues or not needed. -->
+			<exclusions>
+				<exclusion>
+					<groupId>org.apiguardian</groupId>
+					<artifactId>apiguardian-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.codehaus.groovy</groupId>
+					<artifactId>groovy-astbuilder</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.codehaus.groovy</groupId>
+					<artifactId>groovy-cli-picocli</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.codehaus.groovy</groupId>
+					<artifactId>groovy-console</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.codehaus.groovy</groupId>
+					<artifactId>groovy-docgenerator</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.codehaus.groovy</groupId>
+					<artifactId>groovy-groovydoc</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.codehaus.groovy</groupId>
+					<artifactId>groovy-jmx</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.codehaus.groovy</groupId>
+					<artifactId>groovy-macro</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.codehaus.groovy</groupId>
+					<artifactId>groovy-servlet</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.codehaus.groovy</groupId>
+					<artifactId>groovy-swing</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.codehaus.groovy</groupId>
+					<artifactId>groovy-sql</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.codehaus.groovy</groupId>
+					<artifactId>groovy-test-junit5</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.codehaus.groovy</groupId>
+					<artifactId>groovy-testng</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- groovy-ant was excluded above from groovy-all but we need it at compile time. -->
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-ant</artifactId>
+			<version>3.0.5</version>
+			<scope>provided</scope>
 		</dependency>
 		
 		<!-- Junit 5 dependencies. -->
@@ -330,6 +394,17 @@
 			<artifactId>jersey-media-multipart</artifactId>
 			<version>${jersey-version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.inject</groupId>
+			<artifactId>jersey-hk2</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.activation</groupId>
+			<artifactId>jakarta.activation-api</artifactId>
+			<version>1.2.2</version>
+			<scope>provided</scope>
+		</dependency>
 		
 		<!-- Jackson dependencies. Had to force later dependency versions to avoid vulnerable versions. -->
 	    <dependency>
@@ -361,6 +436,10 @@
 					<groupId>commons-logging</groupId>
 					<artifactId>commons-logging</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>javax.activation</groupId>
+					<artifactId>activation</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
@@ -374,6 +453,12 @@
 		    <groupId>javax.xml.bind</groupId>
 		    <artifactId>jaxb-api</artifactId>
 		    <version>2.3.1</version>
+   			<exclusions>
+				<exclusion>
+					<groupId>javax.activation</groupId>
+					<artifactId>javax.activation-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 		    <groupId>com.sun.xml.bind</groupId>

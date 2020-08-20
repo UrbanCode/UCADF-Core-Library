@@ -22,14 +22,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import groovy.transform.TypeChecked
 import groovy.util.logging.Slf4j
 
-/**
- * @author QOP4
- *
- */
-/**
- * @author QOP4
- *
- */
 @Slf4j
 @TypeChecked
 class UcdSession {
@@ -177,72 +169,6 @@ class UcdSession {
 		this.ucdUserPw = ucdUserPw
 	}
 
-	/**
-	 * Run a shell command.
-	 * @param commandList
-	 * @param maxWaitSecs The maximum number of seconds to wait.
-	 * @param showOutput The flag to indicate to show output.
-	 * @param throwOnFail The flag to indicate throw an exception on failure.
-	 * @param noDefaultAuth The flag to indicate no default authentication.
-	 * @return The stdout buffer, the stderr buffer, the exit value.
-	 */
-	@Deprecated	// Use UcAdfExecuteCommand action.
-	public static executeCommand(
-		final List commandList, 
-		final Integer maxWaitSecs, 
-		final Boolean showOutput, 
-		final Boolean throwOnFail, 
-		final Boolean noDefaultAuth = false) {
-		
-		// Convert list to string array
-		String[] commandArr = new String[commandList.size()]
-		
-		// Replace any null elements with empty string
-		for (int i = 0; i < commandList.size(); i++) {
-			if (commandList[i] == null) {
-				commandArr[i] = ""
-			} else {
-				commandArr[i] = commandList[i]
-			}
-		}
-
-		// Initiate the execution
-		Process process
-		if (noDefaultAuth) {
-			// Get the current system environment variables and remove the AH_WEB_URL and DS_AUTH_TOKEN variables so that udclient commands will not pick them up
-			Map envVars = System.getenv()
-			List envVarsList = []
-			envVars.each { k, v ->
-				if (!(k ==~ "AH_WEB_URL" || k ==~ "DS_AUTH_TOKEN")) {
-					envVarsList.add("$k=$v")
-				}
-			}
-			process = Runtime.getRuntime().exec(commandArr, envVarsList as String[])
-		} else {
-			process = Runtime.getRuntime().exec(commandArr)
-		}
-
-		// Wait on the execution and get the results
-		StringBuffer stdOut = new StringBuffer()
-		StringBuffer stdErr = new StringBuffer()
-		process.consumeProcessOutput(stdOut, stdErr)
-		process.waitForOrKill(maxWaitSecs * 1000)
-		def exitValue = process.exitValue()
-		if (showOutput) {
-			if (stdOut) {
-				println "<<<STDOUT>>>\n$stdOut"
-			}
-			if (stdErr) {
-				println "<<<STDERR>>>\n$stdErr"
-			}
-		}
-		if (exitValue && throwOnFail) {
-			throw new UcAdfInvalidValueException("Command failed.")
-		}
-
-		return [ stdOut, stdErr, exitValue]
-	}
-	
 	/**
 	 * Get a UCD web target.
 	 * @return The UCD web target.
