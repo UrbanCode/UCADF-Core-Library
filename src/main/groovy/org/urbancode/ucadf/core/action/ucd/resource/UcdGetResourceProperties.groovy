@@ -59,12 +59,12 @@ class UcdGetResourceProperties extends UcAdfAction {
 		
 		// Return as requested.
 		Object resourceProperties
-		Map<String, UcdProperty> propertiesMap = [:]
 		if (ReturnAsEnum.LIST.equals(returnAs)) {
 			resourceProperties = ucdProperties
 		} else {
-			ucdProperties.each {
-				propertiesMap[it.getName()] = it.getValue()
+			Map<String, UcdProperty> propertiesMap = [:]
+			for (ucdProperty in ucdProperties) {
+				propertiesMap.put(ucdProperty.getName(), ucdProperty)
 			}
 			resourceProperties = propertiesMap
 		}

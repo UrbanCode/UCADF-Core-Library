@@ -11,7 +11,7 @@ class SecretContainerImpl {
 	
 	// Constructor that instantiates an object using the real class.
 	public SecretContainerImpl(byte[] secretBytes) {
-		// Get the class.
+		// Class is available at runtime from the agent installation directory in securedata.jar.
         Class secretContainerClass = SecretContainerImpl.class.classLoader.loadClass("com.urbancode.air.securedata.SecretContainerImpl")
 		
 		// Get the constructor for the class.

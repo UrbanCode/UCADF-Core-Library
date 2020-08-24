@@ -100,8 +100,6 @@ actions:
   - action: UcAdfRunActionsFromFile
     fileName: "${u:testActionsDir}/genericProcessRequestActionTests.yml"
 
-  # TODO: Need group action tests.
-  
   - action: UcAdfRunActionsFromFile
     fileName: "${u:testActionsDir}/lockActionTests.yml"
 
@@ -133,6 +131,9 @@ actions:
   # TODO: Need team tests.
 
   # TODO: Need post-processing script tests.
+  
+  - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/groupActionTests.yml"
   
   - action: UcAdfRunActionsFromFile
     fileName: "${u:testActionsDir}/userActionTests.yml"

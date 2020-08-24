@@ -11,6 +11,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 class UcdVersionArtifactResourceInputs extends UcdObject {
 	String name
 	String compileType
+	String version
+	URL url
 	
 	// Constructors.	
 	UcdVersionArtifactResourceInputs() {

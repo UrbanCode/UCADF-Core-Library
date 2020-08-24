@@ -3,6 +3,7 @@
  */
 package org.urbancode.ucadf.core.model.ucd.group
 
+import org.urbancode.ucadf.core.model.ucd.authorizationRealm.UcdAuthorizationRealm
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
@@ -20,4 +21,7 @@ class UcdGroup extends UcdObject {
 	
 	/** TODO: What's this? */
 	Boolean isUserInGroup
+	
+	/** The authorization realm. */
+	UcdAuthorizationRealm authorizationRealm
 }

@@ -46,6 +46,7 @@ class UcdDeleteAgent extends UcAdfAction {
 			final Integer MAXATTEMPTS = 5
 			for (Integer iAttempt = 1; iAttempt <= MAXATTEMPTS; iAttempt++) {
 				Response response = target.request(MediaType.APPLICATION_JSON).delete()
+				response.bufferEntity()
 				
 				if (response.status == 204) {
 					logVerbose("Agent [$agent] deleted.")

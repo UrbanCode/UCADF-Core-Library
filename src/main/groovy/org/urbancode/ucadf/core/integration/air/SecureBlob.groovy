@@ -21,11 +21,15 @@ class SecureBlob {
 		final SecretContainerImpl secretContainer, 
 		final InputStream inputStream) {
 		
-		// Additional classes are available at runtime from the agent installation directory.
+		// Class is available at runtime from the agent installation directory in CommonsFileUtils.jar.
 		Class ioClass = SecureBlob.class.classLoader.loadClass("com.urbancode.commons.util.IO")
 		log.debug("fromEncryptedBytes ioClass=$ioClass")
+		
+		// Class is available at runtime from the agent installation directory in securedata.jar.
 		Class secureBlobClass = SecureBlob.class.classLoader.loadClass("com.urbancode.air.securedata.SecureBlob")
 		log.debug("fromEncryptedBytes secureBlobClass=$secureBlobClass")
+		
+		// Class is available at runtime from the agent installation directory in securedata.jar.
 		Class secretContainerClass = SecureBlob.class.classLoader.loadClass("com.urbancode.air.securedata.SecretContainer")
 		log.debug("fromEncryptedBytes secretContainerClass=$secretContainerClass")
 		

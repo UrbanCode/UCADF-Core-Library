@@ -54,25 +54,30 @@ class UcdGetResourceInventory extends UcAdfAction {
 
 		logDebug("Getting resource [$resource] inventory.")
 
-		List<UcdResourceInventory> ucdResourceInventoryEntries = []
+		Object inventoryVersions
 		
 		// Construct the query fields.
 		List<UcdFilterField> filterFields = []
 
-		if (resource) {
-			// If an resource ID was provided then use it. Otherwise get the resource information to get the ID.
-			String resourceId = resource
-			if (!UcdObject.isUUID(resource)) {
-				UcdResource ucdResource = actionsRunner.runAction([
-					action: UcdGetResource.getSimpleName(),
-					actionInfo: false,
-					actionVerbose: false,
-					resource: resource,
-					failIfNotFound: true
-				])
+		// If an resource ID was provided then use it. Otherwise get the resource information to get the ID.
+		String resourceId = resource
+		if (!UcdObject.isUUID(resource)) {
+			UcdResource ucdResource = actionsRunner.runAction([
+				action: UcdGetResource.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
+				resource: resource,
+				failIfNotFound: failIfNotFound
+			])
+			
+			if (ucdResource) {
 				resourceId = ucdResource.getId()
+			} else {
+				resourceId = ""
 			}
+		}
 
+		if (resourceId) {
 			// Add the resource ID filter field.
 			filterFields.add(
 				new UcdFilterField(
@@ -81,66 +86,66 @@ class UcdGetResourceInventory extends UcAdfAction {
 					UcdFilterFieldTypeEnum.eq
 				)
 			)
-		}
-
-		filterFields.add(
-			new UcdFilterField(
-				"ghostedDate",
-				"0",
-				UcdFilterFieldTypeEnum.eq,
-				UcdFilterFieldClassEnum.Long
+	
+			filterFields.add(
+				new UcdFilterField(
+					"ghostedDate",
+					"0",
+					UcdFilterFieldTypeEnum.eq,
+					UcdFilterFieldClassEnum.Long
+				)
 			)
-		)
+			
+			WebTarget target = UcdFilterField.addFilterFieldQueryParams(
+				ucdSession.getUcdWebTarget().path("/rest/inventory/resourceInventory/table"),
+				filterFields
+			)
+			logDebug("target=$target")
+	
+			List<UcdResourceInventory> ucdResourceInventoryEntries = []
 		
-		WebTarget target = UcdFilterField.addFilterFieldQueryParams(
-			ucdSession.getUcdWebTarget().path("/rest/inventory/resourceInventory/table"),
-			filterFields
-		)
+			Response response = target.request().get()
+			if (response.getStatus() == 200) {
+				// Get the resource inventory entries.
+				UcdResourceInventoryTable ucdResourceInventoryTable = response.readEntity(UcdResourceInventoryTable.class)
+				ucdResourceInventoryEntries = ucdResourceInventoryTable.getRecords()
+			} else {
+				throw new UcAdfInvalidValueException(response)
+			}
+	
+			// Return the specified collection type.
+			if (ReturnAsEnum.LIST.equals(returnAs)) {
+				if (match) {
+					List<UcdResourceInventory> resourceVersionsList = []
+					for (ucdResourceInventoryEntry in ucdResourceInventoryEntries) {
+						if (ucdResourceInventoryEntry.getVersion().getName() ==~ match) {
+							resourceVersionsList.add(ucdResourceInventoryEntry)
+						}
+					}
+					
+					inventoryVersions = resourceVersionsList
+				} else {
+					inventoryVersions = ucdResourceInventoryEntries
+				}
+			} else {
+				// Initialize the inventory versions map.
+				Map<String, Map> resourceVersionsMap = [
+					versions: new LinkedHashMap()
+				]
 		
-		logDebug("target=$target")
-
-		Response response = target.request().get()
-		if (response.getStatus() == 200) {
-			// Get the resource inventory entries.
-			UcdResourceInventoryTable ucdResourceInventoryTable = response.readEntity(UcdResourceInventoryTable.class)
-			ucdResourceInventoryEntries = ucdResourceInventoryTable.getRecords()
-		} else {
-			throw new UcAdfInvalidValueException(response)
-		}
-
-		// Return the specified collection type.
-		Object inventoryVersions
-		if (ReturnAsEnum.LIST.equals(returnAs)) {
-			if (match) {
-				List<UcdResourceInventory> resourceVersionsList = []
 				for (ucdResourceInventoryEntry in ucdResourceInventoryEntries) {
-					if (ucdResourceInventoryEntry.getVersion().getName() ==~ match) {
-						resourceVersionsList.add(ucdResourceInventoryEntry)
+					String versionName = ucdResourceInventoryEntry.getVersion().getName()
+					
+					// Add the inventory to the version as a map item.
+					if (!match || versionName ==~ match) {
+						resourceVersionsMap['versions'][versionName] = ucdResourceInventoryEntry
 					}
 				}
 				
-				inventoryVersions = resourceVersionsList
-			} else {
-				inventoryVersions = ucdResourceInventoryEntries
+				inventoryVersions = resourceVersionsMap
 			}
-		} else {
-			// Initialize the inventory versions map.
-			Map<String, Map> resourceVersionsMap = [
-				versions: new LinkedHashMap()
-			]
-	
-			for (ucdResourceInventoryEntry in ucdResourceInventoryEntries) {
-				String versionName = ucdResourceInventoryEntry.getVersion().getName()
-				
-				// Add the inventory to the version as a map item.
-				if (!match || versionName ==~ match) {
-					resourceVersionsMap['versions'][versionName] = ucdResourceInventoryEntry
-				}
-			}
-			
-			inventoryVersions = resourceVersionsMap
 		}
-
+		
 		return inventoryVersions
 	}
 }

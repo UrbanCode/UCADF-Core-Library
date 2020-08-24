@@ -18,10 +18,14 @@ public class UcAdfPluginTool {
 	}
 
 	// Get the step properties from the encrypted input properties file.
-	public getStepProperties(final String inPropsFileName) {
-		// Get the secret container to use for decryption.		
-		SecretContainerImpl secretContainer = getSecretContainer()
+	// If secretVar is provided then that is used for decryption, otherwise secretVar comes from STDIN.
+	public getStepProperties(
+		final String inPropsFileName,
+		final String secretVar = "") {
 		
+		// Get the secret container to use for decryption.		
+		SecretContainerImpl secretContainer = getSecretContainer(secretVar)
+
 		Properties inProps = new Properties()
 		InputStream inPropsStream
 		try {
@@ -78,16 +82,20 @@ public class UcAdfPluginTool {
 	}
 	
 	// Get the secret container to use for encryption/decryption.
-	public SecretContainerImpl getSecretContainer() {
+	public SecretContainerImpl getSecretContainer(String secretVar = "") {
 		log.debug("getSecretContainer.")
 
 		// If the secret container hasn't been created yet then create it.
 		if (!this.secretContainer) {
-			// Get the secret.
-			log.debug("getSecretContainer get secretVar from STDIN.")
-			Properties stdInProps = new Properties()
-			stdInProps.load(System.in)
-			String secretVar = stdInProps.getProperty(ENVVARNAME_SECRET)
+			if (secretVar) {
+				log.debug("getSecretContainer using secretVar from parameter.")
+			} else {
+				// Get the secret.
+				log.debug("getSecretContainer get secretVar from STDIN.")
+				Properties stdInProps = new Properties()
+				stdInProps.load(System.in)
+				secretVar = stdInProps.getProperty(ENVVARNAME_SECRET)
+			}
 			log.debug("getSecretContainer secretVar=$secretVar")
 			
 			// Decode the secret string to bytes.

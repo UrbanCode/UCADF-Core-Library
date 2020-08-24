@@ -21,7 +21,7 @@ class UcdIsExternalLoginUser extends UcAdfAction {
 	 * Runs the action.	
 	 */
 	@Override
-	public Object run() {
+	public Boolean run() {
 		// Validate the action properties.
 		validatePropsExist()
 		

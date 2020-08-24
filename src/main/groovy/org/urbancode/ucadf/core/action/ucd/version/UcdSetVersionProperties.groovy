@@ -65,7 +65,7 @@ class UcdSetVersionProperties extends UcAdfAction {
 		WebTarget target
 		Response response
 
-		if (ucdSession.isUcdVersion(UcdSession.UCDVERSION_70)) {
+		if (ucdSession.compareVersion(UcdSession.UCDVERSION_70) >= 0) {
 			target = ucdSession.getUcdWebTarget().path("/cli/version/versionProperties")
 			logDebug("target=$target")
 

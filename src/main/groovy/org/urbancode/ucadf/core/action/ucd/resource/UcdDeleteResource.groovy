@@ -9,6 +9,7 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
+import org.urbancode.ucadf.core.model.ucd.resource.UcdResource
 
 class UcdDeleteResource extends UcAdfAction {
 	// Action properties.
@@ -34,29 +35,46 @@ class UcdDeleteResource extends UcAdfAction {
 		} else {
 			logVerbose("Deleting Resource [$resource].")
 
-			// Had to add logic to handle concurrency issue discovered in UCD 6.2.7.0.
-			final Integer MAXATTEMPTS = 5
-			for (Integer iAttempt = 1; iAttempt <= MAXATTEMPTS; iAttempt++) {
-				WebTarget target = ucdSession.getUcdWebTarget().path("/cli/resource/deleteResource")
-					.queryParam("resource", resource)
+			UcdResource ucdResource
+			
+			WebTarget target 
+			Response response
+			
+			// Get the resource to verify it exists and to get the ID.
+			target = ucdSession.getUcdWebTarget().path("/cli/resource/info")
+				.queryParam("resource", resource)
+			logDebug("target=$target")
+		
+			response = target.request().get()
+			if (response.getStatus() == 200) {
+				ucdResource = response.readEntity(UcdResource)
+
+				// Had to add logic to handle concurrency issue discovered in UCD 6.2.7.0.
+				final Integer MAXATTEMPTS = 5
+				for (Integer iAttempt = 1; iAttempt <= MAXATTEMPTS; iAttempt++) {
+					target = ucdSession.getUcdWebTarget().path("/rest/resource/resource/{resourceId}")
+						.resolveTemplate("resourceId", ucdResource.getId())
+						
+					response = target.request(MediaType.APPLICATION_JSON).delete()
+					response.bufferEntity()
 					
-				Response response = target.request(MediaType.APPLICATION_JSON).delete()
-				if (response.getStatus() == 204) {
-					break
-				} else {
-					String responseStr = response.readEntity(String.class)
-					logVerbose(responseStr)
-					if (response.getStatus() == 404) {
-						if (failIfNotFound) {
-							throw new UcAdfInvalidValueException(response)
-						}
+					if (response.getStatus() == 204) {
 						break
 					} else {
-						if (responseStr ==~ /.*bulk manipulation query.*/ && iAttempt < MAXATTEMPTS) {
-							logVerbose("Attempt $iAttempt failed. Waiting to try again.")
-							Thread.sleep(2000)
+						String responseStr = response.readEntity(String.class)
+						logVerbose(responseStr)
+						if (response.getStatus() == 404) {
+							if (failIfNotFound) {
+								throw new UcAdfInvalidValueException(response)
+							}
+							break
 						} else {
-							throw new UcAdfInvalidValueException(response)
+							if (responseStr ==~ /.*bulk manipulation query.*/ && iAttempt < MAXATTEMPTS) {
+								logVerbose("Attempt $iAttempt failed. Waiting to try again.")
+								Thread.sleep(2000)
+							} else {
+								throw new UcAdfInvalidValueException(response)
+							}
 						}
 					}
 				}

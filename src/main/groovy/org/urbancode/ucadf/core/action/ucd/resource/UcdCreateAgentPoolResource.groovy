@@ -3,8 +3,16 @@
  */
 package org.urbancode.ucadf.core.action.ucd.resource
 
+import javax.ws.rs.client.Entity
+import javax.ws.rs.client.WebTarget
+import javax.ws.rs.core.MediaType
+import javax.ws.rs.core.Response
+
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.resource.UcdResource
+
+import groovy.json.JsonBuilder
 
 class UcdCreateAgentPoolResource extends UcAdfAction {
 	// Action properties.
@@ -40,20 +48,37 @@ class UcdCreateAgentPoolResource extends UcAdfAction {
 			(parent, name) = UcdResource.getParentPathAndName(resource)
 		}
 
-		String resourcePath = "${parent}/${name}"
+		logVerbose("Creating agent pool resource [$parent/$name].")
 
-		logVerbose("Creating agent pool resource [$resourcePath].")
-
-		created = actionsRunner.runAction([
-			action: UcdCreateResource.getSimpleName(),
-			actionInfo: false,
-			actionVerbose: false,
-			agentPool: pool,
+		// Construct the request map.
+		Map<String, String> requestMap = [
 			name: name,
 			parent: parent,
 			description: description,
-			failIfExists: failIfExists
-		])
+			agentPool: pool
+		]
+
+		JsonBuilder jsonBuilder = new JsonBuilder(requestMap)
+		logDebug("jsonBuilder=${jsonBuilder.toString()}")
+
+		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/resource/create")
+		logDebug("target=$target")
+		
+		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
+		if (response.getStatus() == 200) {
+			created = true
+		} else {
+			String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
+			if (response.getStatus() == 400 && errMsg.matches(/.*already exists.*/)) {
+				if (failIfExists) {
+					throw new UcAdfInvalidValueException(errMsg)
+				} else {
+					logVerbose("Resource [$parent/$name] already exists.")
+				}
+			} else {
+				throw new UcAdfInvalidValueException(errMsg)
+			}
+		}
 		
 		return created
 	}

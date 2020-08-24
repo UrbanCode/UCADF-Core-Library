@@ -19,6 +19,9 @@ class UcdAddGroupMember extends UcAdfAction {
 	/** The group name or ID. */
 	String group
 	
+	/** The authorization realm name or ID. (Optional. If not provided then unpredictable if more than one group with the same name. */
+	String authorizationRealm = ""
+
 	/** The user name or ID. */
 	String user
 	
@@ -33,18 +36,15 @@ class UcdAddGroupMember extends UcAdfAction {
 		logVerbose("Add user [$user] to group [$group].")
 		
 		// If an group ID was provided then use it. Otherwise get the group information to get the ID.
-		String groupId = group
-		if (!UcdObject.isUUID(group)) {
-			UcdGroup ucdGroup = actionsRunner.runAction([
-				action: UcdGetGroup.getSimpleName(),
-				actionInfo: false,
-				actionVerbose: false,
-				group: group,
-				failIfNotFound: true
-			])
+		UcdGroup ucdGroup = actionsRunner.runAction([
+			action: UcdGetGroup.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
+			group: group,
+			failIfNotFound: true
+		])
 			
-			groupId = ucdGroup.getId()
-		}
+		String groupId = ucdGroup.getId()
 		
 		// If an user ID was provided then use it. Otherwise get the user information to get the ID.
 		String userId = user

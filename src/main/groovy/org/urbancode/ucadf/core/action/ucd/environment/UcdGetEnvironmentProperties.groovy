@@ -12,6 +12,15 @@ import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
 
 class UcdGetEnvironmentProperties extends UcAdfAction {
+	/** The type of collection to return. */
+	enum ReturnAsEnum {
+		/** Return as a list. */
+		LIST,
+		
+		/** Return as a map having the property name as the key. */
+		MAPBYNAME
+	}
+
 	// Action properties.
 	/** The application name or ID. */
 	String application
@@ -19,16 +28,19 @@ class UcdGetEnvironmentProperties extends UcAdfAction {
 	/** The environment name or ID. */
 	String environment
 	
+	/** The type of collection to return. */
+	ReturnAsEnum returnAs = ReturnAsEnum.LIST
+	
 	/**
 	 * Runs the action.	
-	 * @return The list of property objects.
+	 * @return The specified type of collection.
 	 */
 	@Override
-	public List<UcdProperty> run() {
+	public Object run() {
 		// Validate the action properties.
 		validatePropsExist()
 
-		List<UcdProperty> ucdProperties
+		Object environmentProperties
 		
 		logVerbose("Getting application [$application] environment [$environment] properties.")
 
@@ -39,11 +51,20 @@ class UcdGetEnvironmentProperties extends UcAdfAction {
 
 		Response response = target.request().get()
 		if (response.getStatus() == 200) {
-			ucdProperties = response.readEntity(new GenericType<List<UcdProperty>>(){})
+			List<UcdProperty> ucdProperties = response.readEntity(new GenericType<List<UcdProperty>>(){})
+			if (ReturnAsEnum.LIST.equals(returnAs)) {
+				environmentProperties = ucdProperties
+			} else {
+				Map<String, UcdProperty> propertiesMap = [:]
+				for (ucdProperty in ucdProperties) {
+					propertiesMap.put(ucdProperty.getName(), ucdProperty)
+				}
+				environmentProperties = propertiesMap
+			}
 		} else {
             throw new UcAdfInvalidValueException(response)
 		}
 		
-		return ucdProperties
+		return environmentProperties
 	}
 }

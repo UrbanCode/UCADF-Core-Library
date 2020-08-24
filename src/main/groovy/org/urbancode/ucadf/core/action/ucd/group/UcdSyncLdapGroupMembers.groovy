@@ -68,6 +68,7 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 				actionInfo: false,
 				actionVerbose: false,
 				group: group,
+				authorizationRealm: authorizationRealm,
 				failIfNotFound: true
 			])
 			
@@ -123,6 +124,7 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 				actionInfo: false,
 				actionVerbose: false,
 				group: groupName,
+				authorizationRealm: authorizationRealm,
 				failIfNotFound: true
 			])
 
@@ -156,7 +158,8 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 				action: UcdGetGroupMembers.getSimpleName(),
 				actionInfo: false,
 				actionVerbose: false,
-				group: ucdGroup.getId()
+				group: ucdGroup.getId(),
+				authorizationRealm: authorizationRealm,
 			])
 
 			for (UcdUser ucdUser in ucdGroupMembers) {
@@ -208,6 +211,7 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 								action: UcdAddGroupMember.getSimpleName(),
 								actionInfo: false,
 								group: ucdGroup.getId(),
+								authorizationRealm: authorizationRealm,
 								user: ucdUser.getId()
 							])
 						}
@@ -230,6 +234,7 @@ class UcdSyncLdapGroupMembers extends UcAdfAction {
 								action: UcdRemoveGroupMember.getSimpleName(),
 								actionInfo: false,
 								group: ucdGroup.getId(),
+								authorizationRealm: authorizationRealm,
 								user: ucdUser.getId()
 							])
 						}

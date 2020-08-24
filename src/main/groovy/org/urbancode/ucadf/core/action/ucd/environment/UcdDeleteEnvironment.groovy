@@ -57,6 +57,8 @@ class UcdDeleteEnvironment extends UcAdfAction {
 			logDebug("target=$target")
 			
 			Response response = target.request(MediaType.APPLICATION_JSON).delete()
+			response.bufferEntity()
+			
 			if (response.getStatus() == 204) {
 				logVerbose("Application [$application] environment [$environment] deleted.")
 				deleted = true
