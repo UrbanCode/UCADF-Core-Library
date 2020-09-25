@@ -49,7 +49,7 @@ class UcdGetTeamResourceMappings extends UcAdfAction {
 			if (responseMessage.matches(/.*Unknown.*/)) {
 				teamResourceMappings = new ArrayList<UcdObject>()
 			} else {
-				throw new UcAdfInvalidValueException("Error: $response.status. Unable to get team resource mappings. $target")
+				throw new UcAdfInvalidValueException("Error: ${response.getStatus()}. Unable to get team resource mappings. $target")
 			}
 		}
 		

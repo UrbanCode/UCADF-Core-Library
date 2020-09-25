@@ -19,9 +19,12 @@ class UcdMoveResource extends UcAdfAction {
 	/** The resource from path. */
 	String resourceFrom
 	
-	/** The resource to path. */
+	/** The resource to path parent to which the resource will be moved. */
 	String resourceTo
-	
+
+	/** The flag that indicates fail if the resource is not found. Default is true. */
+	Boolean failIfNotFound = true
+
 	/**
 	 * Runs the action.	
 	 */
@@ -30,50 +33,52 @@ class UcdMoveResource extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 
-		logVerbose("Move resource [$resourceFrom] to [resourceTo].")
+		logVerbose("Move resource [$resourceFrom] to [$resourceTo].")
 
 		// Get the resource information.
-		String resourceFromId = resourceFrom
-		if (!UcdObject.isUUID(resourceFrom)) {
-			UcdResource ucdFromResource = actionsRunner.runAction([
-				action: UcdGetResource.getSimpleName(),
-				actionInfo: false,
-				actionVerbose: false,
-				resource: resourceFrom,
-				failIfNotFound: true
-			])
-			resourceFromId = ucdFromResource.getId()
-		}
+		UcdResource ucdFromResource = actionsRunner.runAction([
+			action: UcdGetResource.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
+			resource: resourceFrom,
+			failIfNotFound: failIfNotFound
+		])
 		
-		String resourceToId = resourceTo
-		if (!UcdObject.isUUID(resourceTo)) {
-			UcdResource ucdToResource = actionsRunner.runAction([
-				action: UcdGetResource.getSimpleName(),
-				actionInfo: false,
-				actionVerbose: false,
-				resource: resourceTo,
-				failIfNotFound: true
-			])
-			resourceToId = ucdToResource.getId()
-		}
-		
-		Map requestMap = [
-			sources: [
-				[ id: resourceFromId ]
+		if (ucdFromResource) {
+			String resourceFromId = ucdFromResource.getId()
+			
+			String resourceToId = resourceTo
+			if (!UcdObject.isUUID(resourceTo)) {
+				UcdResource ucdToResource = actionsRunner.runAction([
+					action: UcdGetResource.getSimpleName(),
+					actionInfo: false,
+					actionVerbose: false,
+					resource: resourceTo,
+					failIfNotFound: true
+				])
+				resourceToId = ucdToResource.getId()
+			}
+			
+			Map requestMap = [
+				sources: [
+					[ id: resourceFromId ]
+				]
 			]
-		]
-		
-		JsonBuilder jsonBuilder = new JsonBuilder(requestMap)
-		
-		WebTarget target = ucdSession.getUcdWebTarget().path("/rest/resource/resource/moveTo/{resourceToId}")
-			.resolveTemplate("resourceToId", resourceToId)
-		logDebug("target=$target")
-
-		Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
-		if (response.getStatus() == 200) {
-			logVerbose("resource [$resourceFrom] moved to [$resourceTo].")
+			
+			JsonBuilder jsonBuilder = new JsonBuilder(requestMap)
+			
+			WebTarget target = ucdSession.getUcdWebTarget().path("/rest/resource/resource/moveTo/{resourceToId}")
+				.resolveTemplate("resourceToId", resourceToId)
+			logDebug("target=$target")
+	
+			Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
+			if (response.getStatus() == 200) {
+				logVerbose("resource [$resourceFrom] moved to [$resourceTo].")
+			} else {
+				throw new UcAdfInvalidValueException(response)
+			}
 		} else {
-			throw new UcAdfInvalidValueException(response)
+			logVerbose("Resource [$resourceFrom] not found to move.")
 		}
 	}
 }

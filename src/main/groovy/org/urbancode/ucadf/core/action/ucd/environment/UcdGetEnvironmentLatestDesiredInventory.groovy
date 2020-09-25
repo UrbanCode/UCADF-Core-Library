@@ -65,6 +65,11 @@ class UcdGetEnvironmentLatestDesiredInventory extends UcAdfAction {
 
 		if (response.getStatus() == 200) {
 			latestDesiredInventoryList = response.readEntity(new GenericType<List<UcdEnvironmentLatestDesiredInventory>>(){})
+			
+			// For some reason the version's component value is not set on the return so iterate the list and set it.
+			for (inventoryItem in latestDesiredInventoryList) {
+				inventoryItem.getVersion().setComponent(inventoryItem.getComponent())
+			}
 		} else {
 			throw new UcAdfInvalidValueException(response)
 		}

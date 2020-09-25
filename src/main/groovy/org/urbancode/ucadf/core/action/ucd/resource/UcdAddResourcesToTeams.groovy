@@ -77,7 +77,7 @@ class UcdAddResourcesToTeams extends UcAdfAction {
 			logDebug(jsonBuilder.toPrettyString())
 	
 			Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
-			if (response.getStatus() != 204 && response.status != 200) {
+			if (response.getStatus() != 204 && response.getStatus() != 200) {
 				throw new UcAdfInvalidValueException(response)
 			}
 		}

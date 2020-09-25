@@ -33,52 +33,84 @@ class UcdDeleteResource extends UcAdfAction {
 		if (!commit) {
 			logVerbose("Would delete resource [$resource] from ucdUrl [${ucdSession.getUcdUrl()}].")
 		} else {
-			logVerbose("Deleting Resource [$resource].")
+			// Attempt to delete the resource. If it encounters a unique result error then try to delete it again with the UUID.
+			if (deleteResource(resource)) {
+				logError("A unique result error was encountered. Getting parent's child resources to find ID of bad resource.")
+				
+				String parent, name
+				(parent, name) = UcdResource.getParentPathAndName(resource)
 
-			UcdResource ucdResource
-			
-			WebTarget target 
-			Response response
-			
-			// Get the resource to verify it exists and to get the ID.
-			target = ucdSession.getUcdWebTarget().path("/cli/resource/info")
-				.queryParam("resource", resource)
-			logDebug("target=$target")
-		
-			response = target.request().get()
-			if (response.getStatus() == 200) {
-				ucdResource = response.readEntity(UcdResource)
+				// Get the resource parent's children.
+				List<UcdResource> ucdResources = actionsRunner.runAction([
+					action: UcdGetChildResources.getSimpleName(),
+					actionInfo: true,
+					actionVerbose: true,
+					resource: parent,
+					failIfNotFound: failIfNotFound
+				])
 
-				// Had to add logic to handle concurrency issue discovered in UCD 6.2.7.0.
-				final Integer MAXATTEMPTS = 5
-				for (Integer iAttempt = 1; iAttempt <= MAXATTEMPTS; iAttempt++) {
-					target = ucdSession.getUcdWebTarget().path("/rest/resource/resource/{resourceId}")
-						.resolveTemplate("resourceId", ucdResource.getId())
-						
-					response = target.request(MediaType.APPLICATION_JSON).delete()
-					response.bufferEntity()
-					
-					if (response.getStatus() == 204) {
-						break
-					} else {
-						String responseStr = response.readEntity(String.class)
-						logVerbose(responseStr)
-						if (response.getStatus() == 404) {
-							if (failIfNotFound) {
-								throw new UcAdfInvalidValueException(response)
-							}
-							break
-						} else {
-							if (responseStr ==~ /.*bulk manipulation query.*/ && iAttempt < MAXATTEMPTS) {
-								logVerbose("Attempt $iAttempt failed. Waiting to try again.")
-								Thread.sleep(2000)
-							} else {
-								throw new UcAdfInvalidValueException(response)
-							}
-						}
-					}
+				// Look for the resource by name.
+				UcdResource ucdResource = ucdResources.find {
+					it.getName().equals(name)
+				}
+
+				// If the resource was found then try to delete it by ID.
+				if (ucdResource) {
+					deleteResource(ucdResource.getId())
 				}
 			}
 		}
 	}	
+
+	// Attempt to delete the resource.	
+	public Boolean deleteResource(final String resource) {
+		logVerbose("Deleting Resource [$resource].")
+		
+		Boolean uniqueResultError = false
+		
+		// Get the resource to verify it exists and to get the ID.
+		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/resource/info")
+			.queryParam("resource", resource)
+		logDebug("target=$target")
+	
+		Response response = target.request().get()
+		
+		if (response.getStatus() == 200) {
+			UcdResource ucdResource = response.readEntity(UcdResource)
+
+			// Had to add logic to handle concurrency issue discovered in UCD 6.2.7.0.
+			final Integer MAXATTEMPTS = 5
+			for (Integer iAttempt = 1; iAttempt <= MAXATTEMPTS; iAttempt++) {
+				target = ucdSession.getUcdWebTarget().path("/rest/resource/resource/{resourceId}")
+					.resolveTemplate("resourceId", ucdResource.getId())
+					
+				response = target.request(MediaType.APPLICATION_JSON).delete()
+				response.bufferEntity()
+
+				if (response.getStatus() == 204) {
+					break
+				} else {
+					String responseStr = response.readEntity(String.class)
+					logVerbose(responseStr)
+					if (response.getStatus() == 404) {
+						if (failIfNotFound) {
+							throw new UcAdfInvalidValueException(response)
+						}
+						break
+					} else {
+						if (responseStr ==~ /.*bulk manipulation query.*/ && iAttempt < MAXATTEMPTS) {
+							logVerbose("Attempt $iAttempt failed. Waiting to try again.")
+							Thread.sleep(2000)
+						} else {
+							throw new UcAdfInvalidValueException(response)
+						}
+					}
+				}
+			}
+		} else if (response.getStatus() == 400 && response.readEntity(String.class).matches(/.*query did not return a unique result.*/)) {
+			uniqueResultError = true
+		}
+		
+		return uniqueResultError
+	}
 }

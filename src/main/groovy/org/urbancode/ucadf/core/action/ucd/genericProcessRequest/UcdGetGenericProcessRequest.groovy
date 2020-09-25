@@ -40,7 +40,7 @@ class UcdGetGenericProcessRequest extends UcAdfAction {
 		} else {
 			String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 			logVerbose(errMsg)
-			if (response.getStatus() == 400 || response.status == 404) {
+			if (response.getStatus() == 400 || response.getStatus() == 404) {
 				if (failIfNotFound) {
 					throw new UcAdfInvalidValueException(errMsg)
 				}

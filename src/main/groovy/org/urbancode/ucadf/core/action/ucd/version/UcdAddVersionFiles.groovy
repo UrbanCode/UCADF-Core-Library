@@ -94,7 +94,28 @@ class UcdAddVersionFiles extends UcAdfAction {
 		logVerbose("Finding files in base directory [${baseDir.getCanonicalPath()}].")
 
 		Integer fileCount = 0
-				
+
+		// Initiate a new form.				
+		FormDataMultiPart formDataMultiPart = new FormDataMultiPart()
+
+		// Add the component name body part to the form.
+		formDataMultiPart.bodyPart(
+			new FormDataBodyPart(
+				"component",
+				component,
+				MediaType.TEXT_PLAIN_TYPE
+			)
+		)
+
+		// Add the version name body part to the form.		
+		formDataMultiPart.bodyPart(
+			new FormDataBodyPart(
+				"version",
+				version,
+				MediaType.TEXT_PLAIN_TYPE
+			)
+		)
+	
 		// Process the directory entries recursively.		
 		baseDir.eachFileRecurse { file ->
 			String fileAbsolutePath = getCanonicalPath(file)
@@ -118,9 +139,10 @@ class UcdAddVersionFiles extends UcAdfAction {
 				}
 			}
 
-			// Add the file to the version.			
+			// Add the file to the form.
 			if (addFile) {
-				addFileVersion(
+				addFileToForm(
+					formDataMultiPart,
 					fileAbsolutePath,
 					fileRelativePath
 				)
@@ -128,20 +150,29 @@ class UcdAddVersionFiles extends UcAdfAction {
 				fileCount++
 			}
 		}
-	
+
+		WebTarget target = ucdSession.getUcdWebTarget().path("/cli-internal/version/addVersionFilesFull")
+		logDebug("target=$target")
+
+		Response response = target.request().post(Entity.entity(formDataMultiPart, formDataMultiPart.getMediaType()))
+		if (response.getStatus() != 204) {
+			throw new UcAdfInvalidValueException(response)
+		}
+
 		logVerbose("Added [$fileCount] files to component [$component] version [$version].")
 		
 		if (fileCount == 0 && failIfNoFiles) {
 			throw new UcAdfInvalidValueException("No files were found to add.")
 		}
 	}
-
-	// Add the file to the component version.
-	private addFileVersion(
+	
+	// Add the file to the form.
+	private addFileToForm(
+		FormDataMultiPart formDataMultiPart,
 		final String filePath,
 		final String fileRelativePath) {
 
-		// Prepend the optional offset.		
+		// Prepend the optional offset.
 		String fileUploadPath = fileRelativePath
 		if (offset) {
 			fileUploadPath = [ offset, fileRelativePath].join("/")
@@ -199,12 +230,16 @@ class UcdAddVersionFiles extends UcAdfAction {
 		if (actionVerbose) {
 			println " as $entryMetadataMap."
 		}
-		
-		FormDataMultiPart formDataMultiPart = new FormDataMultiPart()
-			.field("component", component, MediaType.TEXT_PLAIN_TYPE)
-			.field("version", version, MediaType.TEXT_PLAIN_TYPE)
-			.field("entryMetadata", new JsonBuilder(entryMetadataMap).toString(), MediaType.TEXT_PLAIN_TYPE)
 
+		// Entry metadata to the form.
+		formDataMultiPart.bodyPart(
+			new FormDataBodyPart(
+				"entryMetadata",
+				new JsonBuilder(entryMetadataMap).toString(),
+				MediaType.TEXT_PLAIN_TYPE
+			)
+		)
+		
 		// If the entry is a file then attach it.
 		if (file.isFile()) {
 			// Add the file to the multipart.
@@ -215,14 +250,6 @@ class UcdAddVersionFiles extends UcAdfAction {
 					MediaType.APPLICATION_OCTET_STREAM_TYPE
 				)
 			)
-		}
-					
-		WebTarget target = ucdSession.getUcdWebTarget().path("/cli-internal/version/addVersionFilesFull")
-		logDebug("target=$target")
-
-		Response response = target.request().post(Entity.entity(formDataMultiPart, formDataMultiPart.getMediaType()))
-		if (response.getStatus() != 204) {
-			throw new UcAdfInvalidValueException(response)
 		}
 	}
 

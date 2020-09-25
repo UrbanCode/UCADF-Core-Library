@@ -62,8 +62,9 @@ class UcdSetApplicationProcessRequestProperties extends UcAdfAction {
 			if (response.getStatus() == 200) {
 				break
 			} else {
-				logInfo response.readEntity(String.class)
-				if (response.getStatus() == 409 && iAttempt < MAXATTEMPTS) {
+				String responseStr = response.readEntity(String.class)
+				logInfo(responseStr)
+				if ((response.getStatus() == 409 || responseStr.matches(/.*updated or deleted by another transaction.*/)) && iAttempt < MAXATTEMPTS) {
 					logInfo "Attempt $iAttempt failed. Waiting to try again."
 					Thread.sleep(2000)
 				} else {
