@@ -16,6 +16,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class UcdEnvironment extends UcdSecurityTypeObject {
+	// Common process properties.
+	public final static String PROPNAME_ID = "environment.id"
+	public final static String PROPNAME_NAME = "environment.name"
+	
 	/** The environment ID. */
 	String id
 	

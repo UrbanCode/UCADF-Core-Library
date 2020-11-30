@@ -37,7 +37,7 @@ class UcdAddApplicationToTeams extends UcAdfAction {
 			
 			logVerbose("Adding application [$application] to team [$team] subtype [$subtype].")
 			
-			// Get the subtype name required for the API call.
+			// Get the subtype name.
 			String subtypeName = subtype
 			if (subtype && UcdObject.isUUID(subtype)) {
 				UcdSecuritySubtype ucdSecuritySubtype = actionsRunner.runAction([

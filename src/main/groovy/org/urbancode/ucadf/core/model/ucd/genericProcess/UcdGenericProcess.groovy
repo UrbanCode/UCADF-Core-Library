@@ -94,4 +94,18 @@ class UcdGenericProcess extends UcdSecurityTypeObject {
 		
 		return workingDir
 	}
+
+	/**
+	 * Get a property definition by name.
+	 * @param name
+	 * @return
+	 */
+	public UcdPropDef getPropDefByName(final String name) {
+		// Find the existing property definition.
+		UcdPropDef ucdPropDef = propDefs.find {
+			it.getName().equals(name)
+		}
+
+		return ucdPropDef
+	}
 }

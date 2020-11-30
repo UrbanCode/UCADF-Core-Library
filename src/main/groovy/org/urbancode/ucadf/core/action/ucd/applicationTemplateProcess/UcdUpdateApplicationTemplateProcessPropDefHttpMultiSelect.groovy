@@ -8,6 +8,7 @@ import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucadf.UcAdfSecureString
 import org.urbancode.ucadf.core.model.ucd.applicationProcess.UcdApplicationProcess
 
+@Deprecated	// Use UcdUpdateApplicationTemplateProcessPropDefs action.
 class UcdUpdateApplicationTemplateProcessPropDefHttpMultiSelect extends UcAdfAction {
 	// Action properties.
 	/** The application template name or ID. */

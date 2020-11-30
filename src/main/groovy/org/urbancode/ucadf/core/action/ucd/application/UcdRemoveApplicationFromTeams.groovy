@@ -38,8 +38,8 @@ class UcdRemoveApplicationFromTeams extends UcAdfAction {
 			logVerbose("Remove application [$application] from team [$team] subtype [$subtype].")
 	
 			// Replaces the subtype IDs in the team mappings by looking up the ID using the subtype.
-			String subtypeId = subtype
-			if (subtype && !UcdObject.isUUID(subtype)) {
+			String subtypeName = subtype
+			if (subtype && UcdObject.isUUID(subtype)) {
 				UcdSecuritySubtype ucdSecuritySubtype = actionsRunner.runAction([
 					action: UcdGetSecuritySubtype.getSimpleName(),
 					actionInfo: false,
@@ -47,13 +47,13 @@ class UcdRemoveApplicationFromTeams extends UcAdfAction {
 					subtype: subtype
 				])
 	
-				subtypeId = ucdSecuritySubtype.getId()
+				subtypeName = ucdSecuritySubtype.getName()
 			}
 
 			WebTarget target = ucdSession.getUcdWebTarget().path("/cli/application/teams")
 				.queryParam("application", application)
 				.queryParam("team", team)
-				.queryParam("type", subtypeId)
+				.queryParam("type", subtypeName)
 			logDebug("target=$target")
 
 			Response response = target.request(MediaType.APPLICATION_JSON).delete()

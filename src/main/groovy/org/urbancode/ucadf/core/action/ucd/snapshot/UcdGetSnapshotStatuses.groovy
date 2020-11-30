@@ -79,17 +79,15 @@ class UcdGetSnapshotStatuses extends UcAdfAction {
 		if (ReturnAsEnum.OBJECTS.equals(returnAs)) {
 			snapshotStatuses = ucdStatuses
 		} else if (ReturnAsEnum.MAPBYNAME.equals(returnAs)){
-			Map<String, UcdStatus> statusMap = [:]
+			snapshotStatuses = [:]
 			for (ucdStatus in ucdStatuses) {
-				statusMap.put(ucdStatus.getName(), ucdStatus)
+				snapshotStatuses.put(ucdStatus.getName(), ucdStatus)
 			}
-			snapshotStatuses = statusMap
 		} else {
-			List<String> namesList = []
+			snapshotStatuses = []
 			ucdStatuses.each {
-				namesList.add(it.getName())
+				snapshotStatuses.add(it.getName())
 			}
-			snapshotStatuses = namesList
 		}
 
 		return snapshotStatuses

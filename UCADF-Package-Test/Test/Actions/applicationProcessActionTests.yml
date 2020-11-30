@@ -45,7 +45,7 @@ actions:
             type: "TEXT"
           - name: "HttpSelectProperty"
             type: "HTTP_SELECT"
-            httpUrl: "@sfUcdUrl@/cli/resource?parent=/Standard/WAS%20Management/Lists/Data%20Centers"
+            httpUrl: "${u:ucdUrl}/cli/resource?parent=/"
             httpFormat: "JSON"
             httpValuePath: "name"
             httpAuthenticationType: "BASIC"
@@ -60,20 +60,6 @@ actions:
     process: "${u:coreTestAppProcess1}"
     description: "Updated test process."
     requiredRole: "Administrator"
-    
-  # Update the application process HTTP select property definition.
-  - action: UcdUpdateApplicationProcessPropDefHttpSelect
-    application: "${u:coreTestApp1}"
-    process: "${u:coreTestAppProcess1}"
-    name: "HttpSelectProperty"
-    label: "Test HTTP Select"
-    required: true
-    httpUrl: "${u:ucdUrl}/cli/resource?parent=/"
-    httpFormat: "JSON"
-    httpValuePath: "name"
-    httpAuthenticationType: "BASIC"
-    httpUsername: "PasswordIsAuthToken"
-    httpPassword: "${u:ucdAuthToken}"
     
   # Get the application process property definitions.
   - action: UcdGetApplicationProocessPropDefs
@@ -155,20 +141,6 @@ actions:
         values:
           - ${u:item}
 
-  # Update the application process HTTP property definition.
-  - action: UcdUpdateApplicationProcessPropDefHttpSelect
-    application: "${u:coreTestApp2}"
-    process: "${u:coreTestAppProcess1}"
-    name: "testHttpDefSelect"
-    label: "Test HTTP Select"
-    required: true
-    httpUrl: "${u:ucdUrl}/cli/resource?parent=/"
-    httpFormat: "JSON"
-    httpValuePath: "name"
-    httpAuthenticationType: "BASIC"
-    httpUsername: "PasswordIsAuthToken"
-    httpPassword: "${u:ucdAuthToken}"
-    
   # Create an application process in the second application.
   - action: UcdCreateApplicationProcess
     application: "${u:coreTestApp2}"
@@ -181,4 +153,227 @@ actions:
     application: "${u:coreTestApp2}"
     process: "${u:coreTestAppProcess2}"
     failIfNotFound: true
-    
+
+  #==============================================================================          
+  # Delete Application process definitions.
+  #==============================================================================          
+  - action: UcdDeleteApplicationProcessPropDefs
+    application: "${u:coreTestApp1}"
+    process: "${u:coreTestAppProcess1}"
+    names:
+      - "${u:coreTestProperty1}-CHECKBOX"
+      - "${u:coreTestProperty1}-DATETIME"
+      - "${u:coreTestProperty1}-SECURE"
+      - "${u:coreTestProperty1}-TEXT"
+      - "${u:coreTestProperty1}-TEXTAREA"
+      - "${u:coreTestProperty1}-SELECT"
+      - "${u:coreTestProperty1}-MULTI_SELECT"
+      - "${u:coreTestProperty1}-HTTP_SELECT"
+      - "${u:coreTestProperty1}-HTTP_MULTI_SELECT"
+      
+  #==============================================================================          
+  # Add Application process definitions.
+  #==============================================================================          
+  - action: UcdAddApplicationProcessPropDefs
+    application: "${u:coreTestApp1}"
+    process: "${u:coreTestAppProcess1}"
+    propDefs:
+      - name: "${u:coreTestProperty1}-CHECKBOX"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "CHECKBOX"
+        pattern: ""
+        required: false
+        value: "true"
+
+      - name: "${u:coreTestProperty1}-DATETIME"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "DATETIME"
+        pattern: ""
+        required: false
+        value: "1893477600000"
+
+      - name: "${u:coreTestProperty1}-SECURE"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "SECURE"
+        pattern: ""
+        required: false
+        value: "${u:coreTestProperty1}-Value"
+
+      - name: "${u:coreTestProperty1}-TEXT"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "TEXT"
+        pattern: ""
+        required: false
+        value: "${u:coreTestProperty1}-Value"
+
+      - name: "${u:coreTestProperty1}-TEXTAREA"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "TEXTAREA"
+        pattern: ""
+        required: false
+        value: "${u:coreTestProperty1}-Value"
+
+      - name: "${u:coreTestProperty1}-SELECT"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "SELECT"
+        pattern: ""
+        required: false
+        allowedValues:
+          - label: "${u:coreTestProperty1}-Value1"
+            value: "${u:coreTestProperty1}-Value1"
+          - label: "${u:coreTestProperty1}-Value2"
+            value: "${u:coreTestProperty1}-Value2"
+        value: "${u:coreTestProperty1}-Value1"
+
+      - name: "${u:coreTestProperty1}-MULTI_SELECT"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "MULTI_SELECT"
+        pattern: ""
+        required: false
+        allowedValues:
+          - label: "${u:coreTestProperty1}-Value1"
+            value: "${u:coreTestProperty1}-Value1"
+          - label: "${u:coreTestProperty1}-Value2"
+            value: "${u:coreTestProperty1}-Value2"
+        value: "${u:coreTestProperty1}-Value1"
+
+      - name: "${u:coreTestProperty1}-HTTP_SELECT"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "HTTP_SELECT"
+        pattern: ""
+        required: false
+        httpUrl: "${u:ucdUrl}/cli/resource?parent=/"
+        httpUseBearerAuth: false
+        httpUsername: ""
+        httpPassword: ""
+        httpFormat: "JSON"
+        httpBasePath: ""
+        httpValuePath: ""
+        httpLabelPath: ""
+
+      - name: "${u:coreTestProperty1}-HTTP_MULTI_SELECT"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "HTTP_MULTI_SELECT"
+        pattern: ""
+        required: false
+        httpUrl: "${u:ucdUrl}/cli/resource?parent=/"
+        httpUseBearerAuth: false
+        httpUsername: ""
+        httpPassword: ""
+        httpFormat: "JSON"
+        httpBasePath: ""
+        httpValuePath: ""
+        httpLabelPath: ""
+    failIfExists: false
+  
+  #==============================================================================          
+  # Update Application process definitions.
+  #==============================================================================          
+  - action: UcdUpdateApplicationProcessPropDefs
+    application: "${u:coreTestApp1}"
+    process: "${u:coreTestAppProcess1}"
+    propDefs:
+      - name: "${u:coreTestProperty1}-CHECKBOX"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "CHECKBOX"
+        pattern: ""
+        required: false
+        value: "true"
+        
+      - name: "${u:coreTestProperty1}-DATETIME"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "DATETIME"
+        pattern: ""
+        required: false
+        value: "1893477600000"
+
+      - name: "${u:coreTestProperty1}-SECURE"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "SECURE"
+        pattern: ""
+        required: false
+        value: "${u:coreTestProperty1}-Value"
+        
+      - name: "${u:coreTestProperty1}-TEXT"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "TEXT"
+        pattern: ""
+        required: false
+        value: "${u:coreTestProperty1}-Value"
+
+      - name: "${u:coreTestProperty1}-TEXTAREA"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "TEXTAREA"
+        pattern: ""
+        required: false
+        value: "${u:coreTestProperty1}-Value"
+
+      - name: "${u:coreTestProperty1}-SELECT"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "SELECT"
+        pattern: ""
+        required: false
+        allowedValues:
+          - label: "${u:coreTestProperty1}-Value1"
+            value: "${u:coreTestProperty1}-Value1"
+          - label: "${u:coreTestProperty1}-Value2"
+            value: "${u:coreTestProperty1}-Value2"
+        value: "${u:coreTestProperty1}-Value1"
+
+      - name: "${u:coreTestProperty1}-MULTI_SELECT"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "MULTI_SELECT"
+        pattern: ""
+        required: false
+        allowedValues:
+          - label: "${u:coreTestProperty1}-Value1"
+            value: "${u:coreTestProperty1}-Value1"
+          - label: "${u:coreTestProperty1}-Value2"
+            value: "${u:coreTestProperty1}-Value2"
+        value: "${u:coreTestProperty1}-Value1"
+
+      - name: "${u:coreTestProperty1}-HTTP_SELECT"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "HTTP_SELECT"
+        pattern: ""
+        required: false
+        httpUrl: "${u:ucdUrl}/cli/resource?parent=/"
+        httpUseBearerAuth: false
+        httpUsername: ""
+        httpPassword: ""
+        httpFormat: "JSON"
+        httpBasePath: ""
+        httpValuePath: ""
+        httpLabelPath: ""
+        
+      - name: "${u:coreTestProperty1}-HTTP_MULTI_SELECT"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "HTTP_MULTI_SELECT"
+        pattern: ""
+        required: false
+        httpUrl: "${u:ucdUrl}/cli/resource?parent=/"
+        httpUseBearerAuth: false
+        httpUsername: ""
+        httpPassword: ""
+        httpFormat: "JSON"
+        httpBasePath: ""
+        httpValuePath: ""
+        httpLabelPath: ""

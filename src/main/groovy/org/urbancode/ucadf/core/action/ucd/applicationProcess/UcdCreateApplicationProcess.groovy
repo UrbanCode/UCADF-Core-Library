@@ -10,9 +10,9 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.action.ucd.role.UcdGetRole
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.applicationProcess.UcdApplicationProcessInventoryManagementTypeEnum
 import org.urbancode.ucadf.core.model.ucd.applicationProcess.UcdApplicationProcessOfflineAgentHandlingEnum
-import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.property.UcdPropDef
 import org.urbancode.ucadf.core.model.ucd.role.UcdRole
@@ -59,8 +59,6 @@ class UcdCreateApplicationProcess extends UcAdfAction {
 
 		Boolean created = false
 				
-		logVerbose("Creating application [$application] process [$name].")
-
 		// If an required role ID was provided then use it. Otherwise get the role information to get the ID.
 		String requiredRoleId = requiredRole
 		if (requiredRole && !UcdObject.isUUID(requiredRole)) {
@@ -72,6 +70,8 @@ class UcdCreateApplicationProcess extends UcAdfAction {
 			])
 			requiredRoleId = ucdRole.getId()
 		}
+
+		logVerbose("Creating application [$application] process [$name].")
 
 		Map requestMap = [
 			application: application,
@@ -85,7 +85,7 @@ class UcdCreateApplicationProcess extends UcAdfAction {
 		]
 		
 		JsonBuilder jsonBuilder = new JsonBuilder(requestMap)
-		
+		logVerbose(jsonBuilder.toString())
 
 		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/applicationProcess/create")
 		logDebug("target=$target")

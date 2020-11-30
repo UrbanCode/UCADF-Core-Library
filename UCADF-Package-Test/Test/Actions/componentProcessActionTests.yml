@@ -30,3 +30,259 @@ actions:
     process: "${u:coreTestCompProcessDelete}"
     failIfNotFound: false
     
+  #==============================================================================          
+  # Create component processes.
+  #==============================================================================          
+  - action: UcdCreateComponentProcess
+    component: "${u:coreTestComp1}"
+    name: "${u:coreTestCompProcessDeployment}"
+    type: "DEPLOYMENT"
+    failIfExists: false
+
+  - action: UcdCreateComponentProcess
+    component: "${u:coreTestComp1}"
+    name: "${u:coreTestCompProcessConfigurationDeployment}"
+    type: "CONFIGURATIONDEPLOYMENT"
+    failIfExists: false
+
+  - action: UcdCreateComponentProcess
+    component: "${u:coreTestComp1}"
+    name: "${u:coreTestCompProcessUninstall}"
+    type: "UNINSTALL"
+    failIfExists: false
+
+  - action: UcdCreateComponentProcess
+    component: "${u:coreTestComp1}"
+    name: "${u:coreTestCompProcessOperationalWithVersion}"
+    type: "OPERATIONALWITHVERSION"
+    failIfExists: false
+
+  - action: UcdCreateComponentProcess
+    component: "${u:coreTestComp1}"
+    name: "${u:coreTestCompProcessOperationalNoVersion}"
+    type: "OPERATIONALNOVERSION"
+    failIfExists: false
+
+  #==============================================================================          
+  # Delete Component process definitions.
+  #==============================================================================          
+  - action: UcdDeleteComponentProcessPropDefs
+    component: "${u:coreTestComp1}"
+    process: "${u:coreTestCompProcessDeployment}"
+    names:
+      - "${u:coreTestProperty1}-CHECKBOX"
+      - "${u:coreTestProperty1}-DATETIME"
+      - "${u:coreTestProperty1}-SECURE"
+      - "${u:coreTestProperty1}-TEXT"
+      - "${u:coreTestProperty1}-TEXTAREA"
+      - "${u:coreTestProperty1}-SELECT"
+      - "${u:coreTestProperty1}-MULTI_SELECT"
+      - "${u:coreTestProperty1}-HTTP_SELECT"
+      - "${u:coreTestProperty1}-HTTP_MULTI_SELECT"
+      
+  #==============================================================================          
+  # Add Component process definitions.
+  #==============================================================================          
+  - action: UcdAddComponentProcessPropDefs
+    component: "${u:coreTestComp1}"
+    process: "${u:coreTestCompProcessDeployment}"
+    propDefs:
+      - name: "${u:coreTestProperty1}-CHECKBOX"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "CHECKBOX"
+        pattern: ""
+        required: false
+        value: "true"
+
+      - name: "${u:coreTestProperty1}-DATETIME"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "DATETIME"
+        pattern: ""
+        required: false
+        value: "1893477600000"
+
+      - name: "${u:coreTestProperty1}-SECURE"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "SECURE"
+        pattern: ""
+        required: false
+        value: "${u:coreTestProperty1}-Value"
+
+      - name: "${u:coreTestProperty1}-TEXT"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "TEXT"
+        pattern: ""
+        required: false
+        value: "${u:coreTestProperty1}-Value"
+
+      - name: "${u:coreTestProperty1}-TEXTAREA"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "TEXTAREA"
+        pattern: ""
+        required: false
+        value: "${u:coreTestProperty1}-Value"
+
+      - name: "${u:coreTestProperty1}-SELECT"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "SELECT"
+        pattern: ""
+        required: false
+        allowedValues:
+          - label: "${u:coreTestProperty1}-Value1"
+            value: "${u:coreTestProperty1}-Value1"
+          - label: "${u:coreTestProperty1}-Value2"
+            value: "${u:coreTestProperty1}-Value2"
+        value: "${u:coreTestProperty1}-Value1"
+
+      - name: "${u:coreTestProperty1}-MULTI_SELECT"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "MULTI_SELECT"
+        pattern: ""
+        required: false
+        allowedValues:
+          - label: "${u:coreTestProperty1}-Value1"
+            value: "${u:coreTestProperty1}-Value1"
+          - label: "${u:coreTestProperty1}-Value2"
+            value: "${u:coreTestProperty1}-Value2"
+        value: "${u:coreTestProperty1}-Value1"
+
+      - name: "${u:coreTestProperty1}-HTTP_SELECT"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "HTTP_SELECT"
+        pattern: ""
+        required: false
+        httpUrl: "${u:ucdUrl}/cli/resource?parent=/"
+        httpUseBearerAuth: false
+        httpUsername: ""
+        httpPassword: ""
+        httpFormat: "JSON"
+        httpBasePath: ""
+        httpValuePath: ""
+        httpLabelPath: ""
+
+      - name: "${u:coreTestProperty1}-HTTP_MULTI_SELECT"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "HTTP_MULTI_SELECT"
+        pattern: ""
+        required: false
+        httpUrl: "${u:ucdUrl}/cli/resource?parent=/"
+        httpUseBearerAuth: false
+        httpUsername: ""
+        httpPassword: ""
+        httpFormat: "JSON"
+        httpBasePath: ""
+        httpValuePath: ""
+        httpLabelPath: ""
+    failIfExists: false
+  
+  #==============================================================================          
+  # Update Component process definitions.
+  #==============================================================================          
+  - action: UcdUpdateComponentProcessPropDefs
+    component: "${u:coreTestComp1}"
+    process: "${u:coreTestCompProcessDeployment}"
+    propDefs:
+      - name: "${u:coreTestProperty1}-CHECKBOX"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "CHECKBOX"
+        pattern: ""
+        required: false
+        value: "true"
+        
+      - name: "${u:coreTestProperty1}-DATETIME"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "DATETIME"
+        pattern: ""
+        required: false
+        value: "1893477600000"
+
+      - name: "${u:coreTestProperty1}-SECURE"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "SECURE"
+        pattern: ""
+        required: false
+        value: "${u:coreTestProperty1}-Value"
+        
+      - name: "${u:coreTestProperty1}-TEXT"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "TEXT"
+        pattern: ""
+        required: false
+        value: "${u:coreTestProperty1}-Value"
+
+      - name: "${u:coreTestProperty1}-TEXTAREA"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "TEXTAREA"
+        pattern: ""
+        required: false
+        value: "${u:coreTestProperty1}-Value"
+
+      - name: "${u:coreTestProperty1}-SELECT"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "SELECT"
+        pattern: ""
+        required: false
+        allowedValues:
+          - label: "${u:coreTestProperty1}-Value1"
+            value: "${u:coreTestProperty1}-Value1"
+          - label: "${u:coreTestProperty1}-Value2"
+            value: "${u:coreTestProperty1}-Value2"
+        value: "${u:coreTestProperty1}-Value1"
+
+      - name: "${u:coreTestProperty1}-MULTI_SELECT"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "MULTI_SELECT"
+        pattern: ""
+        required: false
+        allowedValues:
+          - label: "${u:coreTestProperty1}-Value1"
+            value: "${u:coreTestProperty1}-Value1"
+          - label: "${u:coreTestProperty1}-Value2"
+            value: "${u:coreTestProperty1}-Value2"
+        value: "${u:coreTestProperty1}-Value1"
+
+      - name: "${u:coreTestProperty1}-HTTP_SELECT"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "HTTP_SELECT"
+        pattern: ""
+        required: false
+        httpUrl: "${u:ucdUrl}/cli/resource?parent=/"
+        httpUseBearerAuth: false
+        httpUsername: ""
+        httpPassword: ""
+        httpFormat: "JSON"
+        httpBasePath: ""
+        httpValuePath: ""
+        httpLabelPath: ""
+        
+      - name: "${u:coreTestProperty1}-HTTP_MULTI_SELECT"
+        description: "${u:coreTestProperty1} description."
+        label: "${u:coreTestProperty1} label"
+        type: "HTTP_MULTI_SELECT"
+        pattern: ""
+        required: false
+        httpUrl: "${u:ucdUrl}/cli/resource?parent=/"
+        httpUseBearerAuth: false
+        httpUsername: ""
+        httpPassword: ""
+        httpFormat: "JSON"
+        httpBasePath: ""
+        httpValuePath: ""
+        httpLabelPath: ""

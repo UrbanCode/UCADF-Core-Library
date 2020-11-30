@@ -90,11 +90,10 @@ class UcdGetTeamUsers extends UcAdfAction {
 		Object teamUsers
 		if (ReturnAsEnum.LIST.equals(returnAs)) {
 			// Convert the map to a list.
-			List<UcdUser> ucdUsers = []
+			teamUsers = []
 			ucdUsersMap.each { userName, ucdUser ->
-				ucdUsers.add(ucdUser)
+				teamUsers.add(ucdUser)
 			}
-			teamUsers = ucdUsers
 		} else {
 			teamUsers = ucdUsersMap
 		}

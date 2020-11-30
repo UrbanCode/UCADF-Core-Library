@@ -26,6 +26,9 @@ actions:
   # Run the tests.
   #==============================================================================          
   - action: UcAdfRunActionsFromFile
+    fileName: "${u:testActionsDir}/cryptActionTests.yml"
+    
+  - action: UcAdfRunActionsFromFile
     fileName: "${u:testActionsDir}/ucAdfGeneralActionTests.yml"
     
   - action: UcAdfRunActionsFromFile

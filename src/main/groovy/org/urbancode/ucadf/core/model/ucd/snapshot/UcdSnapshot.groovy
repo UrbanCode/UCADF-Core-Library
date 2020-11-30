@@ -10,6 +10,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class UcdSnapshot extends UcdObject {
+	// Common process properties.
+	public final static String PROPNAME_ID = "snapshot.id"
+	public final static String PROPNAME_NAME = "snapshot.name"
+	
 	/** The snapshot ID. */
 	String id
 	

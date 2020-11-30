@@ -7,8 +7,11 @@ import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
+import org.urbancode.ucadf.core.action.ucd.security.UcdGetSecuritySubtype
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
+import org.urbancode.ucadf.core.model.ucd.general.UcdObject
+import org.urbancode.ucadf.core.model.ucd.security.UcdSecuritySubtype
 import org.urbancode.ucadf.core.model.ucd.team.UcdTeamSecurity
 
 class UcdRemoveEnvironmentFromTeams extends UcAdfAction {
@@ -34,6 +37,19 @@ class UcdRemoveEnvironmentFromTeams extends UcAdfAction {
 			String team = teamSecurity.getTeam()
 			String subtype = teamSecurity.getSubtype()
 					
+			// Get the subtype name.
+			String subtypeName = subtype
+			if (subtype && UcdObject.isUUID(subtype)) {
+				UcdSecuritySubtype ucdSecuritySubtype = actionsRunner.runAction([
+					action: UcdGetSecuritySubtype.getSimpleName(),
+					actionInfo: false,
+					actionVerbose: false,
+					subtype: subtype
+				])
+
+				subtypeName = ucdSecuritySubtype.getName()
+			}
+
 			logVerbose("Remove application [$application] from team [$team] subtype [$subtype].")
 			logVerbose("Removing application [$application] environment [$environment] from team [$team] subtype [$subtype].")
 			
@@ -41,7 +57,7 @@ class UcdRemoveEnvironmentFromTeams extends UcAdfAction {
 				.queryParam("application", application)
 				.queryParam("environment", environment)
 				.queryParam("team", team)
-				.queryParam("type", subtype ?: "")
+				.queryParam("type", subtypeName ?: "")
 			logDebug("target=$target")
 
 			Response response = target.request(MediaType.APPLICATION_JSON).delete()
