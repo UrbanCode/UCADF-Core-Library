@@ -37,9 +37,9 @@ class UcdRemoveAgentFromTeams extends UcAdfAction {
 					
 			logVerbose("Remove agent [$agent] from team [$team] subtype [$subtype].")
 	
-			// Get the subtype ID.
-			String subtypeId = subtype
-			if (subtype && !UcdObject.isUUID(subtype)) {
+			// Get the subtype name.
+			String subtypeName = subtype
+			if (subtype && UcdObject.isUUID(subtype)) {
 				UcdSecuritySubtype ucdSecuritySubtype = actionsRunner.runAction([
 					action: UcdGetSecuritySubtype.getSimpleName(),
 					actionInfo: false,
@@ -47,13 +47,13 @@ class UcdRemoveAgentFromTeams extends UcAdfAction {
 					subtype: subtype
 				])
 
-				subtypeId = ucdSecuritySubtype.getId()
+				subtypeName = ucdSecuritySubtype.getName()
 			}
 
 			WebTarget target = ucdSession.getUcdWebTarget().path("/cli/agentCLI/teams")
 				.queryParam("agent", agent)
 				.queryParam("team", team)
-				.queryParam("type", subtypeId)
+				.queryParam("type", subtypeName)
 			logDebug("target=$target")
 			
 			Response response = target.request(MediaType.APPLICATION_JSON).delete()

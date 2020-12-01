@@ -11,7 +11,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.As
 	@Type(value = UcdSnapshotConfigurationPropSheet.class, name = UcdSnapshotConfigurationPropSheet.CLASS_NAME),
 	@Type(value = UcdSnapshotConfigurationApprovalProcess.class, name = UcdSnapshotConfigurationApprovalProcess.CLASS_NAME),
 	@Type(value = UcdSnapshotConfigurationApplicationProcess.class, name = UcdSnapshotConfigurationApplicationProcess.CLASS_NAME),
-	@Type(value = UcdSnapshotConfigurationComponentProcess.class, name = UcdSnapshotConfigurationComponentProcess.CLASS_NAME)
+	@Type(value = UcdSnapshotConfigurationComponentProcess.class, name = UcdSnapshotConfigurationComponentProcess.CLASS_NAME),
+	@Type(value = UcdSnapshotConfigurationPromotedComponentProcess.class, name = UcdSnapshotConfigurationPromotedComponentProcess.CLASS_NAME)
 ])
 interface UcdSnapshotConfigurationTypeByClassName {
 }

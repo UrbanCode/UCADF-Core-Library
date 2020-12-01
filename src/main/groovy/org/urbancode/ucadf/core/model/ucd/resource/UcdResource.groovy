@@ -19,6 +19,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class UcdResource extends UcdSecurityTypeObject {
+	// Common process properties.
+	public final static String PROPNAME_ID = "resource.id"
+	public final static String PROPNAME_NAME = "resource.name"
+	public final static String PROPNAME_PARENT_PATH = "resource.parent.path"
+	public final static String PROPNAME_PATH = "resource.path"
+	public final static String PROPNAME_ROLE_ID = "resource.role.id"
+	public final static String PROPNAME_ROLE_NAME = "resource.role.name"
+	
 	/** The path delimiter. */
 	public final static String PATHDELIMITER = "/"
 

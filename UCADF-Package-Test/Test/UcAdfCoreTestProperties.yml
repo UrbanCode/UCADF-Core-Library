@@ -60,8 +60,11 @@ propertyValues:
   coreTestCompStandardFull2: "UCADFCORETEST-CompStandardFull2"
   
   # Component processes.
-  coreTestCompProcess1: "UCADFCORETEST-CompProcess1"
-  coreTestCompProcess2: "UCADFCORETEST-CompProcess2"
+  coreTestCompProcessDeployment: "UCADFCORETEST-CompProcess-DEPLOYMENT"
+  coreTestCompProcessConfigurationDeployment: "UCADFCORETEST-CompProcess-CONFIGURATIONDEPLOYMENT"
+  coreTestCompProcessUninstall: "UCADFCORETEST-CompProcess-UNINSTALL"
+  coreTestCompProcessOperationalWithVersion: "UCADFCORETEST-CompProcess-OPERATIONALWITHVERSION"
+  coreTestCompProcessOperationalNoVersion: "UCADFCORETEST-CompProcess-OPERATIONALNOVERSION"
   coreTestCompProcessDelete: "UCADFCORETEST-CompProcessDelete"
 
   # Component configuration templates.

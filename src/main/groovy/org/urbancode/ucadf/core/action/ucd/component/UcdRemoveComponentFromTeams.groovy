@@ -12,7 +12,6 @@ import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.security.UcdSecuritySubtype
-import org.urbancode.ucadf.core.model.ucd.security.UcdSecurityTypeEnum
 import org.urbancode.ucadf.core.model.ucd.team.UcdTeamSecurity
 
 class UcdRemoveComponentFromTeams extends UcAdfAction {
@@ -38,8 +37,8 @@ class UcdRemoveComponentFromTeams extends UcAdfAction {
 			logVerbose("Remove component [$component] from team [$team] subtype [$subtype].")
 	
 			// Replaces the subtype IDs in the team mappings by looking up the ID using the subtype name.
-			String subtypeId = subtype
-			if (subtype && !UcdObject.isUUID(subtype)) {
+			String subtypeName = subtype
+			if (subtype && UcdObject.isUUID(subtype)) {
 				UcdSecuritySubtype ucdSecuritySubtype = actionsRunner.runAction([
 					action: UcdGetSecuritySubtype.getSimpleName(),
 					actionInfo: false,
@@ -47,13 +46,13 @@ class UcdRemoveComponentFromTeams extends UcAdfAction {
 					subtype: subtype
 				])
 	
-				subtypeId = ucdSecuritySubtype.getId()
+				subtypeName = ucdSecuritySubtype.getName()
 			}
 
 			WebTarget target = ucdSession.getUcdWebTarget().path("/cli/component/teams")
 				.queryParam("component", component)
 				.queryParam("team", team)
-				.queryParam("type", subtypeId)
+				.queryParam("type", subtypeName)
 			logDebug("target=$target")
 
 			Response response = target.request(MediaType.APPLICATION_JSON).delete()

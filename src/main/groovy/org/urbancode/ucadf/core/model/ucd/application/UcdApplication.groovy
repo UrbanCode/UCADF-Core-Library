@@ -14,6 +14,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class UcdApplication extends UcdSecurityTypeObject {
+	// Common process properties.
+	public final static String PROPNAME_ID = "application.id"
+	public final static String PROPNAME_NAME = "application.name"
+	
 	/** The application ID. */
 	String id
 	

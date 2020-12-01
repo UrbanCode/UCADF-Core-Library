@@ -8,16 +8,28 @@ import org.urbancode.ucadf.core.model.ucd.componentTemplate.UcdComponentTemplate
 import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
 
 class UcdGetComponentTemplateProperties extends UcAdfAction {
+	/** The type of collection to return. */
+	enum ReturnAsEnum {
+		/** Return as List<UcdProperty>. */
+		LIST,
+		
+		/** Return as Map<String, UcdProperty> having the property name as the key. */
+		MAPBYNAME
+	}
+
 	// Action properties.
 	/** The component template name or ID. */
 	String componentTemplate
+
+	/** The type of collection to return. */
+	ReturnAsEnum returnAs = ReturnAsEnum.LIST
 	
 	/**
 	 * Runs the action.	
-	 * @return The list of property objects.
+	 * @return The specified type of collection.
 	 */
 	@Override
-	public List<UcdProperty> run() {
+	public Object run() {
 		// Validate the action properties.
 		validatePropsExist()
 
@@ -33,6 +45,17 @@ class UcdGetComponentTemplateProperties extends UcAdfAction {
 			failIfNotFound: true
 		])
 
-		return ucdComponentTemplate.getPropValues()
+		// Return as requested.
+		Object componentTemplateProperties
+		if (ReturnAsEnum.LIST.equals(returnAs)) {
+			componentTemplateProperties = ucdComponentTemplate.getPropValues()
+		} else {
+			componentTemplateProperties = [:]
+			for (ucdProperty in ucdComponentTemplate.getPropValues()) {
+				componentTemplateProperties.put(ucdProperty.getName(), ucdProperty)
+			}
+		}
+
+		return componentTemplateProperties
 	}
 }

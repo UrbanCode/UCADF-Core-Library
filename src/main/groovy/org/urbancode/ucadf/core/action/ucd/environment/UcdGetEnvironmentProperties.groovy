@@ -55,11 +55,10 @@ class UcdGetEnvironmentProperties extends UcAdfAction {
 			if (ReturnAsEnum.LIST.equals(returnAs)) {
 				environmentProperties = ucdProperties
 			} else {
-				Map<String, UcdProperty> propertiesMap = [:]
+				environmentProperties = [:]
 				for (ucdProperty in ucdProperties) {
-					propertiesMap.put(ucdProperty.getName(), ucdProperty)
+					environmentProperties.put(ucdProperty.getName(), ucdProperty)
 				}
-				environmentProperties = propertiesMap
 			}
 		} else {
             throw new UcAdfInvalidValueException(response)

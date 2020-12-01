@@ -12,6 +12,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class UcdComponentProcessRequest extends UcdProcessRequestTrace {
+	// Common process properties.
+	public final static String PROPNAME_REQUEST_ID = "request.id"
+	public final static String PROPNAME_PARENTREQUEST_ID = "parentRequest.id"
+	
 	/** The submitted time. */
 	Long submittedTime
 	

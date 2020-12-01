@@ -14,10 +14,10 @@ import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
 class UcdGetResourceProperties extends UcAdfAction {
 	/** The type of collection to return. */
 	enum ReturnAsEnum {
-		/** Return as a list. */
+		/** Return as List<UcdProperty>. */
 		LIST,
 		
-		/** Return as a map having the property name as the key. */
+		/** Return as Map<String, UcdProperty> having the property name as the key. */
 		MAPBYNAME
 	}
 
@@ -62,11 +62,10 @@ class UcdGetResourceProperties extends UcAdfAction {
 		if (ReturnAsEnum.LIST.equals(returnAs)) {
 			resourceProperties = ucdProperties
 		} else {
-			Map<String, UcdProperty> propertiesMap = [:]
+			resourceProperties = [:]
 			for (ucdProperty in ucdProperties) {
-				propertiesMap.put(ucdProperty.getName(), ucdProperty)
+				resourceProperties.put(ucdProperty.getName(), ucdProperty)
 			}
-			resourceProperties = propertiesMap
 		}
 		
 		return resourceProperties

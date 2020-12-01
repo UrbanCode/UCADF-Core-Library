@@ -3,8 +3,6 @@
  */
 package org.urbancode.ucadf.core.model.ucd.system
 
-import java.util.logging.Filter
-import java.util.logging.LogRecord
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -13,7 +11,6 @@ import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.Response
 
 import org.glassfish.jersey.client.ClientConfig
-import org.glassfish.jersey.client.ClientProperties
 import org.urbancode.ucadf.core.integration.jersey.JerseyManager
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
@@ -191,24 +188,13 @@ class UcdSession {
 	 */
 	public Client getWebNonCompliantClient() {
 		if (!ucdWebNonCompliantClient) {
-			ClientConfig config = new ClientConfig()
-			config.property(ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION, true)
-			ucdWebNonCompliantClient = getUcdConfiguredClient(config)
-
-			// Suppress the DELETE with no body warnings
-			java.util.logging.Logger jerseyLogger =
-				java.util.logging.Logger.getLogger(org.glassfish.jersey.client.JerseyInvocation.class.getName())
-				jerseyLogger.setFilter(new Filter() {
-					@Override
-					public boolean isLoggable(LogRecord record) {
-						boolean isLoggable = true
-						if (record.getMessage().contains("Entity must be null for http method DELETE")) {
-							isLoggable = false
-						}
-						return isLoggable
-					}
-				})
+			if (ucdUserId && ucdUserPw) {
+				ucdWebNonCompliantClient = JerseyManager.getNonCompliantConfiguredClient(ucdUserId, ucdUserPw)
+			} else {
+				ucdWebNonCompliantClient = JerseyManager.getNonCompliantConfiguredClient(null, null)
+			}
 		}
+		
 		return ucdWebNonCompliantClient
 	}
 	
@@ -237,7 +223,7 @@ class UcdSession {
 			
 			// By adding this header it doesn't require authentication.
 			Response response = target.request().get()
-			if (response.getStatus() != 200 && response.status != 401) {	
+			if (response.getStatus() != 200 && response.getStatus() != 401) {	
 				log.error response.readEntity(String.class)
 				throw new UcAdfInvalidValueException("Status: ${response.getStatus()} Unable to get UrbanCode Deploy version. $target")
 			}

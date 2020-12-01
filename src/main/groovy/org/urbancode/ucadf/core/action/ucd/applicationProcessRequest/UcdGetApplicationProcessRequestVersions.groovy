@@ -68,7 +68,7 @@ class UcdGetApplicationProcessRequestVersions extends UcAdfAction {
 		
 		Response response = target.request().get()
 		UcdApplicationProcessRequestVersions ucdApplicationProcessRequestVersions
-		if (response.status == 200) {
+		if (response.getStatus() == 200) {
 			// API call returns a list of version objects and for each of the associated component objects.
 			ucdApplicationProcessRequestVersions = response.readEntity(UcdApplicationProcessRequestVersions.class)
 
@@ -142,7 +142,7 @@ class UcdGetApplicationProcessRequestVersions extends UcAdfAction {
 		} else {
 			String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 			logVerbose(errMsg)
-			if (response.getStatus() == 400 || response.status == 404) {
+			if (response.getStatus() == 400 || response.getStatus() == 404) {
 				if (failIfNotFound) {
 					throw new UcAdfInvalidValueException(errMsg)
 				}

@@ -50,11 +50,10 @@ class UcdGetComponentProcessRequestProperties extends UcAdfAction {
 			if (ReturnAsEnum.LIST.equals(returnAs)) {
 				processProperties = ucdProperties
 			} else {
-				Map<String, UcdProperty> propertiesMap = [:]
+				processProperties = [:]
 				for (ucdProperty in ucdProperties) {
-					propertiesMap.put(ucdProperty.getName(), ucdProperty)
+					processProperties.put(ucdProperty.getName(), ucdProperty)
 				}
-				processProperties = propertiesMap
 			}
 		} else {
             throw new UcAdfInvalidValueException(response)

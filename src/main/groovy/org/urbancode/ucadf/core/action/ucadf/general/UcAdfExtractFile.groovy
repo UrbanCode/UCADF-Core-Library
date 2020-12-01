@@ -7,6 +7,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 class UcAdfExtractFile extends UcAdfAction {
 	/** The extract file type. */
@@ -94,7 +95,12 @@ class UcAdfExtractFile extends UcAdfAction {
 			ZipInputStream zipInputStream = new ZipInputStream(inputStream)
 			
 			ZipEntry zipEntry = zipInputStream.getNextEntry()
+			if (!zipEntry) {
+				throw new UcAdfInvalidValueException("Unable to get information from zip file [$extractFile].")
+			}
+			
 			while(zipEntry != null) {
+
 				File newFile = new File("${extractDir.getPath()}${File.separator}${zipEntry.getName()}")
 				if (verbose) {
 					println "Unzipping ${newFile.getPath()}"

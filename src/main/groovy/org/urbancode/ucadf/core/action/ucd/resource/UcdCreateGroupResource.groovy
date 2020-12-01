@@ -26,24 +26,70 @@ class UcdCreateGroupResource extends UcAdfAction {
 	
 	/** The flag that indicates fail if the group resource already exists. Default is true. */
 	Boolean failIfExists = true
+
+	// Private properties.
+	private String name
+	private Boolean created = false
 	
 	/**
 	 * Runs the action.	
 	 * @return True if the group resource was created.
 	 */
 	@Override
-	public Object run() {
+	public Boolean run() {
 		// Validate the action properties.
 		validatePropsExist()
 
-		Boolean created = false
-		
 		// If no parent path was provided then split the provided path to get the parent.
-		String name = resource
+		name = resource
 		if (!parent) {
 			(parent, name) = UcdResource.getParentPathAndName(resource)
 		}
 
+		// Attempt to create the resource. If it encounters a unique result error then try to delete it and try to create it again.
+		if (createResource(false)) {
+			// Attempt to delete the resource.
+			actionsRunner.runAction([
+				action: UcdDeleteResource.getSimpleName(),
+				actionInfo: true,
+				actionVerbose: true,
+				resource: resource
+			])
+			
+			// Attempt to create the resource again.
+			createResource(true)
+		}
+
+		// If the resource was created then attempt to get it to make sure there's no unique result problem.
+		if (created) {
+			WebTarget target = ucdSession.getUcdWebTarget().path("/cli/resource/info")
+				.queryParam("resource", "${parent}/${name}")
+			logDebug("target=$target")
+		
+			Response response = target.request().get()
+			
+			// If the get encounters a unique result error then delete the resource and create it again.
+			if (response.getStatus() == 400 && response.readEntity(String.class).matches(/.*query did not return a unique result.*/)) {
+				// Attempt to delete the resource.
+				actionsRunner.runAction([
+					action: UcdDeleteResource.getSimpleName(),
+					actionInfo: true,
+					actionVerbose: true,
+					resource: resource
+				])
+				
+				// Attempt to create the resource again.
+				createResource(true)
+			}
+		}
+		
+		return created
+	}
+
+	// Attempt to create the resource.	
+	public Boolean createResource(final Boolean retry) {
+		Boolean uniqueResultError = false
+		
 		logVerbose("Creating group resource [$parent/$name].")
 
 		// Construct the request map.
@@ -56,25 +102,14 @@ class UcdCreateGroupResource extends UcAdfAction {
 		JsonBuilder jsonBuilder = new JsonBuilder(requestMap)
 		logDebug("jsonBuilder=${jsonBuilder.toString()}")
 
-		WebTarget target 
-		Response response
-		
-		target = ucdSession.getUcdWebTarget().path("/cli/resource/create")
+		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/resource/create")
 		logDebug("target=$target")
-		
-		response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
+
+		Response response = target.request(MediaType.APPLICATION_JSON)
+			.put(Entity.json(jsonBuilder.toString()))
+			
 		if (response.getStatus() == 200) {
 			created = true
-			
-			// Get the resource to verify it exists and to get the ID.
-			target = ucdSession.getUcdWebTarget().path("/cli/resource/info")
-				.queryParam("resource", resource)
-			logDebug("target=$target")
-		
-			response = target.request().get()
-			if (response.getStatus() != 200) {
-				println response.getStatus()
-			}
 		} else {
 			String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 			if (response.getStatus() == 400 && errMsg.matches(/.*already exists.*/)) {
@@ -83,11 +118,13 @@ class UcdCreateGroupResource extends UcAdfAction {
 				} else {
 					logVerbose("Resource [$parent/$name] already exists.")
 				}
+			} else if (!retry && response.getStatus() == 400 && errMsg.matches(/.*query did not return a unique result.*/)) {
+				uniqueResultError = true
 			} else {
 				throw new UcAdfInvalidValueException(errMsg)
 			}
 		}
 		
-		return created
+		return uniqueResultError
 	}
 }

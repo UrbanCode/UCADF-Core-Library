@@ -7,11 +7,10 @@ import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
-import org.urbancode.ucadf.core.model.ucd.agent.UcdAgent
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
+import org.urbancode.ucadf.core.model.ucd.agent.UcdAgent
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
 import org.urbancode.ucadf.core.model.ucd.property.UcdPropSheet
-import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
 
 class UcdGetAgentProperties extends UcAdfAction {
 	/** The type of collection to return. */
@@ -66,11 +65,10 @@ class UcdGetAgentProperties extends UcAdfAction {
 			if (ReturnAsEnum.LIST.equals(returnAs)) {
 				agentProperties = ucdPropSheet.getProperties()
 			} else {
-				Map<String, UcdProperty> propertiesMap = [:]
+				agentProperties = [:]
 				for (agentProperty in ucdPropSheet.getProperties()) {
-					propertiesMap.put(agentProperty.getName(), agentProperty)
+					agentProperties.put(agentProperty.getName(), agentProperty)
 				}
-				agentProperties = propertiesMap
 			}
 		} else {
             throw new UcAdfInvalidValueException(response)

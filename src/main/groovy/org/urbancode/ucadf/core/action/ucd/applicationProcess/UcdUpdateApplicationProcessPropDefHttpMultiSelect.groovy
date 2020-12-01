@@ -16,6 +16,7 @@ import org.urbancode.ucadf.core.model.ucd.property.UcdPropDefHttpMultiSelect
 
 import groovy.json.JsonBuilder
 
+@Deprecated	// Use UcdUpdateApplicationProcessPropDefs action.
 class UcdUpdateApplicationProcessPropDefHttpMultiSelect extends UcAdfAction {
 	// Action properties.
 	/** The application name or ID. If not specified then process must be an ID. */

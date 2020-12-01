@@ -16,6 +16,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class UcdApplicationProcessRequest extends UcdObject {
+	// Common process properties.
+	public final static String PROPNAME_ID = "applicationProcess.id"
+	public final static String PROPNAME_NAME = "applicationProcess.name"
+	public final static String PROPNAME_USER_ID = "request.user.id"
+	public final static String PROPNAME_USER_NAME = "request.user.name"
+	
 	/** The root trace object. */
 	UcdProcessRequestTrace rootTrace
 	

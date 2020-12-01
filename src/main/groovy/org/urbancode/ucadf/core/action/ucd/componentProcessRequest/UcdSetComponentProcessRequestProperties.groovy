@@ -18,7 +18,7 @@ import groovy.json.JsonBuilder
 
 class UcdSetComponentProcessRequestProperties extends UcAdfAction {
 	// Action properties.
-	/** The application Process request ID. */
+	/** The component process request ID. */
 	String requestId
 	
 	/** The list of properties. */

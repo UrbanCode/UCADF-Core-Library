@@ -48,11 +48,11 @@ class UcdDeleteAgent extends UcAdfAction {
 				Response response = target.request(MediaType.APPLICATION_JSON).delete()
 				response.bufferEntity()
 				
-				if (response.status == 204) {
+				if (response.getStatus() == 204) {
 					logVerbose("Agent [$agent] deleted.")
 					deleted = true
 					break
-				} else if (response.status == 404) {
+				} else if (response.getStatus() == 404) {
 					String errMsg = UcAdfInvalidValueException.getResponseErrorMessage(response)
 					logVerbose(errMsg)
 					if (failIfNotFound) {
