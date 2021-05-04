@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response
 
 import org.glassfish.jersey.client.ClientConfig
 import org.urbancode.ucadf.core.integration.jersey.JerseyManager
+import org.urbancode.ucadf.core.model.ucadf.UcAdfObject
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 import com.fasterxml.jackson.annotation.JsonIgnore
@@ -21,7 +22,7 @@ import groovy.util.logging.Slf4j
 
 @Slf4j
 @TypeChecked
-class UcdSession {
+class UcdSession extends UcAdfObject {
 	public final static String PASSWORDISAUTHTOKEN = "PasswordIsAuthToken"
 	
 	// UrbanCode version matches.

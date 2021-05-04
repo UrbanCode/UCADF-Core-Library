@@ -64,19 +64,20 @@ class UcdSetComponentTemplateProperties extends UcAdfAction {
 			}
 	
 			if (ucdExistingProperty) {
-				// Update the property.
+				logDebug("Update existing property.")
 				target = ucdSession.getUcdWebTarget().path("/property/propSheet/componentTemplates{templateLookup}propSheet.-1/propValues/{propName}")
 					.resolveTemplateFromEncoded("templateLookup", templateId)
 					.resolveTemplate("propName", ucdProperty.getName())
 					
 				requestMap.put("existingId", ucdExistingProperty.getId())
 			} else {
-				// Add the property.
+				logDebug("Add property.")
 				target = ucdSession.getUcdWebTarget().path("/property/propSheet/componentTemplates{templateLookup}propSheet.-1/propValues")
 					.resolveTemplateFromEncoded("templateLookup", templateId)
 			}
 			logDebug("target=$target")
-	
+			logDebug("requestMap=$requestMap")
+			
 			JsonBuilder jsonBuilder = new JsonBuilder(requestMap)
 			
 			// Had to put Version in the header to avoid 409 status errors		
@@ -87,8 +88,8 @@ class UcdSetComponentTemplateProperties extends UcAdfAction {
 			if (response.getStatus() == 200) {
 				logVerbose("Property [${ucdProperty.getName()}] set.")
 				
-				// Intentionally sleeping because of UCD 6.1 problems if the component template properties are updated too quickly in succession.
-				Thread.sleep(1000)
+				// Intentionally sleeping because of problems if the component template properties are updated too quickly in succession.
+				Thread.sleep(1500)
 			} else {
 	            throw new UcAdfInvalidValueException(response)
 			}

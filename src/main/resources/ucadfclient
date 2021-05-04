@@ -33,7 +33,7 @@ then
 	
     if [ -f "$UCADFJAR" ];
     then
-		"$JAVACOMMAND" -classpath "$UCADF_CLASSPATH" -Dlog4j.configurationFile="$LOG4JPROPS" org.urbancode.ucadf.core.client.UcAdfClient $@
+		"$JAVACOMMAND" -classpath "$UCADF_CLASSPATH" -Dlog4j.configurationFile="$LOG4JPROPS" org.urbancode.ucadf.core.client.UcAdfClient "$@"
 	else
 		echo "$UCADFJAR file not found."
 		exit 1

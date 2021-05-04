@@ -54,7 +54,7 @@ class UcdDeleteAutomationPlugin extends UcAdfAction {
 				logDebug("target=$target")
 				
 				// Logic to handle concurrency issue that might exist in some UCD versions.
-				final Integer MAXATTEMPTS = 5
+				final Integer MAXATTEMPTS = 10
 				for (Integer iAttempt = 1; iAttempt <= MAXATTEMPTS; iAttempt++) {
 					Response response = target.request(MediaType.APPLICATION_JSON).delete()
 					response.bufferEntity()
@@ -74,7 +74,7 @@ class UcdDeleteAutomationPlugin extends UcAdfAction {
 						String responseStr = response.readEntity(String.class)
 						logVerbose(responseStr)
 						if (responseStr ==~ /.*bulk manipulation query.*/ && iAttempt < MAXATTEMPTS) {
-							logVerbose("Attempt $iAttempt failed. Waiting to try again.")
+							logWarn("Attempt $iAttempt failed. Waiting to try again.")
 							Thread.sleep(2000)
 						} else {
 							throw new UcAdfInvalidValueException(response)

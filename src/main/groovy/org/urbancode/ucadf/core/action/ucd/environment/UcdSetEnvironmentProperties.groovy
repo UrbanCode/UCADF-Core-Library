@@ -54,11 +54,24 @@ class UcdSetEnvironmentProperties extends UcAdfAction {
 	
 			JsonBuilder jsonBuilder = new JsonBuilder(requestMap)
 	
-			Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
-			if (response.getStatus() == 200) {
-				logVerbose("Property [${ucdProperty.getName()}] set.")
-			} else {
-	            throw new UcAdfInvalidValueException(response)
+			// Had to add logic to handle concurrency issue discovered in UCD 7.x.
+			final Integer MAXATTEMPTS = 10
+			for (Integer iAttempt = 1; iAttempt <= MAXATTEMPTS; iAttempt++) {
+				Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(jsonBuilder.toString()))
+				if (response.getStatus() == 200) {
+					logVerbose("Property [${ucdProperty.getName()}] set.")
+					break
+				} else {
+					String responseStr = response.readEntity(String.class)
+					logInfo(responseStr)
+					if ((response.getStatus() == 409 || responseStr.matches(/.*transaction.*/)) && iAttempt < MAXATTEMPTS) {
+						logWarn("Attempt $iAttempt failed. Waiting to try again.")
+						Random rand = new Random(System.currentTimeMillis())
+						Thread.sleep(rand.nextInt(2000))
+					} else {
+						throw new UcAdfInvalidValueException("Status: ${response.getStatus()} Unable to set application process request property. $target")
+					}
+				}
 			}
 		}
 	}

@@ -10,11 +10,11 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.action.ucd.authorizationRealm.UcdGetAuthorizationRealm
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
+import org.urbancode.ucadf.core.model.ucadf.UcAdfSecureString
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.authenticationRealm.UcdAuthenticationRealm
 import org.urbancode.ucadf.core.model.ucd.authenticationRealm.UcdAuthenticationRealmProperties
 import org.urbancode.ucadf.core.model.ucd.authorizationRealm.UcdAuthorizationRealm
-import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
-import org.urbancode.ucadf.core.model.ucadf.UcAdfSecureString
 import org.urbancode.ucadf.core.model.ucd.system.UcdSession
 
 import groovy.json.JsonBuilder
@@ -36,26 +36,35 @@ class UcdCreateLdapAuthenticationRealm extends UcAdfAction {
 	/** The connection password. */
 	UcAdfSecureString connectionPassword = new UcAdfSecureString()
 
-	/** The user pattern. */
-	String userPattern = ""
-		
-	/** The user base. */
-    String userBase
-	
-	/** The user search. Default is uid={0}. */
-    String userSearch = "uid={0}"
-	
-	/** The user name attribute. Deafult is cn. */
-    String userNameAttribute = "cn"
-	
-	/** The user email attribute. Default is mail. */
-    String userEmailAttribute = "mail"
-	
-	/** If true then the subtree is searched. Default is true. */
-    Boolean searchSubtree = true
+	/** LDAP configuration properties. If a value is provided it takes precedence over the individually specified properties above. */
+	Map<String, String> configProperties = [:]
 	
 	/** The names or IDs of the authorization realms. */
 	List<String> authorizationRealms
+
+	/** The user pattern. Deprecated. Use the user-pattern configProperties value. */
+	@Deprecated
+	String userPattern = ""
+		
+	/** The user base. Deprecated. Use the user-base configProperties value. */
+	@Deprecated
+    String userBase = ""
+	
+	/** The user search. Default is uid={0}. Deprecated. Use the user-search configProperties value. */
+	@Deprecated
+    String userSearch = "uid={0}"
+	
+	/** The user name attribute. Deafult is cn. Deprecated. Use the name-attribute configProperties value. */
+	@Deprecated
+    String userNameAttribute = "cn"
+	
+	/** The user email attribute. Default is mail. Deprecated. Use the email-attribute configProperties value. */
+	@Deprecated
+    String userEmailAttribute = "mail"
+	
+	/** If true then the subtree is searched. Default is true. Deprecated. Use the user-search-subtree configProperties value. */
+	@Deprecated
+    Boolean searchSubtree = true
 
 	/** The number of allowed login attempts. Default is 0. */
 	Integer allowedAttempts = 0
@@ -78,6 +87,25 @@ class UcdCreateLdapAuthenticationRealm extends UcAdfAction {
         WebTarget target = ucdSession.getUcdWebTarget().path("/security/authenticationRealm")
         logDebug("target=$target")
 
+		// Construct the request LDAP configuration properties.
+		Map<String, String> requestConfigProperties = [
+            "context-factory" : UcdAuthenticationRealmProperties.CONTEXTFACTORY_LDAP,
+            "url" : ldapUrl,
+            "connection-password" : connectionPassword.toString(),
+            "connection-name" : connectionName,
+			"user-pattern" : userPattern,
+			"user-base" : userBase,
+			"user-search" : userSearch,
+			"user-search-subtree" : searchSubtree,
+			"name-attribute" : userNameAttribute,
+			"email-attribute" : userEmailAttribute
+		]
+
+		// Override the default map with any additionally provided configuration properties.
+		configProperties.each { k, v ->
+			requestConfigProperties.put(k, v)
+		}
+		
         // Build a custom post body that includes only the required fields
         Map<String, String> requestMap = [
             "name" : name,
@@ -86,18 +114,7 @@ class UcdCreateLdapAuthenticationRealm extends UcAdfAction {
             "loginClassName" : UcdAuthenticationRealm.MODULECLASSNAME_LDAP,
             "anonymousConnection" : connectionPassword.toString() ? false : true,
             "userSearchType" : "searchBase",
-            "properties": [
-                "context-factory" : UcdAuthenticationRealmProperties.CONTEXTFACTORY_LDAP,
-                "url" : ldapUrl,
-                "connection-password" : connectionPassword.toString(),
-                "connection-name" : connectionName,
-                "user-pattern" : userPattern,
-                "user-base" : userBase,
-                "user-search" : userSearch,
-                "user-search-subtree" : searchSubtree,
-                "name-attribute" : userNameAttribute,
-                "email-attribute" : userEmailAttribute
-            ]
+            "properties": requestConfigProperties
         ]
 
 		// Construct the list of authorization realm IDs.

@@ -7,19 +7,22 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
+import org.urbancode.ucadf.core.actionsrunner.UcAdfActionsRunner
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 class UcAdfExtractFile extends UcAdfAction {
 	/** The extract file type. */
-	enum ExtractFileType {
-		ZIP
+	enum ExtractFileTypeEnum {
+		ZIP,
+		TAR
 	}
 	
 	// Action properties.
 	/** The extract file name. */
 	String fileName
 
-	ExtractFileType fileType = ExtractFileType.ZIP
+	/** The file extract type. Default is ZIP. */
+	ExtractFileTypeEnum fileType = ExtractFileTypeEnum.ZIP
 		
 	/** The extract directory name. */
 	String extractDirName
@@ -54,9 +57,16 @@ class UcAdfExtractFile extends UcAdfAction {
 			extractDir.mkdirs()
 
 			// Currently only supports Zip file type.
-			if (ExtractFileType.ZIP.equals(fileType)) {
+			if (ExtractFileTypeEnum.ZIP.equals(fileType)) {
 				// Unzip the file.
 				unzip(
+					extractFile, 
+					extractDir,
+					actionVerbose
+				)	
+			} else if (ExtractFileTypeEnum.TAR.equals(fileType)) {
+				// Untar the file.
+				untar(
 					extractFile, 
 					extractDir,
 					actionVerbose
@@ -135,5 +145,28 @@ class UcAdfExtractFile extends UcAdfAction {
 		} catch (IOException e) {
 			e.printStackTrace()
 		}
+	}
+	
+	// Extract a TAR file.	
+	public static untar(
+		final File extractFile,
+		final File extractDir,
+		final Boolean verbose) {
+
+		if (verbose) {
+			println "Untar file [$extractFile] to directory [$extractDir]."
+		}
+
+		// Construct the command list.
+		List<String> commandList = [ "tar", "-xvf", extractFile.toString(), "-C", extractDir.toString() ]
+		
+		// Run the native tar command.
+		new UcAdfActionsRunner().runAction([
+			action: UcAdfExecuteCommand.getSimpleName(),
+			actionInfo: false,
+			actionVerbose: false,
+			commandList: commandList,
+			showOutput: true
+		])
 	}
 }

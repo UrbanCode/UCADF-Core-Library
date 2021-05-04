@@ -9,9 +9,9 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.authorizationRealm.UcdAuthorizationRealm
 import org.urbancode.ucadf.core.model.ucd.authorizationRealm.UcdAuthorizationRealmProperties
-import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 
 import groovy.json.JsonBuilder
 
@@ -23,19 +23,27 @@ class UcdCreateLdapAuthorizationRealm extends UcAdfAction {
 	/** The description. */
     String description = ""
 
-	/** The group attribute. */
+	/** LDAP configuration properties. If a value is provided it takes precedence over the individually specified properties above. */
+	Map<String, String> configProperties = [:]
+
+	/** The group attribute. Deprecated. Use the group-attribute configProperties value. */
+	@Deprecated
 	String groupAttribute = ""
 		
-	/** The group base. */
-    String groupBase
+	/** The group base. Deprecated. Use the group-base configProperties value. */
+	@Deprecated
+    String groupBase = ""
 	
-	/** The group search. Default is uniquemember={0}. */
+	/** The group search. Default is uniquemember={0}. Deprecated. Use the group-search configProperties value. */
+	@Deprecated
     String groupSearch = "uniquemember={0}"
 	
-	/** The group name attributes. Default is cn. */
+	/** The group name attributes. Default is cn. Deprecated. Use the group-name configProperties value. */
+	@Deprecated
     String groupName = "cn"
 	
-	/** If true then the subtree is searched. Default is true. */
+	/** If true then the subtree is searched. Default is true. Deprecated. Use the group-search-subtree configProperties value. */
+	@Deprecated
     Boolean searchSubtree = true
 	
 	/** The flag that indicates fail if the tag already exists. Default is true. */
@@ -56,21 +64,29 @@ class UcdCreateLdapAuthorizationRealm extends UcAdfAction {
 		
         WebTarget target = ucdSession.getUcdWebTarget().path("/security/authorizationRealm")
         logDebug("target=$target")
-        
+
+		// Construct the request LDAP configuration properties.
+		Map<String, String> requestConfigProperties = [
+	        "group-attribute" : groupAttribute,
+	        "group-base" : groupBase,
+	        "group-search" : groupSearch,
+	        "group-name" : groupName,
+	        "group-search-subtree" : searchSubtree,
+	        "group-mapper" : UcdAuthorizationRealmProperties.GROUPMAPPER
+		]
+
+		// Override the default map with any additionally provided configuration properties.
+		configProperties.each { k, v ->
+			requestConfigProperties.put(k, v)
+		}
+
         // Build a custom post body that includes only the required fields
 		Map requestMap = [
 			name : name,
             description : description,
             authorizationModuleClassName : UcdAuthorizationRealm.AUTHORIZATIONMODULE_LDAP,
             groupSearchType : "roleSearch",
-            properties: [
-                "group-attribute" : groupAttribute,
-                "group-base" : groupBase,
-                "group-search" : groupSearch,
-                "group-name" : groupName,
-                "group-search-subtree" : searchSubtree,
-                "group-mapper" : UcdAuthorizationRealmProperties.GROUPMAPPER
-            ]
+            properties: requestConfigProperties
 		]
 		
         JsonBuilder jsonBuilder = new JsonBuilder(requestMap)

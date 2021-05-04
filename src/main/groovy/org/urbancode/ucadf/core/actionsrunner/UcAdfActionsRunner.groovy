@@ -252,6 +252,7 @@ class UcAdfActionsRunner {
 
 		UcAdfAction action
 		Exception caughtException
+		Boolean setReturnProperty = true
 		
 		// 	Try/finally used to ensure pop actions stack.	
 		try {
@@ -304,6 +305,9 @@ class UcAdfActionsRunner {
 			// Do not evaluate a when condition of the UcAdfWhen action here but rather run the action so that it can perform the elseActions if needed.
 			if (action.getWhen() && !action.getAction().equals(UcAdfWhen.getSimpleName()) && evaluateWhen(action) == false) {
 				log.debug("Skipping action [$actionName}] when [${action.getWhen()}].")
+				
+				// Don't want to set a return property value if the when condition wasn't processed.
+				setReturnProperty = false
 			} else {
 				// Show the action properties.
 				action.showProperties()
@@ -350,19 +354,21 @@ class UcAdfActionsRunner {
 			}
 	
 			// Set the return object in the actionReturn property.
-			setPropertyValue(
-				UcAdfActionPropertyEnum.ACTIONRETURN.getPropertyName(),
-				returnObject
-			)
-				
-			// Optionally, set the return object in the specified property.
-			if (action.getActionReturnPropertyName()) {
+			if (setReturnProperty) {
 				setPropertyValue(
-					action.getActionReturnPropertyName(), 
+					UcAdfActionPropertyEnum.ACTIONRETURN.getPropertyName(),
 					returnObject
 				)
-			}	
-	
+			
+				// Optionally, set the return object in the specified property.
+				if (action.getActionReturnPropertyName()) {
+					setPropertyValue(
+						action.getActionReturnPropertyName(), 
+						returnObject
+					)
+				}	
+			}
+			
 			// Action end processing.
 			action.end()
 		} catch (Exception e) {

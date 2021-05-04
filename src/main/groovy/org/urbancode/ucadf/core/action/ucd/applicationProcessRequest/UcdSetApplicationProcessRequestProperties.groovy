@@ -52,7 +52,7 @@ class UcdSetApplicationProcessRequestProperties extends UcAdfAction {
 		JsonBuilder jsonBuilder = new JsonBuilder(data)
 
 		// Had to add logic to handle concurrency issue discovered in UCD 7.x.
-		final Integer MAXATTEMPTS = 5
+		final Integer MAXATTEMPTS = 10
 		for (Integer iAttempt = 1; iAttempt <= MAXATTEMPTS; iAttempt++) {
 			WebTarget target = ucdSession.getUcdWebTarget().path("/rest/deploy/applicationProcessRequest/{requestId}/saveProperties")
 				.resolveTemplate("requestId", requestId)
@@ -64,9 +64,10 @@ class UcdSetApplicationProcessRequestProperties extends UcAdfAction {
 			} else {
 				String responseStr = response.readEntity(String.class)
 				logInfo(responseStr)
-				if ((response.getStatus() == 409 || responseStr.matches(/.*updated or deleted by another transaction.*/)) && iAttempt < MAXATTEMPTS) {
-					logInfo "Attempt $iAttempt failed. Waiting to try again."
-					Thread.sleep(2000)
+				if ((response.getStatus() == 409 || responseStr.matches(/.*transaction.*/)) && iAttempt < MAXATTEMPTS) {
+					logWarn("Attempt $iAttempt failed. Waiting to try again.")
+					Random rand = new Random(System.currentTimeMillis())
+					Thread.sleep(rand.nextInt(2000))
 				} else {
 					throw new UcAdfInvalidValueException("Status: ${response.getStatus()} Unable to set application process request property. $target")
 				}
