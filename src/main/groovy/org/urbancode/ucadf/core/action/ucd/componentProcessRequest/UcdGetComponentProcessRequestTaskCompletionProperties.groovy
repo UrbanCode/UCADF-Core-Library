@@ -8,6 +8,7 @@ import java.util.regex.Matcher
 
 import org.urbancode.ucadf.core.action.ucd.user.UcdGetUser
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
+import org.urbancode.ucadf.core.model.ucadf.UcAdfObject
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.componentProcessRequest.UcdComponentProcessRequest
 import org.urbancode.ucadf.core.model.ucd.componentProcessRequest.UcdComponentProcessRequestTask
@@ -111,7 +112,7 @@ class UcdGetComponentProcessRequestTaskCompletionProperties extends UcAdfAction 
 	}
 
 	/** This class returns task information. */
-	static public class TaskReturn {
+	static public class TaskReturn extends UcAdfObject {
 		String taskCompletedBy
 		String taskCompletedByDisplayName
 		String taskCompletedOn

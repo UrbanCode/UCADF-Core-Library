@@ -14,6 +14,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class UcdVersion extends UcdObject {
+	// z/OS component version properties.
+	public final static String PROPNAME_UCD_REPOSITORY_TYPE = "ucd.repository.type"
+	public final static String PROPNAME_UCD_VERSON_ISMERGED = "ucd.version.ismerged"
+	public final static String PROPNAME_UCD_VERSON_MERGEFROMVERSIONS = "ucd.version.mergefromversions"
+	
 	/** The version ID. */
 	String id
 	

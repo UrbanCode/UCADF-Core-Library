@@ -107,6 +107,7 @@ class UcAdfDiff extends UcAdfAction {
 		List<UcdApplicationProcess> appProcesses1 = actionsRunner.runAction([
 			action: UcdGetApplicationProcesses.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			application: name1,
 			full: true
 		])
@@ -114,6 +115,7 @@ class UcAdfDiff extends UcAdfAction {
 		List<UcdApplicationProcess> appProcesses2 = actionsRunner.runAction([
 			action: UcdGetApplicationProcesses.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			application: name2,
 			full: true
 		])
@@ -138,6 +140,7 @@ class UcAdfDiff extends UcAdfAction {
 		List<UcdComponentProcess> compProcesses2 = actionsRunner.runAction([
 			action: UcdGetComponentProcesses.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			component: name2
 		])
 
@@ -156,6 +159,7 @@ class UcAdfDiff extends UcAdfAction {
 		List<UcdProperty> compProperties1 = actionsRunner.runAction([
 			action: UcdGetComponentProperties.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			component: name1,
 			excludeInherited: true
 		])
@@ -163,6 +167,7 @@ class UcAdfDiff extends UcAdfAction {
 		List<UcdProperty> compProperties2 = actionsRunner.runAction([
 			action: UcdGetComponentProperties.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			component: name2,
 			excludeInherited: true
 		])
@@ -182,12 +187,14 @@ class UcAdfDiff extends UcAdfAction {
 		List<UcdComponentProcess> compTemplateProcesses1 = actionsRunner.runAction([
 			action: UcdGetComponentTemplateProcesses.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			componentTemplate: name1
 		])
 		
 		List<UcdComponentProcess> compTemplateProcesses2 = actionsRunner.runAction([
 			action: UcdGetComponentTemplateProcesses.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			componentTemplate: name2
 		])
 
@@ -206,12 +213,14 @@ class UcAdfDiff extends UcAdfAction {
 		List<UcdProperty> compTemplateProperties1 = actionsRunner.runAction([
 			action: UcdGetComponentProperties.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			componentTemplate: name1
 		])
 		
 		List<UcdProperty> compTemplateProperties2 = actionsRunner.runAction([
 			action: UcdGetComponentProperties.getSimpleName(),
 			actionInfo: false,
+			actionVerbose: false,
 			componentTemplate: name2
 		])
 

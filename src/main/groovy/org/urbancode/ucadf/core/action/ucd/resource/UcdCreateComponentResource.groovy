@@ -46,55 +46,82 @@ class UcdCreateComponentResource extends UcAdfAction {
 		// Validate the action properties.
 		validatePropsExist()
 		
+		Boolean created = false
+		
 		// If no parent path was provided then split the provided path to get the parent.
 		name = resource
 		if (!parent) {
 			(parent, name) = UcdResource.getParentPathAndName(resource)
 		}
 
-		// Attempt to create the resource. If it encounters a unique result error then try to delete it and try to create it again.
-		if (createResource(false)) {
-			// Attempt to delete the resource.
-			actionsRunner.runAction([
-				action: UcdDeleteResource.getSimpleName(),
-				actionInfo: true,
-				actionVerbose: true,
-				resource: resource
-			])
-			
-			// Attempt to create the resource again.
-			createResource(true)
-		}
+		// See if the resource already exists.
+		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/resource/info")
+			.queryParam("resource", "${parent}/${name}")
+		logDebug("target=$target")
 
-		// If the resource was created then attempt to get it to make sure there's no unique result problem.
-		if (created) {
-			WebTarget target = ucdSession.getUcdWebTarget().path("/cli/resource/info")
-				.queryParam("resource", "${parent}/${name}")
-			logDebug("target=$target")
-		
-			Response response = target.request().get()
-			
-			// If the get encounters a unique result error then delete the resource and create it again.
-			if (response.getStatus() == 400 && response.readEntity(String.class).matches(/.*query did not return a unique result.*/)) {
-				// Attempt to delete the resource.
-				actionsRunner.runAction([
-					action: UcdDeleteResource.getSimpleName(),
-					actionInfo: true,
-					actionVerbose: true,
-					resource: resource
-				])
-				
-				// Attempt to create the resource again.
-				createResource(true)
+		Response response = target.request().get()
+	
+		if (response.getStatus() == 200) {
+			String message = "Resource [${parent}/${name}] already exists."
+			if (failIfExists) {
+				throw new UcAdfInvalidValueException(message)
+			} else {
+				logVerbose(message)
 			}
+		} else {
+			createResourceWithRetry()
+			created = true
 		}
 		
 		return created
 	}
+
+	// Logic to handle concurrency issues.
+	public createResourceWithRetry() {
+		Boolean uniqueResultError
+		Boolean alreadyExists
+		final Integer MAXATTEMPTS = 20
+		for (Integer iAttempt = 1; iAttempt <= MAXATTEMPTS; iAttempt++) {
+			// Attempt to create the resourece.
+			(alreadyExists, uniqueResultError) = createResource()
+			if (alreadyExists) {
+				break
+			}
+			
+			if (!uniqueResultError) {
+				// Attempt to retrieve the newly created resource.
+				uniqueResultError = retrieveNewResource()
+			}
+
+			// If no error then quit.
+			if (!uniqueResultError) {
+				break
+			}
+
+			logVerbose("A unique result error was encountered on attempt $iAttempt. Trying again.")
+
+			// Attempt to delete the resource.
+			actionsRunner.runAction([
+				action: UcdDeleteResource.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
+				resource: resource
+			])
+
+			// Sleep for a random period of time.
+			Random rand = new Random(System.currentTimeMillis())
+			Thread.sleep(rand.nextInt(2000))
+		}
+		
+		if (uniqueResultError) {
+			throw new UcAdfInvalidValueException("Errors were encountered while trying to create resource.")
+		}
+	}
 	
 	// Attempt to create the resource.	
-	public Boolean createResource(final Boolean retry) {
+	public Object createResource() {
 		Boolean uniqueResultError = false
+		Boolean alreadyExists = false
 		
 		logVerbose("Creating component resource [$parent/$name].")
 
@@ -134,11 +161,31 @@ class UcdCreateComponentResource extends UcAdfAction {
 				} else {
 					logVerbose("Resource [$parent/$name] already exists.")
 				}
-			} else if (!retry && response.getStatus() == 400 && errMsg.matches(/.*query did not return a unique result.*/)) {
+			} else if (response.getStatus() == 400 && errMsg.matches(/.*query did not return a unique result.*/)) {
 				uniqueResultError = true
 			} else {
 				throw new UcAdfInvalidValueException(errMsg)
 			}
+		}
+		
+		return [alreadyExists, uniqueResultError]
+	}
+	
+	// Attempt to retrieve the newly created resource.
+	public Boolean retrieveNewResource() {
+		Boolean uniqueResultError = false
+		
+		WebTarget target = ucdSession.getUcdWebTarget().path("/cli/resource/info")
+			.queryParam("resource", "${parent}/${name}")
+			
+		logDebug("target=$target")
+	
+		Response response = target.request().get()
+		
+		// If the get encounters a unique result error then delete the resource and create it again.
+		if (response.getStatus() != 200) {
+			logWarn("Attempt to retrieve resource returned ${response.getStatus()}.")
+			uniqueResultError = true
 		}
 		
 		return uniqueResultError

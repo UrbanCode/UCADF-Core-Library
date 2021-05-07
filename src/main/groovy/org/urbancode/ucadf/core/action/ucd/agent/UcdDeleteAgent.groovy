@@ -43,7 +43,7 @@ class UcdDeleteAgent extends UcAdfAction {
 			logDebug("target=$target")
 			
 			// Had to add logic to handle concurrency issue discovered in UCD 7.0.1.2.
-			final Integer MAXATTEMPTS = 5
+			final Integer MAXATTEMPTS = 10
 			for (Integer iAttempt = 1; iAttempt <= MAXATTEMPTS; iAttempt++) {
 				Response response = target.request(MediaType.APPLICATION_JSON).delete()
 				response.bufferEntity()
@@ -62,9 +62,10 @@ class UcdDeleteAgent extends UcAdfAction {
 				} else {
 					String responseStr = response.readEntity(String.class)
 					logVerbose(responseStr)
-					if ((responseStr ==~ /.*bulk manipulation query.*/ || responseStr ==~ /.*another transaction.*/) && iAttempt < MAXATTEMPTS) {
-						logVerbose("Attempt $iAttempt failed. Waiting to try again.")
-						Thread.sleep(2000)
+					if ((responseStr ==~ /.*bulk manipulation query.*/ || responseStr ==~ /.*transaction.*/) && iAttempt < MAXATTEMPTS) {
+						logWarn("Attempt $iAttempt failed. Waiting to try again.")
+						Random rand = new Random(System.currentTimeMillis())
+						Thread.sleep(rand.nextInt(2000))
 					} else {
 						throw new UcAdfInvalidValueException(response)
 					}

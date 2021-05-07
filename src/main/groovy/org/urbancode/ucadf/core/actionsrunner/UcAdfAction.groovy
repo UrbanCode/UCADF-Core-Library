@@ -250,6 +250,14 @@ abstract class UcAdfAction extends UcdObject {
 			log.info message
 		}
 	}
+	
+	/**
+	 * Log a message with log.warn.
+	 * @param message the message to log.
+	 */
+	public void logWarn(final String message) {
+		log.warn message
+	}
 
 	/**
 	 * Log a message with log.error.

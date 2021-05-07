@@ -10,22 +10,37 @@ import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.action.ucd.component.UcdGetComponent
 import org.urbancode.ucadf.core.action.ucd.version.UcdAddVersionFiles
+import org.urbancode.ucadf.core.action.ucd.version.UcdAddVersionLink
 import org.urbancode.ucadf.core.action.ucd.version.UcdCreateVersion
 import org.urbancode.ucadf.core.action.ucd.version.UcdDeleteVersion
 import org.urbancode.ucadf.core.action.ucd.version.UcdDownloadVersionFiles
-import org.urbancode.ucadf.core.action.ucd.version.UcdGetVersionArtifacts
+import org.urbancode.ucadf.core.action.ucd.version.UcdGetVersionLinks
+import org.urbancode.ucadf.core.action.ucd.version.UcdGetVersionProperties
+import org.urbancode.ucadf.core.action.ucd.version.UcdSetVersionProperties
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.component.UcdComponent
 import org.urbancode.ucadf.core.model.ucd.component.UcdComponentTypeEnum
 import org.urbancode.ucadf.core.model.ucd.general.UcdObject
+import org.urbancode.ucadf.core.model.ucd.property.UcdProperty
 import org.urbancode.ucadf.core.model.ucd.snapshot.UcdSnapshot
-import org.urbancode.ucadf.core.model.ucd.snapshot.UcdSnapshotVersions
-import org.urbancode.ucadf.core.model.ucd.version.UcdVersionArtifact
+import org.urbancode.ucadf.core.model.ucd.version.UcdVersionLink
 
 import groovy.json.JsonBuilder
 
 class UcdSnapshotMergeVersions extends UcAdfAction {
+	/** The phase of the merge that is currently running. */
+	enum MergePhaseEnum {
+		/** The version downloads are beginning. */
+		DownloadVersionsBegin,
+		
+		/** A version has been downloaded and overlayed the previous version. */
+		DownloadedVersion,
+
+		/** The version have been downloaded and overlayed. */
+		DownloadVersionsEnd
+	}
+	
 	// Action properties.
 	/** The application name or ID. */
 	String application
@@ -44,7 +59,16 @@ class UcdSnapshotMergeVersions extends UcAdfAction {
 
 	/** The file name to use when downloading STANDARD component type artifacts. */
 	String downloadFileName = "UCADF-Core-MergeArtifacts.zip"
+
+
+	/** A flag that indicates whether to merge properties from all contributing versions. Default is false (use properties from last merged version.) */
+	Boolean mergeAllProperties = false
 	
+	/** A flag that indicates whether to merge links from all contributing versions. Default is false (use links from last merged version.) */
+	Boolean mergeAllLinks = false
+
+	String callbackAction = ""
+			
 	/** The flag that indicates fail if the version already exists. Default is true. */
 	Boolean failIfExists = true
 
@@ -105,62 +129,113 @@ class UcdSnapshotMergeVersions extends UcAdfAction {
 		}
 	}
 
-	// Merge a standard component type.
-	// There is no API to do this so each version has to be evaluated and downloaded to create a new version.
+	// Merge a standard component type. There is no API to do this so each version has to be evaluated and downloaded to create a new version.
 	public mergeStandardComponent() {
-		// Get the snapshot versions.
-		List<UcdSnapshotVersions> snapshotVersions = actionsRunner.runAction([
+		// Get the snapshot versions map.
+		Map<String, Map<String, String>> snapshotVersionsMap = actionsRunner.runAction([
 			action: UcdGetSnapshotVersions.getSimpleName(),
 			actionInfo: false,
 			actionVerbose: false,
 			application: application,
 			snapshot: snapshotId,
-			returnAs: UcdGetSnapshotVersions.ReturnAsEnum.LIST
+			returnAs: UcdGetSnapshotVersions.ReturnAsEnum.MAPBYNAME
 		])
 
-		// Create a merged map of the artifact paths and the version that last contributed to that path.
-		for (snapshotVersion in snapshotVersions) {
-			snapshotVersion.each { versionCompName, versionName ->
-				if (component.equals(versionCompName)) {
-					List<UcdVersionArtifact> ucdArtifacts = actionsRunner.runAction([
-						action: UcdGetVersionArtifacts.getSimpleName(),
-						actionInfo: false,
-						actionVerbose: false,
-						component: component,
-						version: versionName
-					])
-
-					mergePaths(
-						versionName,
-						ucdArtifacts
-					)
-				}
-			}
+		// Get the set of version names.
+		HashSet versionSet = new HashSet()
+		snapshotVersionsMap.get(component).each { versionName, value ->
+			versionSet.add(versionName)
+		}
+		
+		// Get a merged map of the version properties.
+		Map<String, UcdProperty> mergedVersionPropertiesMap = [:]
+		for (version in (mergeAllProperties ? versionSet : [ versionSet.last() ])) {
+			logVerbose("Using properties from version [${version}].")
+			Map<String, UcdProperty> versionPropertiesMap = actionsRunner.runAction([
+				action: UcdGetVersionProperties.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
+				component: component,
+				version: version,
+				returnAs: UcdGetVersionProperties.ReturnAsEnum.MAPBYNAME
+			])
+			mergedVersionPropertiesMap += versionPropertiesMap
+		}
+		
+		// Create a list of the merged properties.
+		List<UcdProperty> mergedVersionProperties = []
+		mergedVersionPropertiesMap.each { key, ucdProperty ->
+			mergedVersionProperties.add(ucdProperty)
 		}
 
-		// Derive the list of component versions that are contributing to the merge.
-		HashSet versionNameSet = new HashSet()
-		mergedPaths.each { path, versionName ->
-			versionNameSet.add(versionName)
+		// Get a merged list of the version links.
+		Map<String, UcdVersionLink> mergedVersionLinksMap = [:]
+		for (version in (mergeAllLinks ? versionSet : [ versionSet.last() ])) {
+			logVerbose("Using links from version [${version}].")
+			Map<String, UcdVersionLink> versionLinksMap = actionsRunner.runAction([
+				action: UcdGetVersionLinks.getSimpleName(),
+				actionInfo: false,
+				actionVerbose: false,
+				component: component,
+				version: version,
+				returnAs: UcdGetVersionLinks.ReturnAsEnum.MAPBYNAME
+			])
+			mergedVersionLinksMap += versionLinksMap
+		}
+		
+		// If a callback action was provided then run it.
+		if (callbackAction) {
+			actionsRunner.runAction([
+				action: callbackAction,
+				actionInfo: actionInfo,
+				actionVerbose: actionVerbose,
+				mergePhase: MergePhaseEnum.DownloadVersionsBegin,
+				component: component,
+				extractDirName: downloadDir.getPath()
+			])
 		}
 
 		// Download the version artifacts for the versions to be merged in the order they were specified in the snapshot.
-		for (snapshotVersion in snapshotVersions) {
-			snapshotVersion.each { versionCompName, versionName ->
-				// If the component version specified in the snapshot is in the set then download it.
-				if (component.equals(versionCompName) && versionNameSet.contains(versionName)) {
-					actionsRunner.runAction([
-						action: UcdDownloadVersionFiles.getSimpleName(),
-						actionInfo: false,
-						component: component,
-						version: versionName,
-						fileName: new File(downloadDir, downloadFileName).getPath(),
-						extractDirName: downloadDir.getPath()
-					])
-				}
+		for (versionName in versionSet) {
+			String fileName = new File(downloadDir, downloadFileName).getPath()
+			
+			// Download the version files.
+			actionsRunner.runAction([
+				action: UcdDownloadVersionFiles.getSimpleName(),
+				actionInfo: false,
+				component: component,
+				version: versionName,
+				fileName: fileName,
+				extractDirName: downloadDir.getPath()
+			])
+			
+			// If a callback action was provided then run it to do any custom renaming, etc.
+			if (callbackAction) {
+				actionsRunner.runAction([
+					action: callbackAction,
+					actionInfo: actionInfo,
+					actionVerbose: actionVerbose,
+					mergePhase: MergePhaseEnum.DownloadedVersion,
+					component: component,
+					version: versionName,
+					fileName: fileName,
+					extractDirName: downloadDir.getPath()
+				])
 			}
 		}
 		
+		// If a callback action was provided then run it.
+		if (callbackAction) {
+			actionsRunner.runAction([
+				action: callbackAction,
+				actionInfo: actionInfo,
+				actionVerbose: actionVerbose,
+				mergePhase: MergePhaseEnum.DownloadVersionsEnd,
+				component: component,
+				extractDirName: downloadDir.getPath()
+			])
+		}
+
 		try {
 			// Create the new version.
 			actionsRunner.runAction([
@@ -180,6 +255,27 @@ class UcdSnapshotMergeVersions extends UcAdfAction {
 		        base: downloadDir.getPath(),
 				include: [ "**/*" ]
 			])
+			
+			// Set the version properties.
+			actionsRunner.runAction([
+				action: UcdSetVersionProperties.getSimpleName(),
+				actionInfo: false,
+		        component: component,
+		        version: version,
+				properties: mergedVersionProperties
+			])
+			
+			// Add the version links.
+			mergedVersionLinksMap.each { key, ucdVersionLink ->
+				actionsRunner.runAction([
+					action: UcdAddVersionLink.getSimpleName(),
+					actionInfo: false,
+			        component: component,
+			        version: version,
+					name: ucdVersionLink.getName(),
+					value: ucdVersionLink.getValue()
+				])
+			}
 		} catch(Exception e) {
 			// Delete a partially created version.
 			actionsRunner.runAction([
@@ -193,19 +289,6 @@ class UcdSnapshotMergeVersions extends UcAdfAction {
 		}
 	}
 
-	public mergePaths(
-		final String versionName, 
-		final List<UcdVersionArtifact> ucdArtifacts) {
-		
-		for (ucdArtifact in ucdArtifacts) {
-			mergedPaths.put(ucdArtifact.getPath(), versionName)
-			mergePaths(
-				versionName, 
-				ucdArtifact.getChildArtifacts()
-			)
-		}
-	}	
-	
 	// Merge a z/OS component type. There is an API to do this for this component type.
 	public mergeZosComponent() {
 		Map requestMap = [

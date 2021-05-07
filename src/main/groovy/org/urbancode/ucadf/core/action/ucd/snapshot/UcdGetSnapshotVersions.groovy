@@ -7,7 +7,6 @@ import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.GenericType
 import javax.ws.rs.core.Response
 
-import org.urbancode.ucadf.core.action.ucd.team.UcdGetTeamUsers.ReturnAsEnum
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
 import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.snapshot.UcdSnapshotVersions
@@ -18,7 +17,7 @@ class UcdGetSnapshotVersions extends UcAdfAction {
 		/** Return as a list of componentName: versionName maps. */
 		LIST,
 		
-		/** Return as a map having the team name as the key. */
+		/** Return as a map having the component name as the key. */
 		MAPBYNAME
 	}
 	

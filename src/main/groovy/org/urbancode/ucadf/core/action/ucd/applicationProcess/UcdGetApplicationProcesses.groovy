@@ -39,6 +39,7 @@ class UcdGetApplicationProcesses extends UcAdfAction {
 			UcdApplication ucdApplication = actionsRunner.runAction([
 				action: UcdGetApplication.getSimpleName(),
 				actionInfo: false,
+				actionVerbose: false,
 				application: application,
 				failIfNotFound: true
 			])

@@ -43,7 +43,7 @@ class UcdDeleteResource extends UcAdfAction {
 				// Get the resource parent's children.
 				List<UcdResource> ucdResources = actionsRunner.runAction([
 					action: UcdGetChildResources.getSimpleName(),
-					actionInfo: true,
+					actionInfo: false,
 					actionVerbose: true,
 					resource: parent,
 					failIfNotFound: failIfNotFound
@@ -79,7 +79,7 @@ class UcdDeleteResource extends UcAdfAction {
 			UcdResource ucdResource = response.readEntity(UcdResource)
 
 			// Had to add logic to handle concurrency issue discovered in UCD 6.2.7.0.
-			final Integer MAXATTEMPTS = 5
+			final Integer MAXATTEMPTS = 10
 			for (Integer iAttempt = 1; iAttempt <= MAXATTEMPTS; iAttempt++) {
 				target = ucdSession.getUcdWebTarget().path("/rest/resource/resource/{resourceId}")
 					.resolveTemplate("resourceId", ucdResource.getId())
@@ -99,8 +99,9 @@ class UcdDeleteResource extends UcAdfAction {
 						break
 					} else {
 						if (responseStr ==~ /.*bulk manipulation query.*/ && iAttempt < MAXATTEMPTS) {
-							logVerbose("Attempt $iAttempt failed. Waiting to try again.")
-							Thread.sleep(2000)
+							logWarn("Attempt $iAttempt failed. Waiting to try again.")
+							Random rand = new Random(System.currentTimeMillis())
+							Thread.sleep(rand.nextInt(2000))
 						} else {
 							throw new UcAdfInvalidValueException(response)
 						}

@@ -51,7 +51,7 @@ class UcdSetResourceProperties extends UcAdfAction {
 		Response response
 
 		// Had to add logic to handle concurrency issue discovered in UCD 7.x.
-		final Integer MAXATTEMPTS = 5
+		final Integer MAXATTEMPTS = 10
 		for (Integer iAttempt = 1; iAttempt <= MAXATTEMPTS; iAttempt++) {
 			if (ucdSession.compareVersion(UcdSession.UCDVERSION_70) >= 0) {
 				// Newer API.
@@ -89,10 +89,11 @@ class UcdSetResourceProperties extends UcAdfAction {
 			if (response.getStatus() == 200) {
 				break
 			} else {
-				logInfo response.readEntity(String.class)
+				logInfo(response.readEntity(String.class))
 				if (response.getStatus() == 409 && iAttempt < MAXATTEMPTS) {
-					logInfo "Attempt $iAttempt failed. Waiting to try again."
-					Thread.sleep(2000)
+					logWarn("Attempt $iAttempt failed. Waiting to try again.")
+					Random rand = new Random(System.currentTimeMillis())
+					Thread.sleep(rand.nextInt(2000))
 				} else {
 					throw new UcAdfInvalidValueException(response)
 				}

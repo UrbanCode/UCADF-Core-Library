@@ -3,13 +3,18 @@
  */
 package org.urbancode.ucadf.core.action.ucd.version
 
+import java.nio.file.Files
+import java.nio.file.Paths
+
 import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.Response
 
 import org.urbancode.ucadf.core.action.ucadf.general.UcAdfExtractFile
 import org.urbancode.ucadf.core.action.ucd.component.UcdGetComponent
 import org.urbancode.ucadf.core.actionsrunner.UcAdfAction
+import org.urbancode.ucadf.core.model.ucadf.exception.UcAdfInvalidValueException
 import org.urbancode.ucadf.core.model.ucd.component.UcdComponent
+import org.urbancode.ucadf.core.model.ucd.component.UcdComponentTypeEnum
 import org.urbancode.ucadf.core.model.ucd.version.UcdVersion
 
 class UcdDownloadVersionFiles extends UcAdfAction {
@@ -20,13 +25,13 @@ class UcdDownloadVersionFiles extends UcAdfAction {
 	/** The version name or ID. */
 	String version
 	
-	/** The downloaded Zip file name. */
-	String fileName
+	/** The downloaded file name. If singleFilePath is specified then this will be the single file. Otherwise, the downloaded artifacts Zip file. */
+	String fileName = ""
 	
 	/** (Optional) The extract directory name. If specified then the download will be extracted here and the Zip file removed. */
 	String extractDirName = ""
 
-	/** The single file path. */	
+	/** (Optional) A single file path. */	
 	String singleFilePath = ""
 	
 	/** The flag that indicates to skip if the download file (Zip) already exists. Default is false. */
@@ -50,6 +55,7 @@ class UcdDownloadVersionFiles extends UcAdfAction {
 		validatePropsExist()
 
 		Boolean downloaded = false
+		
 		File artifactsFile = new File(fileName)
 
 		if (skipIfZipExists && artifactsFile.exists()) {
@@ -100,13 +106,25 @@ class UcdDownloadVersionFiles extends UcAdfAction {
 			}
 			
 			if (ucdVersion) {
-				logVerbose("Starting download of component [$component] version [$version].")
+				logVerbose("Starting download of component [$component] type [${ucdComponent.getComponentType()}] version [$version] type [${ucdVersion.getType()}].")
+
+				WebTarget target
+				if (singleFilePath) {
+					target = ucdSession.getUcdWebTarget().path("/rest/deploy/version/{versionId}/downloadArtifact/{singleFilePath}")
+						.resolveTemplate("versionId", ucdVersion.getId())
+						.resolveTemplate("singleFilePath", singleFilePath)
+				} else {
+					target = ucdSession.getUcdWebTarget().path("/rest/deploy/version/{versionId}/downloadArtifacts")
+						.resolveTemplate("versionId", ucdVersion.getId())
+				}
 				
-				WebTarget target = ucdSession.getUcdWebTarget().path("/rest/deploy/version/{versionId}/downloadArtifacts")
-					.resolveTemplate("versionId", ucdVersion.getId())
 				logDebug("target=$target")
 				
 				Response response = target.request().get()
+
+				if (response.getStatus() == 404 && failIfNotFound && singleFilePath) {
+					throw new UcAdfInvalidValueException("File [$singleFilePath] not found to download.")
+				}
 				
 				InputStream inputStream = response.readEntity(InputStream.class)
 		
@@ -135,9 +153,11 @@ class UcdDownloadVersionFiles extends UcAdfAction {
 				logVerbose("Downloaded artifacts file [${artifactsFile.getAbsolutePath()}] size is [${artifactsFile.length()}] bytes.")
 		
 				downloaded = true
-				
+
 				// Extract the downloaded file.
 				if (extractDirName) {
+					File extractDir = new File(extractDirName)
+					
 					actionsRunner.runAction([
 						action: UcAdfExtractFile.getSimpleName(),
 						actionInfo: false,
@@ -148,12 +168,48 @@ class UcdDownloadVersionFiles extends UcAdfAction {
 						deleteFileIfExtracted: deleteZipIfExtracted,
 						actionVerbose: actionVerbose
 					])
+					
+					// If this is a ZOS component then also unzip the package.zip files.
+					if (UcdComponentTypeEnum.ZOS.equals(ucdComponent.getComponentType())) {
+						// Extract the top-level package.zip file.
+						actionsRunner.runAction([
+							action: UcAdfExtractFile.getSimpleName(),
+							actionInfo: false,
+							actionVerbose: actionVerbose,
+							fileName: new File(extractDir, "package.zip").getAbsolutePath(),
+							extractDirName: extractDirName,
+							skipIfExtractDirExists: skipIfExtractDirExists,
+							deleteFileIfExtracted: deleteZipIfExtracted,
+							actionVerbose: actionVerbose
+						])
+
+						// If it is a merged version then it will have child package ZIP files that need to be extracted.
+						logVerbose("Looking for z/OS component package files in [$extractDirName].")
+						for (packageZipPath in Files.walk(Paths.get(extractDirName))) {
+							if (packageZipPath.getFileName().toString().matches(/^package_.*\.zip$/)) {
+								logVerbose("Found [$packageZipPath].")
+
+								// Extract the compressed package file that has a zip extension but is actually a tar file.
+								actionsRunner.runAction([
+									action: UcAdfExtractFile.getSimpleName(),
+									actionInfo: false,
+									actionVerbose: actionVerbose,
+									fileName: packageZipPath.toString(),
+									extractDirName: packageZipPath.toString().replaceAll(/.zip$/, ''),
+									fileType: UcAdfExtractFile.ExtractFileTypeEnum.TAR,
+									skipIfExtractDirExists: skipIfExtractDirExists,
+									deleteFileIfExtracted: deleteZipIfExtracted,
+									actionVerbose: actionVerbose
+								])
+							}
+						}
+					}
 				}
 			} else {
 				logVerbose("Component [$component] version [$version] not found.")
 			}
 		}
-
+		
 		return downloaded
 	}	
 }

@@ -15,6 +15,7 @@ class UcdComponentProcessRequest extends UcdProcessRequestTrace {
 	// Common process properties.
 	public final static String PROPNAME_REQUEST_ID = "request.id"
 	public final static String PROPNAME_PARENTREQUEST_ID = "parentRequest.id"
+	public final static String PROPNAME_COMPONENTPROCESS_NAME = "componentProcess.name"
 	
 	/** The submitted time. */
 	Long submittedTime
